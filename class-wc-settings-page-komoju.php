@@ -381,8 +381,6 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
                         $methods_by_slug[$slug] = $payment_method;
                     }
                 }
-
-                $methods_by_slug[$slug] = $payment_method;
             }
 
             return $methods_by_slug;
