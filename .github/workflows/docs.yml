@@ -11,6 +11,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Check out
         uses: actions/checkout@v4
@@ -32,7 +34,7 @@ jobs:
           git init
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote add origin "https://${{ secrets.DOCS_DEPLOY_TOKEN }}@github.com/degica/komoju-woocommerce.git"
+          git remote add origin "https://github.com/komoju/komoju-woocommerce"
           git checkout -b gh-pages
           git add .
           git commit -m "Deploy docs"
