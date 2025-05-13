@@ -31,13 +31,17 @@ jobs:
         run: pip install mkdocs mkdocs-material mkdocs-static-i18n
       - name: Build docs
         run: mkdocs build
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site  # MkDocs output folder
 
   deploy:
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
