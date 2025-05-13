@@ -26,14 +26,11 @@ jobs:
       - name: Build docs
         run: mkdocs build
 
-      - name: Deploy to gh-pages using PAT
-        run: |
-          cd site
-          git init
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote add origin "https://${{ secrets.DOCS_DEPLOY_TOKEN }}@github.com/degica/komoju-woocommerce.git"
-          git checkout -b gh-pages
-          git add .
-          git commit -m "Deploy docs"
-          git push origin gh-pages --force
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.DOCS_DEPLOY_TOKEN }}
+          publish_dir: ./site
+          publish_branch: gh-pages
+          cname: tech.degica.com/komoju-woocommerce
+          full_commit_message: "Deploy docs from CI"

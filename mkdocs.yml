@@ -1,7 +1,7 @@
 site_name: Komoju-WooCommerce Plugin Docs
 site_url: "https://tech.degica.com/komoju-woocommerce/"
-repo_url: https://github.com/degica/komoju-woocommerce
-repo_name: "degica/komoju-woocommerce"
+repo_url: https://github.com/komoju/komoju-woocommerce
+repo_name: "komoju/komoju-woocommerce"
 
 theme:
   name: material
