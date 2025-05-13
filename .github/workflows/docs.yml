@@ -8,32 +8,42 @@ on:
       - 'mkdocs.yml'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-
       - name: Install dependencies
         run: pip install mkdocs mkdocs-material mkdocs-static-i18n
-
       - name: Build docs
         run: mkdocs build
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site  # MkDocs output folder
 
-      - name: Deploy to gh-pages using PAT
-        run: |
-          cd site
-          git init
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote add origin "https://${{ secrets.DOCS_DEPLOY_TOKEN }}@github.com/degica/komoju-woocommerce.git"
-          git checkout -b gh-pages
-          git add .
-          git commit -m "Deploy docs"
-          git push origin gh-pages --force
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
