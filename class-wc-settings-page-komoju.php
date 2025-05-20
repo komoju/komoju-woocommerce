@@ -304,7 +304,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             return;
         }
 
-        // CPF-264 Force emove linepay settings
+        // CPF-264 Force remove linepay settings
         delete_option('woocommerce_komoju_linepay_settings');
 
         // Clear gateway settings from removed entries
