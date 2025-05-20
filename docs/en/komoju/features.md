@@ -18,7 +18,6 @@ We currently accept the following payment methods:
 - Pay-Easy
 - Japan Bank Transfer
 - PayPay
-- LINE Pay
 - MerPay
 - RakutenPay
 - Paidy

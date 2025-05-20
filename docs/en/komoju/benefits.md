@@ -4,7 +4,7 @@ When enabling KOMOJU Payment Gateway on your store, you will be able to accept p
 
 Our plugin is fully PCI-DSS compliant, so you do not need to worry about regulations and cardholder safety. With 3D-Secure 2.0, you can be rest assured that your payments are secured and authenticated.
 
-You can accept payments with digital wallets such as Alipay, WeChat Pay, PayPay, LINE Pay, Toss, PAYCO, GrabPay, Doku, OVO and many more. Payments with digital wallets give your customers a customised, trusted and convenient payment option.
+You can accept payments with digital wallets such as Alipay, WeChat Pay, PayPay, Toss, PAYCO, GrabPay, Doku, OVO and many more. Payments with digital wallets give your customers a customised, trusted and convenient payment option.
 
 We support businesses that are conducting business cross-border. For the majority of the payment methods we do not require a local entity or bank account. Accept payments wherever you're located, and ship your products worldwide.
 

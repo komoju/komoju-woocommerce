@@ -20,11 +20,10 @@ describe('KOMOJU for WooCommerce: Admin', () => {
     cy.contains('Komoju - Konbini');
     cy.contains('Komoju - Credit Card');
 
-    cy.setupKomoju(['paypay', 'linepay']);
+    cy.setupKomoju(['paypay']);
     cy.clickPaymentTab();
 
     cy.contains('Komoju - PayPay');
-    cy.contains('Komoju - LINE Pay');
   })
 
   it('lets me change the KOMOJU endpoint', () => {
