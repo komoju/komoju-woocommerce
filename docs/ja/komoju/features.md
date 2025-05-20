@@ -18,7 +18,6 @@ KOMOJU は、複数の通貨と多様なローカル決済方法・クレジッ�
 - Pay-Easy
 - 銀行振込（日本）
 - PayPay
-- LINE Pay
 - MerPay
 - RakutenPay
 - Paidy
