@@ -127,7 +127,7 @@ if $INPUT_GENERATE_ZIP; then
   echo "Generating zip file..."
   cd "$SVN_DIR/trunk" || exit
   zip -r "${PWD}/${SLUG}.zip" .
-  echo "::set-output name=zip-path::${PWD}/${SLUG}.zip"
+  echo "zip-path=${PWD}/${SLUG}.zip" >> $GITHUB_OUTPUT
   cp "${PWD}/${SLUG}.zip" $GIT_DIR
   echo "✓ Zip file generated!"
 fi
