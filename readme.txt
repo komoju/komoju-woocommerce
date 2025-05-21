@@ -177,6 +177,10 @@ Go back to your Wordpress instance and set the "Webhook Secret Token" value on t
 
 == Changelog ==
 
+= 3.2.0 =
+
+Removing all references to LINE Pay
+
 = 3.1.9 =
 
 Update readme.txt
