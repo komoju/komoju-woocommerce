@@ -128,9 +128,19 @@ Cypress.Commands.add('setupKomoju', (
     });
   });
 
-  for (const slug of paymentTypes) {
-    cy.get(`input[type="checkbox"][value="${slug}"]`).click();
-  }
+  paymentTypes.forEach(slug => {
+    cy.get('body').then($body => {
+      if ($body.find(`input[type="checkbox"][value="${slug}"]`).length) {
+        cy.get(`input[type="checkbox"][value="${slug}"]`)
+          .click()
+          .then(() => {
+            cy.log(`Komoju payment method checkbox for "${slug}" found and clicked.`);
+          });
+      } else {
+        cy.log(`Komoju payment method checkbox for "${slug}" not found.`);
+      }
+    });
+  });
 
   cy.contains('Save changes').click();
 });

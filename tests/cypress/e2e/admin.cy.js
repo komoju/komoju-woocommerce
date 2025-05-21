@@ -26,6 +26,20 @@ describe('KOMOJU for WooCommerce: Admin', () => {
     cy.contains('Komoju - PayPay');
   })
 
+  it('LINE pay should not exist', () => {
+    cy.setupKomoju(['konbini', 'credit_card']);
+    cy.clickPaymentTab();
+
+    cy.contains('Komoju - Konbini');
+    cy.contains('Komoju - Credit Card');
+
+    cy.setupKomoju(['paypay', 'linepay']);
+    cy.clickPaymentTab();
+
+    cy.contains('Komoju - PayPay')
+    cy.contains('Komoju - LINE Pay').should('not.exist');
+  });
+
   it('lets me change the KOMOJU endpoint', () => {
     cy.visit('/wp-admin/admin.php?page=wc-settings&tab=komoju_settings&section=api_settings');
 
