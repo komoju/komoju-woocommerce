@@ -41,6 +41,10 @@ function woocommerce_komoju_init()
         $komoju_payment_methods = get_option('komoju_woocommerce_payment_methods');
         if (gettype($komoju_payment_methods) == 'array') {
             foreach ($komoju_payment_methods as $payment_method) {
+                // CPF-264 Remove linepay from the list of payment methods
+                if (isset($payment_method['type_slug']) && $payment_method['type_slug'] === 'linepay') {
+                    continue;
+                }
                 $methods[] = new WC_Gateway_Komoju_Single_Slug($payment_method);
             }
         }

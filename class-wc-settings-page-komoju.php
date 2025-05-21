@@ -304,6 +304,9 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             return;
         }
 
+        // CPF-264 Force remove linepay settings
+        delete_option('woocommerce_komoju_linepay_settings');
+
         // Clear gateway settings from removed entries
         if ($old_payment_types) {
             $to_remove = array_diff($old_payment_types, $payment_types);
@@ -370,6 +373,11 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             foreach ($all_payment_methods as $payment_method) {
                 $slug        = $payment_method['type_slug'];
                 $pm_currency = $payment_method['currency'];
+
+                // CPF-264 Remove linepay from the list of payment methods
+                if ($slug === 'linepay') {
+                    continue;
+                }
 
                 // If $slug is not set, register
                 if (!isset($methods_by_slug[$slug])) {
