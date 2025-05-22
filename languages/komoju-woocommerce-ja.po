@@ -242,3 +242,7 @@ msgstr "保留中ステータスを利用する"
 #, php-format
 msgid "Use 'on-hold' status for payments that are authorized on komoju but awaiting capture. If not selected, 'payment pending' status will be used."
 msgstr "承認済みで決済を待っている状態の取引には保留中ステータスをご利用ください。指定されない場合支払い待ちステータスが適用されます。"
+
+#: includes/class-wc-gateway-komoju-single-slug.php:248
+msgid "Payment error:"
+msgstr "決済エラー:"

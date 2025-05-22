@@ -245,7 +245,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
                 'redirect' => $result->redirect_url,
             ];
         } else {
-            wc_add_notice(__('Payment error:', 'woothemes') . $result->error, 'error');
+            wc_add_notice(__('Payment error:', 'komoju-woocommerce') . $result->error, 'error');
         }
     }
 
