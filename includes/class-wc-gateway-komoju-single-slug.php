@@ -137,12 +137,21 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
             $order_total = $this->get_order_total();
         }
 
+        $amount = self::to_cents($order_total, $currency);
+
         $session_params = [
-            'amount'         => self::to_cents($order_total, $currency),
+            'amount'         => $amount,
             'currency'       => $currency,
             'default_locale' => self::get_locale_or_fallback(),
             'metadata'       => [
                 'woocommerce_note' => 'This session is only for rendering inline fields, and will not be completed.',
+            ],
+            'line_items'     => [
+                [
+                    'amount'      => $amount,
+                    'description' => 'Purchase',
+                    'quantity'    => 1,
+                ]
             ],
         ];
 
