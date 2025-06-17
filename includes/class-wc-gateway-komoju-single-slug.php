@@ -151,7 +151,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
                     'amount'      => $amount,
                     'description' => 'Purchase',
                     'quantity'    => 1,
-                ]
+                ],
             ],
         ];
 
