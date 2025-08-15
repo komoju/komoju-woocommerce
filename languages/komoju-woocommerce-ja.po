@@ -3,40 +3,37 @@ msgstr ""
 "Project-Id-Version: komoju-woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-03 01:40+0000\n"
-"PO-Revision-Date: 2020-06-03 11:42+1000\n"
+"PO-Revision-Date: 2025-08-15 13:29+0900\n"
 "Last-Translator: \n"
 "Language-Team: KOMOJU <contact@komoju.com>\n"
 "Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3.1\n"
+"X-Generator: Poedit 3.6\n"
 
-#: class-wc-gateway-komoju.php:36 class-wc-gateway-komoju.php:38
-#: class-wc-gateway-komoju.php:369 class-wc-settings-page-komoju.php:24
-#: includes/class-wc-gateway-komoju-single-slug.php:22
-#: includes/settings-komoju.php:21
+#: class-wc-gateway-komoju.php:36 class-wc-gateway-komoju.php:38 class-wc-gateway-komoju.php:369 class-wc-settings-page-komoju.php:24
+#: includes/class-wc-gateway-komoju-single-slug.php:22 includes/settings-komoju.php:21
 msgid "Komoju"
 msgstr ""
 
+#: includes/class-wc-gateway-komoju-single-slug.php:250
+msgid "A payment processing error has occurred. Please review your input and try again."
+msgstr "決済処理でエラーが発生しました。入力内容をご確認のうえ、再度お試しください。"
+
 #: class-wc-gateway-komoju.php:37
-msgid ""
-"Allows payments by Komoju, dedicated to Japanese online and offline payment "
-"gateways."
-msgstr ""
-"Komoju は日本独自のオンラインと オフラインの決済を提供するゲートウェイです。"
+msgid "Allows payments by Komoju, dedicated to Japanese online and offline payment gateways."
+msgstr "Komoju は日本独自のオンラインと オフラインの決済を提供するゲートウェイです。"
 
 #: class-wc-gateway-komoju.php:100 class-wc-gateway-komoju.php:102
 msgid "Gateway Disabled"
 msgstr "ゲートウェイ無効"
 
-#: class-wc-gateway-komoju.php:100 class-wc-gateway-komoju.php:102
-#: class-wc-gateway-komoju.php:109
+#: class-wc-gateway-komoju.php:100 class-wc-gateway-komoju.php:102 class-wc-gateway-komoju.php:109
 msgid "Komoju does not support your store currency."
 msgstr "Komoju はあなたのストアの通貨をサポートしていません"
 
-#: class-wc-gateway-komoju.php:152 class-wc-gateway-komoju.php:154
-#: class-wc-gateway-komoju.php:270
+#: class-wc-gateway-komoju.php:152 class-wc-gateway-komoju.php:154 class-wc-gateway-komoju.php:270
 msgid "Method of payment:"
 msgstr "決済方法:"
 
@@ -76,43 +73,34 @@ msgstr "変更"
 msgid "Reset"
 msgstr "初期化"
 
-#: includes/class-wc-gateway-komoju-ipn-handler.php:94
-#: includes/class-wc-gateway-komoju-ipn-handler.php:108
+#: includes/class-wc-gateway-komoju-ipn-handler.php:94 includes/class-wc-gateway-komoju-ipn-handler.php:108
 #: includes/class-wc-gateway-komoju-ipn-handler.php:111
 #, php-format
 msgid "Validation error: Komoju currencies do not match (code %s)."
 msgstr "エラー: 通貨が不正です (code %s)。"
 
-#: includes/class-wc-gateway-komoju-ipn-handler.php:108
-#: includes/class-wc-gateway-komoju-ipn-handler.php:123
+#: includes/class-wc-gateway-komoju-ipn-handler.php:108 includes/class-wc-gateway-komoju-ipn-handler.php:123
 #: includes/class-wc-gateway-komoju-ipn-handler.php:126
 #, php-format
 msgid "Validation error: Komoju amounts do not match (total %s)."
 msgstr "エラー: 金額が不正です (total %s)。"
 
-#: includes/class-wc-gateway-komoju-ipn-handler.php:128
-#: includes/class-wc-gateway-komoju-ipn-handler.php:144
+#: includes/class-wc-gateway-komoju-ipn-handler.php:128 includes/class-wc-gateway-komoju-ipn-handler.php:144
 #: includes/class-wc-gateway-komoju-ipn-handler.php:147
 msgid "IPN payment captured"
 msgstr "IPN 決済が完了"
 
-#: includes/class-wc-gateway-komoju-ipn-handler.php:136
-#: includes/class-wc-gateway-komoju-ipn-handler.php:152
+#: includes/class-wc-gateway-komoju-ipn-handler.php:136 includes/class-wc-gateway-komoju-ipn-handler.php:152
 #: includes/class-wc-gateway-komoju-ipn-handler.php:155
 #, php-format
 msgid "Payment pending: %s"
 msgstr "決済保留中: %s"
 
-#: includes/class-wc-gateway-komoju-ipn-handler.php:153
-#: includes/class-wc-gateway-komoju-ipn-handler.php:162
-#: includes/class-wc-gateway-komoju-ipn-handler.php:165
-#: includes/class-wc-gateway-komoju-ipn-handler.php:177
-#: includes/class-wc-gateway-komoju-ipn-handler.php:181
-#: includes/class-wc-gateway-komoju-ipn-handler.php:187
-#: includes/class-wc-gateway-komoju-ipn-handler.php:188
-#: includes/class-wc-gateway-komoju-ipn-handler.php:190
-#: includes/class-wc-gateway-komoju-ipn-handler.php:195
-#: includes/class-wc-gateway-komoju-ipn-handler.php:201
+#: includes/class-wc-gateway-komoju-ipn-handler.php:153 includes/class-wc-gateway-komoju-ipn-handler.php:162
+#: includes/class-wc-gateway-komoju-ipn-handler.php:165 includes/class-wc-gateway-komoju-ipn-handler.php:177
+#: includes/class-wc-gateway-komoju-ipn-handler.php:181 includes/class-wc-gateway-komoju-ipn-handler.php:187
+#: includes/class-wc-gateway-komoju-ipn-handler.php:188 includes/class-wc-gateway-komoju-ipn-handler.php:190
+#: includes/class-wc-gateway-komoju-ipn-handler.php:195 includes/class-wc-gateway-komoju-ipn-handler.php:201
 #: includes/class-wc-gateway-komoju-ipn-handler.php:202
 #, php-format
 msgid "Payment %s via IPN."
@@ -136,9 +124,7 @@ msgstr "ユーザーから見るコントロールのタイトルです。"
 
 #: includes/settings-komoju.php:72
 #, php-format
-msgid ""
-"Default url for the webhook is %s. Use this if you're not sure what it "
-"should be."
+msgid "Default url for the webhook is %s. Use this if you're not sure what it should be."
 msgstr "Webhook のデフォルト URL は %s です。"
 
 #: includes/settings-komoju.php:74 includes/settings-komoju.php:75
@@ -171,11 +157,8 @@ msgstr "ウェブフックシークレットトークン"
 
 #: includes/settings-komoju.php:90
 #, php-format
-msgid ""
-"Specify a special callback url (or leave this field empty if you don't know "
-"what it is). Default url is %s"
-msgstr ""
-"コールバックURLを指定 (もし分からない場合は空欄でも可能) 。デフォルトURL  %s"
+msgid "Specify a special callback url (or leave this field empty if you don't know what it is). Default url is %s"
+msgstr "コールバックURLを指定 (もし分からない場合は空欄でも可能) 。デフォルトURL  %s"
 
 #: includes/settings-komoju.php:91
 msgid "Please enter your Komoju Webhook Secret Token"
@@ -194,19 +177,13 @@ msgid "Invoice Prefix"
 msgstr "請求書の先頭文字"
 
 #: includes/settings-komoju.php:98 includes/settings-komoju.php:103
-msgid ""
-"Please enter a prefix for your invoice numbers. If you use your Komoju "
-"account for multiple stores ensure this prefix is unique."
+msgid "Please enter a prefix for your invoice numbers. If you use your Komoju account for multiple stores ensure this prefix is unique."
 msgstr "請求書の先頭文字を入力してください。"
 
 #: includes/settings-komoju.php:98
 #, php-format
-msgid ""
-"When checked, your Komoju sandbox will be used in order to test payments. "
-"Sign up for a developer account <a href=\"%s\">here</a>."
-msgstr ""
-"支払った際、Komoju サンドボックス上でテストの決済が実行されます。 開発用アカ"
-"ウント登録は<a href=\"%s\">こちら</a> 。"
+msgid "When checked, your Komoju sandbox will be used in order to test payments. Sign up for a developer account <a href=\"%s\">here</a>."
+msgstr "支払った際、Komoju サンドボックス上でテストの決済が実行されます。 開発用アカウント登録は<a href=\"%s\">こちら</a> 。"
 
 #: includes/settings-komoju.php:103 includes/settings-komoju.php:108
 msgid "Debug Log"
