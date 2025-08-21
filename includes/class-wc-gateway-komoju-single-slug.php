@@ -245,14 +245,14 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
                 'customer_email'  => $order->get_billing_email(),
                 'payment_details' => $token,
             ]);
-        
+
             $order->set_transaction_id($session->payment_data->external_order_num);
             $order->save();
-
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             wc_add_notice(__('A payment processing error has occurred. Please review your input and try again.', 'komoju-woocommerce'), 'error');
+
             return ['result' => 'failure'];
-        } 
+        }
 
         if ($result->redirect_url) {
             return [
