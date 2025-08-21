@@ -17,7 +17,7 @@ msgstr ""
 msgid "Komoju"
 msgstr ""
 
-#: includes/class-wc-gateway-komoju-single-slug.php:250
+#: includes/class-wc-gateway-komoju-single-slug.php:252
 msgid "A payment processing error has occurred. Please review your input and try again."
 msgstr "決済処理でエラーが発生しました。入力内容をご確認のうえ、再度お試しください。"
 
