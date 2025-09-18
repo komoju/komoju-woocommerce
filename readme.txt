@@ -177,6 +177,14 @@ Go back to your Wordpress instance and set the "Webhook Secret Token" value on t
 
 == Changelog ==
 
+= 3.2.2 =
+
+Update readme.txt
+
+= 3.2.1 =
+
+Prevent raw JSON error messages from showing
+
 = 3.2.0 =
 
 Removing all references to LINE Pay
