@@ -222,7 +222,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         $order = wc_get_order($order_id);
         // If we have a token from <komoju-fields>, we can process payment immediately.
         // Otherwise we will redirect to the KOMOJU hosted page.
-        $token = sanitize_text_field($_POST['komoju_payment_token']);
+        $token = sanitize_text_field( isset( $_POST['komoju_payment_token'] ) ? $_POST['komoju_payment_token'] : '' );
 
         // Gimmick: If there is a KOMOJU payment UUID already set for the order, try to cancel the preceding payment.
         // Some considerations:
