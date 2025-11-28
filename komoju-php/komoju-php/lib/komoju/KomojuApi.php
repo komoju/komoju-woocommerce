@@ -100,10 +100,11 @@ class KomojuApi
     private function post($uri, $payload)
     {
         $payload['fraud_details'] = [
-            'customer_ip'        => $_SERVER['REMOTE_ADDR'],
+            // Null-coalesce to avoid undefined index notices in logs.
+            'customer_ip'        => $_SERVER['REMOTE_ADDR'] ?? '',
             'customer_email'     => $payload['customer_email'] ?? '',
-            'browser_language'   => $_SERVER['HTTP_ACCEPT_LANGUAGE'],
-            'browser_user_agent' => $_SERVER['HTTP_USER_AGENT'],
+            'browser_language'   => $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '',
+            'browser_user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
         ];
 
         $ch        = curl_init($this->endpoint . $uri);
