@@ -177,6 +177,10 @@ Go back to your Wordpress instance and set the "Webhook Secret Token" value on t
 
 == Changelog ==
 
+= 3.2.4 =
+
+Supress non-critical error messages
+
 = 3.2.3 =
 
 Supress non-critical error messages
