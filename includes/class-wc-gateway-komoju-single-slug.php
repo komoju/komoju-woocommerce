@@ -190,7 +190,14 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         // We lazily fetch one session to be shared by all payment methods with dynamic fields.
         static $checkout_session;
         if (is_null($checkout_session)) {
-            $checkout_session = $this->create_session_for_fields();
+            try {
+                $checkout_session = $this->create_session_for_fields();
+            } catch (KomojuExceptionBadServer|KomojuExceptionBadJson $e) {
+                $checkout_session = false;
+            }
+        }
+        if (!$checkout_session) {
+            return; // Gracefully degrade: skip inline fields, fall back to redirect-based payment
         }
         $payment_type = $this->payment_method['type_slug']; ?>
         <komoju-fields
