@@ -119,9 +119,9 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
 
         if ($refund && $refund->amount == self::to_cents($amount, $currency)) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -266,9 +266,8 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
                 'result'   => 'success',
                 'redirect' => $result->redirect_url,
             ];
-        } else {
-            wc_add_notice(__('Payment error:', 'woothemes') . $result->error, 'error');
         }
+        wc_add_notice(__('Payment error:', 'woothemes') . $result->error, 'error');
     }
 
     public function default_title()

@@ -265,9 +265,9 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
 
         if (in_array($lang, $supported_langs)) {
             return $lang;
-        } else {
-            return $fallback_lang;
         }
+
+        return $fallback_lang;
     }
 
     /**
@@ -330,9 +330,9 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
 
         if (in_array(strtolower($currency), self::no_decimal_currencies())) {
             return absint($total);
-        } else {
-            return absint(wc_format_decimal((float) $total * 100, wc_get_price_decimals())); // In cents.
         }
+
+        return absint(wc_format_decimal((float) $total * 100, wc_get_price_decimals())); // In cents.
     }
 
     public static function no_decimal_currencies()
