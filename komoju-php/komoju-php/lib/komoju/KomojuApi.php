@@ -70,6 +70,8 @@ class KomojuApi
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers());
         curl_setopt($ch, CURLOPT_USERPWD, $this->secretKey . ':');
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         $result = curl_exec($ch);
         if (curl_errno($ch)) {
             $error = curl_error($ch);
@@ -114,6 +116,8 @@ class KomojuApi
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers());
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_USERPWD, $this->secretKey . ':');
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         $result = curl_exec($ch);
         if (curl_errno($ch)) {
             $error = curl_error($ch);

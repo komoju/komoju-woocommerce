@@ -177,6 +177,10 @@ Go back to your Wordpress instance and set the "Webhook Secret Token" value on t
 
 == Changelog ==
 
+= 3.2.5 =
+
+Add cURL timeouts and graceful error handling to prevent checkout errors
+
 = 3.2.4 =
 
 Supress non-critical error messages

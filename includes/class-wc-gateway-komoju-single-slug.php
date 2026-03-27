@@ -119,9 +119,9 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
 
         if ($refund && $refund->amount == self::to_cents($amount, $currency)) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -190,7 +190,14 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         // We lazily fetch one session to be shared by all payment methods with dynamic fields.
         static $checkout_session;
         if (is_null($checkout_session)) {
-            $checkout_session = $this->create_session_for_fields();
+            try {
+                $checkout_session = $this->create_session_for_fields();
+            } catch (KomojuExceptionBadServer|KomojuExceptionBadJson $e) {
+                $checkout_session = false;
+            }
+        }
+        if (!$checkout_session) {
+            return; // Gracefully degrade: skip inline fields, fall back to redirect-based payment
         }
         $payment_type = $this->payment_method['type_slug']; ?>
         <komoju-fields
@@ -259,9 +266,8 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
                 'result'   => 'success',
                 'redirect' => $result->redirect_url,
             ];
-        } else {
-            wc_add_notice(__('Payment error:', 'woothemes') . $result->error, 'error');
         }
+        wc_add_notice(__('Payment error:', 'woothemes') . $result->error, 'error');
     }
 
     public function default_title()
