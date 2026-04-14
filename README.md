@@ -4,8 +4,8 @@ Easily accept local payment methods around the world with [KOMOJU](https://komoj
 
 ## Documentation & Getting Started
 
-- Japanese: [KOMOJU-WooCommerce ユーザーガイド](https://tech.degica.com/komoju-woocommerce/user_guide/getting_started/)
-- English: [KOMOJU-WooCommerce Plugin: Getting Started](https://tech.degica.com/komoju-woocommerce/en/user_guide/getting_started/)
+- Japanese: [KOMOJU-WooCommerce ユーザーガイド](https://ja.doc.komoju.com/docs/getting-started-with-woocommerce)
+- English: [KOMOJU-WooCommerce Plugin: Getting Started](https://doc.komoju.com/docs/getting-started-with-woocommerce)
 
 The above guides cover:
 - Installation instructions
