@@ -103,12 +103,8 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
             return;
         }
 
-        $endpoint = $this->komoju_api->endpoint;
-        if ($endpoint === 'https://komoju.com') {
-            $url = 'https://app.komoju.com/merchant/payments/' . $payment_id;
-        } else {
-            $url = $endpoint . '/merchant/payments/' . $payment_id;
-        } ?>
+        $url = preg_replace('#(https?://)#', '$1app.', $this->komoju_api->endpoint)
+             . '/merchant/payments/' . $payment_id; ?>
         <p>
             <a href="<?php echo esc_attr($url); ?>">
                 <?php echo __('View payment on KOMOJU', 'komoju-woocommerce'); ?>
