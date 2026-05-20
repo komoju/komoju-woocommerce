@@ -202,7 +202,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function payment_status_captured($order, $webhookEvent)
     {
-        if ($order->has_status(['processing', 'completed'])) {
+        if ($order->is_paid()) {
             WC_Gateway_Komoju::log('Aborting, Order #' . $order->get_id() . ' is already complete.');
 
             return;
@@ -238,6 +238,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
     {
         if (!$this->is_order_cancellable($order, $webhookEvent)) {
             WC_Gateway_Komoju::log('Aborting cancelled webhook for Order #' . $order->get_id() . ': order is not cancellable.');
+            $order->add_order_note(__('KOMOJU cancellation received but ignored — does not match current payment session.', 'komoju-woocommerce'));
 
             return;
         }
@@ -294,6 +295,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
     {
         if ($order->has_status(['processing', 'completed', 'refunded'])) {
             WC_Gateway_Komoju::log('Aborting, Order #' . $order->get_id() . ' is already beyond authorized.');
+            $order->add_order_note(__('KOMOJU authorization received but ignored — payment already captured.', 'komoju-woocommerce'));
 
             return;
         }
