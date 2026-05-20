@@ -256,7 +256,6 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
                 'customer_email'  => $order->get_billing_email(),
                 'payment_details' => $token,
             ]);
-
         } catch (Throwable $e) {
             wc_add_notice(__('A payment processing error has occurred. Please review your input and try again.', 'komoju-woocommerce'), 'error');
 
