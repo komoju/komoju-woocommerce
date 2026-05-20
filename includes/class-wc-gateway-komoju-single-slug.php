@@ -239,7 +239,11 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         // - If the metadata is not set, there is nothing we can do anyway.
         $komoju_payment_id = $order->get_meta('komoju_payment_id');
         if (!empty($komoju_payment_id)) {
-            $this->komoju_api->cancel($komoju_payment_id, []);
+            try {
+                $this->komoju_api->cancel($komoju_payment_id, []);
+            } catch (KomojuExceptionBadServer|KomojuExceptionBadJson $e) {
+                // Best-effort: the payment may already be cancelled or expired.
+            }
         }
 
         if (!$token || $token === '') {
