@@ -121,12 +121,13 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
 
         $order = $this->get_komoju_order($webhookEvent, $this->invoice_prefix);
         if ($order) {
-            $this->save_komoju_meta_data($order, $webhookEvent);
             switch ($webhookEvent->status()) {
                 case 'captured':
+                    $this->save_komoju_meta_data($order, $webhookEvent);
                     $this->payment_status_captured($order, $webhookEvent);
                     break;
                 case 'authorized':
+                    $this->save_komoju_meta_data($order, $webhookEvent);
                     $this->payment_status_authorized($order, $webhookEvent);
                     break;
                 case 'expired':
@@ -136,6 +137,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
                     $this->payment_status_cancelled($order, $webhookEvent);
                     break;
                 case 'refunded':
+                    $this->save_komoju_meta_data($order, $webhookEvent);
                     $this->payment_status_refunded($order, $webhookEvent);
                     break;
                 default:
@@ -202,7 +204,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function payment_status_captured($order, $webhookEvent)
     {
-        if ($order->has_status('captured')) {
+        if ($order->has_status(['processing', 'completed'])) {
             WC_Gateway_Komoju::log('Aborting, Order #' . $order->get_id() . ' is already complete.');
             exit;
         }
@@ -290,6 +292,10 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function payment_status_authorized($order, $webhookEvent)
     {
+        if ($order->has_status(['processing', 'completed', 'refunded'])) {
+            return;
+        }
+
         if ($this->useOnHold === 'yes') {
             $order->update_status('on-hold');
         } else {
