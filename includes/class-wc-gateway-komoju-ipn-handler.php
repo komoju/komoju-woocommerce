@@ -252,23 +252,25 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function is_order_cancellable($order, $webhookEvent)
     {
+        $skippable_statuses = ['completed', 'processing', 'refunded'];
+        if ($order->has_status($skippable_statuses)) {
+            return false;
+        }
+
+        // Match webhook to the current checkout session to ignore stale cancellations
+        // from previous payment attempts (e.g. customer cancelled then retried).
+        $komoju_session_id = $order->get_meta('komoju_session_id');
+        if (!empty($komoju_session_id)) {
+            return $komoju_session_id === $webhookEvent->session_id();
+        }
+
+        // Legacy: orders created before session tracking used transaction_id
         $transaction_id = $order->get_transaction_id();
         if (empty($transaction_id)) {
             return false;
         }
-        if ($transaction_id == $webhookEvent->uuid()) {
-            return true;
-        }
 
-        // for backward compatibility
-        // Order Statuses
-        //   - processing: Payment received (paid) and stock has been reduced;
-        //   - Completed — Order fulfilled and complete – requires no further action.
-        //   - Refunded — Refunded by an admin – no further action required.
-        // @see https://woocommerce.com/document/managing-orders/
-        $skippable_statuses = ['completed', 'processing', 'refunded'];
-
-        return $transaction_id == $webhookEvent->external_order_num() && !$order->has_status($skippable_statuses);
+        return $transaction_id == $webhookEvent->uuid() || $transaction_id == $webhookEvent->external_order_num();
     }
 
     /**
@@ -351,7 +353,10 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
             $order->update_meta_data('Additional info', wc_clean(print_r($webhookEvent->additional_information(), true)));
         }
         if (!empty($webhookEvent->uuid())) {
-            $order->update_meta_data('komoju_payment_id', $webhookEvent->uuid(), true);
+            $komoju_session_id = $order->get_meta('komoju_session_id');
+            if (empty($komoju_session_id) || $komoju_session_id === $webhookEvent->session_id()) {
+                $order->update_meta_data('komoju_payment_id', $webhookEvent->uuid(), true);
+            }
         }
         $order->save();
     }
