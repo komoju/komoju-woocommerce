@@ -236,41 +236,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function payment_status_cancelled($order, $webhookEvent)
     {
-        if (!$this->is_order_cancellable($order, $webhookEvent)) {
-            WC_Gateway_Komoju::log('Aborting cancelled webhook for Order #' . $order->get_id() . ': order is not cancellable.');
-
-            return;
-        }
-
-        $order->update_status('cancelled', sprintf(__('Payment %s via IPN.', 'komoju-woocommerce'), wc_clean($webhookEvent->status())));
-    }
-
-    /**
-     * @param WC_Order $order
-     *
-     * @return bool return true if the order is cancellable
-     */
-    protected function is_order_cancellable($order, $webhookEvent)
-    {
-        $skippable_statuses = ['completed', 'processing', 'refunded'];
-        if ($order->has_status($skippable_statuses)) {
-            return false;
-        }
-
-        // Match webhook to the current checkout session to ignore stale cancellations
-        // from previous payment attempts (e.g. customer cancelled then retried).
-        $komoju_session_id = $order->get_meta('komoju_session_id');
-        if (!empty($komoju_session_id)) {
-            return $komoju_session_id === $webhookEvent->session_id();
-        }
-
-        // Legacy: orders created before session tracking used transaction_id
-        $transaction_id = $order->get_transaction_id();
-        if (empty($transaction_id)) {
-            return false;
-        }
-
-        return $transaction_id == $webhookEvent->uuid() || $transaction_id == $webhookEvent->external_order_num();
+        WC_Gateway_Komoju::log('Payment cancelled for Order #' . $order->get_id() . '. Order status not updated — customer may retry.');
     }
 
     /**
@@ -281,7 +247,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function payment_status_expired($order, $webhookEvent)
     {
-        $this->payment_status_cancelled($order, $webhookEvent);
+        WC_Gateway_Komoju::log('Payment expired for Order #' . $order->get_id() . '. Order status not updated — customer may retry.');
     }
 
     /**
