@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, spot]
     steps:
       - name: Check out
         uses: actions/checkout@v4
@@ -41,7 +41,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, on-demand]
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

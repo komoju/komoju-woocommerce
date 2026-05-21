@@ -7,7 +7,7 @@ on:
 jobs:
   tag:
     name: Deploy Wordpress Plugin
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, on-demand]
     steps:
     - name: setup
       uses: actions/checkout@master

@@ -9,7 +9,7 @@ on:
 
 jobs:
   cypress-tests:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, spot]
     steps:
       - uses: actions/checkout@v4
       - uses: hoverkraft-tech/compose-action@v2.0.2
@@ -27,7 +27,7 @@ jobs:
           name: screenshots
           path: tests/cypress/screenshots/
   build:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, spot]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

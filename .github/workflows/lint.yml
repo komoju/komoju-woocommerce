@@ -9,7 +9,9 @@ on:
 
 jobs:
   php-cs-fixer:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, spot]
+    env:
+      COMPOSER_ALLOW_SUPERUSER: 1
     steps:
       - uses: actions/checkout@v2
       - name: Setup PHP
