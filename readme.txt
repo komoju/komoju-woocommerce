@@ -1,12 +1,12 @@
 === KOMOJU Payments ===
-Contributors: degica
+Contributors: KOMOJU
 Tags: WooCommerce,Payment Gateway,Komoju
 Requires at least: 6.0
-Tested up to: 6.7.2
+Tested up to: 6.9.4
 Stable tag: trunk
 Requires PHP: 7.2
 WC requires at least: 6.0.0
-WC tested up to: 9.7.1
+WC tested up to: 10.7.0
 License: MIT
 License URI: https://directory.fsf.org/wiki/License:X11
 
@@ -177,6 +177,14 @@ Go back to your Wordpress instance and set the "Webhook Secret Token" value on t
 
 == Changelog ==
 
+= 3.2.6 =
+
+Updated link to KOMOJU payment page on order dashboard to use the "/merchant" path
+Fixed bug where a customer who returned to the checkout page could not create another payment for the same order
+Added "komoju_session_id" as metadata on the order page
+Updated compatibility for WordPress 6.9.4
+Upgraded support for WooCommerce 10.7.0
+
 = 3.2.5 =
 
 Add cURL timeouts and graceful error handling to prevent checkout errors
@@ -208,7 +216,7 @@ Update readme.txt
 = 3.1.8 =
 
 Added Quick Start Guide Link
-Updated compatibility for WordPress 6.7.2.
+Updated compatibility for WordPress 6.7.2
 Upgraded support for WooCommerce 9.7.1
 Fix: Hide field-related elements when inline fields are disabled
 

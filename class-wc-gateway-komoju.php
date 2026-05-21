@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  *
  * @extends     WC_Payment_Gateway
  *
- * @version     3.2.5
+ * @version     3.2.6
  *
  * @author      Komoju
  */
@@ -147,6 +147,10 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
     public function process_payment($order_id, $payment_type = null)
     {
         $session = $this->create_session_for_order($order_id, $payment_type);
+
+        $order = wc_get_order($order_id);
+        $order->update_meta_data('komoju_session_id', $session->id);
+        $order->save();
 
         return [
             'result'   => 'success',

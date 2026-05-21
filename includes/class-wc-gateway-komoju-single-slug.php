@@ -252,7 +252,11 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
 
         try {
             $session = $this->create_session_for_order($order_id, $payment_type);
-            $result  = $this->komoju_api->paySession($session->id, [
+
+            $order->update_meta_data('komoju_session_id', $session->id);
+            $order->save();
+
+            $result = $this->komoju_api->paySession($session->id, [
                 'customer_email'  => $order->get_billing_email(),
                 'payment_details' => $token,
             ]);

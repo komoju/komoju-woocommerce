@@ -202,9 +202,10 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function payment_status_captured($order, $webhookEvent)
     {
-        if ($order->has_status('captured')) {
+        if ($order->is_paid()) {
             WC_Gateway_Komoju::log('Aborting, Order #' . $order->get_id() . ' is already complete.');
-            exit;
+
+            return;
         }
 
         if ($webhookEvent->currency() != $order->get_currency()) {
@@ -235,40 +236,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function payment_status_cancelled($order, $webhookEvent)
     {
-        if (!$this->is_order_cancellable($order, $webhookEvent)) {
-            $transaction_id     = $order->get_transaction_id();
-            $external_order_num = $webhookEvent->external_order_num();
-            WC_Gateway_Komoju::log('Aborting, transaction_id: ' . $transaction_id . ' and external_order_num: ' . $external_order_num . ' do not match.');
-            exit;
-        }
-
-        $order->update_status('cancelled', sprintf(__('Payment %s via IPN.', 'komoju-woocommerce'), wc_clean($webhookEvent->status())));
-    }
-
-    /**
-     * @param WC_Order $order
-     *
-     * @return bool return true if the order is cancellable
-     */
-    protected function is_order_cancellable($order, $webhookEvent)
-    {
-        $transaction_id = $order->get_transaction_id();
-        if (empty($transaction_id)) {
-            return false;
-        }
-        if ($transaction_id == $webhookEvent->uuid()) {
-            return true;
-        }
-
-        // for backward compatibility
-        // Order Statuses
-        //   - processing: Payment received (paid) and stock has been reduced;
-        //   - Completed — Order fulfilled and complete – requires no further action.
-        //   - Refunded — Refunded by an admin – no further action required.
-        // @see https://woocommerce.com/document/managing-orders/
-        $skippable_statuses = ['completed', 'processing', 'refunded'];
-
-        return $transaction_id == $webhookEvent->external_order_num() && !$order->has_status($skippable_statuses);
+        WC_Gateway_Komoju::log('Payment cancelled for Order #' . $order->get_id() . '. Order status not updated — customer may retry.');
     }
 
     /**
@@ -279,7 +247,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function payment_status_expired($order, $webhookEvent)
     {
-        $this->payment_status_cancelled($order, $webhookEvent);
+        WC_Gateway_Komoju::log('Payment expired for Order #' . $order->get_id() . '. Order status not updated — customer may retry.');
     }
 
     /**
@@ -290,6 +258,12 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function payment_status_authorized($order, $webhookEvent)
     {
+        if ($order->is_paid() || $order->has_status('refunded')) {
+            WC_Gateway_Komoju::log('Aborting, Order #' . $order->get_id() . ' is already beyond authorized.');
+
+            return;
+        }
+
         if ($this->useOnHold === 'yes') {
             $order->update_status('on-hold');
         } else {
@@ -351,7 +325,10 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
             $order->update_meta_data('Additional info', wc_clean(print_r($webhookEvent->additional_information(), true)));
         }
         if (!empty($webhookEvent->uuid())) {
-            $order->update_meta_data('komoju_payment_id', $webhookEvent->uuid(), true);
+            $komoju_session_id = $order->get_meta('komoju_session_id');
+            if (empty($komoju_session_id) || $komoju_session_id === $webhookEvent->session_id()) {
+                $order->update_meta_data('komoju_payment_id', $webhookEvent->uuid(), true);
+            }
         }
         $order->save();
     }
