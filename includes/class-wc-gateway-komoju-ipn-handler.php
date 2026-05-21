@@ -258,7 +258,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function payment_status_authorized($order, $webhookEvent)
     {
-        if ($order->has_status(['processing', 'completed', 'refunded'])) {
+        if ($order->is_paid() || $order->has_status('refunded')) {
             WC_Gateway_Komoju::log('Aborting, Order #' . $order->get_id() . ' is already beyond authorized.');
 
             return;
