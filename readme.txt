@@ -4,7 +4,7 @@ Tags: WooCommerce,Payment Gateway,Komoju
 Requires at least: 6.0
 Tested up to: 7.0
 Stable tag: 3.2.7
-Requires PHP: 7.2
+Requires PHP: 7.4
 WC requires at least: 6.0.0
 WC tested up to: 10.7.0
 License: GPL-2.0-or-later

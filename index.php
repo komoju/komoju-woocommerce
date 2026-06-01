@@ -14,7 +14,7 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 * Author URI: https://komoju.com
 * Version: 3.2.7
 * Requires at least: 6.0
-* Requires PHP: 7.2
+* Requires PHP: 7.4
 * Text Domain: komoju-japanese-payments
 * Domain Path: /languages
 * License: GPL-2.0-or-later
