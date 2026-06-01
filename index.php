@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 
 /*
@@ -8,7 +12,11 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
  * Description: Extends WooCommerce with KOMOJU gateway.
  * Author: KOMOJU
  * Author URI: https://komoju.com
- * Version: 3.2.6
+ * Version: 3.2.7
+ * Text Domain: komoju-japanese-payments
+ * Domain Path: /languages
+ * License: GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * WC requires at least: 6.0
  * WC tested up to: 10.7.0
  */
@@ -24,10 +32,7 @@ add_action('plugins_loaded', 'woocommerce_komoju_init', 0);
 
 function woocommerce_komoju_init()
 {
-    /*
-     * Localisation
-     */
-    load_plugin_textdomain('komoju-woocommerce', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    // Translations are loaded automatically by WordPress for plugins hosted on WordPress.org.
 
     /**
      * Add the Gateway to WooCommerce
@@ -78,7 +83,8 @@ function woocommerce_komoju_init()
             $komoju_fields_js = 'https://multipay.komoju.com/fields.js';
         }
 
-        wp_enqueue_script('komoju-fields', $komoju_fields_js);
+        wp_enqueue_script('komoju-fields', $komoju_fields_js, [], null, true); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+        wp_script_add_data('komoju-fields', 'type', 'module');
     }
 
     function woocommerce_komoju_load_script_as_module($tag, $handle, $src)
@@ -87,7 +93,7 @@ function woocommerce_komoju_init()
             return $tag;
         }
 
-        return '<script type="module" src="' . esc_attr($src) . '"></script>';
+        return '<script type="module" src="' . esc_url($src) . '"></script>' . "\n"; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
     }
 
     function woocommerce_komoju_handle_http_request()
@@ -96,7 +102,7 @@ function woocommerce_komoju_init()
         WC()->payment_gateways()->payment_gateways();
 
         // When WC_Gateway_Komoju_IPN_Handler is instantiated, this filter should be registered.
-        $handled = apply_filters('invoke_komoju_ipn_handler', false);
+        $handled = apply_filters('komoju_japanese_payments_invoke_ipn_handler', false);
 
         // Catch unexpected case where the filter is NOT registered
         if (!$handled) {
@@ -127,9 +133,9 @@ function woocommerce_komoju_init()
         require_once 'includes/class-wc-gateway-komoju-block.php';
     }
 
-    add_action('woocommerce_blocks_loaded', 'register_komoju_payment_method_type');
+    add_action('woocommerce_blocks_loaded', 'komoju_japanese_payments_register_block_types');
 
-    function register_komoju_payment_method_type()
+    function komoju_japanese_payments_register_block_types()
     {
         if (!class_exists('Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType')) {
             return;

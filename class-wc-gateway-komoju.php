@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  *
  * @extends     WC_Payment_Gateway
  *
- * @version     3.2.6
+ * @version     3.2.7
  *
  * @author      Komoju
  */
@@ -57,8 +57,8 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
     public function __construct()
     {
         $this->id                   = $this->id ? $this->id : 'komoju';
-        $this->method_title         = $this->method_title ? $this->method_title : __('Komoju', 'komoju-woocommerce');
-        $this->method_description   = __("Includes all Komoju payment methods. Not recommended, since the name 'KOMOJU' is not recognized by most customers and refunds through WooCommerce are not supported.", 'komoju-woocommerce');
+        $this->method_title         = $this->method_title ? $this->method_title : __('Komoju', 'komoju-japanese-payments');
+        $this->method_description   = __("Includes all Komoju payment methods. Not recommended, since the name 'KOMOJU' is not recognized by most customers and refunds through WooCommerce are not supported.", 'komoju-japanese-payments');
         $this->debug                = 'yes' === $this->get_option_compat('debug_log', 'debug');
         $this->invoice_prefix       = $this->get_option_compat('invoice_prefix', 'invoice_prefix');
         $this->secretKey            = $this->get_option_compat('secret_key', 'secretKey');
@@ -106,8 +106,8 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
         $url = preg_replace('#(https?://)#', '$1app.', $this->komoju_api->endpoint)
              . '/merchant/payments/' . $payment_id; ?>
         <p>
-            <a href="<?php echo esc_attr($url); ?>">
-                <?php echo __('View payment on KOMOJU', 'komoju-woocommerce'); ?>
+            <a href="<?php echo esc_url($url); ?>">
+                <?php echo esc_html__('View payment on KOMOJU', 'komoju-japanese-payments'); ?>
             </a>
         </p>
 <?php
@@ -316,13 +316,14 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
      */
     protected function default_title()
     {
-        return __('Komoju', 'komoju-woocommerce');
+        return __('Komoju', 'komoju-japanese-payments');
     }
 
     protected function default_description()
     {
         return sprintf(
-            __('%s payments powered by KOMOJU', 'komoju-woocommerce'),
+            /* translators: %s: payment method name */
+            __('%s payments powered by KOMOJU', 'komoju-japanese-payments'),
             $this->default_title()
         );
     }

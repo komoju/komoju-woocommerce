@@ -2,15 +2,17 @@
 Contributors: KOMOJU
 Tags: WooCommerce,Payment Gateway,Komoju
 Requires at least: 6.0
-Tested up to: 6.9.4
-Stable tag: trunk
+Tested up to: 7.0
+Stable tag: 3.2.7
 Requires PHP: 7.2
 WC requires at least: 6.0.0
 WC tested up to: 10.7.0
-License: MIT
-License URI: https://directory.fsf.org/wiki/License:X11
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
+
+Accept payments in Japan, South-Korea, South-East Asia and Europe with KOMOJU. Supports credit cards, convenience store payments, digital wallets and more.
 
 ## Quick Start Guide
 

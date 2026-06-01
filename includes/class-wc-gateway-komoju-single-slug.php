@@ -27,7 +27,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         $this->payment_method = $payment_method;
         $this->id             = 'komoju_' . $slug;
         $this->has_fields     = $this->should_use_inline_fields($slug);
-        $this->method_title   = __('Komoju', 'komoju-woocommerce') . ' - ' . $this->default_title();
+        $this->method_title   = __('Komoju', 'komoju-japanese-payments') . ' - ' . $this->default_title();
 
         if ($this->get_option('showIcon') == 'yes') {
             $this->icon = "https://komoju.com/payment_methods/$slug.svg";
@@ -72,7 +72,8 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         }
 
         $this->method_description = sprintf(
-            __('%s payments powered by KOMOJU', 'komoju-woocommerce'),
+            /* translators: %s: payment method name */
+            __('%s payments powered by KOMOJU', 'komoju-japanese-payments'),
             $this->default_title()
         );
     }
@@ -202,7 +203,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         $payment_type = $this->payment_method['type_slug']; ?>
         <komoju-fields
             token name="komoju_payment_token"
-            komoju-api="<?php echo KomojuApi::endpoint(); ?>"
+            komoju-api="<?php echo esc_url(KomojuApi::endpoint()); ?>"
             publishable-key="<?php echo esc_attr($this->publishableKey); ?>"
             session="<?php echo esc_attr(json_encode($checkout_session)); ?>"
             payment-type="<?php echo esc_attr($payment_type); ?>"
@@ -229,7 +230,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         $order = wc_get_order($order_id);
         // If we have a token from <komoju-fields>, we can process payment immediately.
         // Otherwise we will redirect to the KOMOJU hosted page.
-        $token = sanitize_text_field(isset($_POST['komoju_payment_token']) ? $_POST['komoju_payment_token'] : '');
+        $token = isset($_POST['komoju_payment_token']) ? sanitize_text_field(wp_unslash($_POST['komoju_payment_token'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
         // Gimmick: If there is a KOMOJU payment UUID already set for the order, try to cancel the preceding payment.
         // Some considerations:
@@ -261,7 +262,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
                 'payment_details' => $token,
             ]);
         } catch (Throwable $e) {
-            wc_add_notice(__('A payment processing error has occurred. Please review your input and try again.', 'komoju-woocommerce'), 'error');
+            wc_add_notice(__('A payment processing error has occurred. Please review your input and try again.', 'komoju-japanese-payments'), 'error');
 
             return ['result' => 'failure'];
         }
@@ -272,7 +273,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
                 'redirect' => $result->redirect_url,
             ];
         }
-        wc_add_notice(__('Payment error:', 'woothemes') . $result->error, 'error');
+        wc_add_notice(__('Payment error:', 'komoju-japanese-payments') . $result->error, 'error');
     }
 
     public function default_title()
