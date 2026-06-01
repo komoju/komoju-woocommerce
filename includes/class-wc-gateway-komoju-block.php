@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 
 final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
@@ -17,7 +21,6 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
     public function initialize()
     {
         $this->settings = $this->gateway->payment_method['settings'] ?? [];
-        $this->settings = get_option('woocommerce_test_komoju_settings', []);
     }
 
     public function is_active()
