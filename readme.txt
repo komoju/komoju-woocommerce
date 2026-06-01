@@ -179,6 +179,12 @@ Go back to your Wordpress instance and set the "Webhook Secret Token" value on t
 
 == Changelog ==
 
+= 3.2.7 =
+
+Security and code quality improvements
+Updated minimum PHP requirement to 7.4
+Updated "Tested up to" WordPress 7.0
+
 = 3.2.6 =
 
 Updated link to KOMOJU payment page on order dashboard to use the "/merchant" path
