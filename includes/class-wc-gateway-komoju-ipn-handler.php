@@ -42,8 +42,8 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
         // callback from session page (external redirect from KOMOJU, nonce not applicable)
         if (isset($_GET['session_id'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $session_id = sanitize_text_field(wp_unslash($_GET['session_id']));
-            $session = $this->get_session($session_id);
-            $order   = $this->get_order_from_komoju_session($session, $this->invoice_prefix);
+            $session    = $this->get_session($session_id);
+            $order      = $this->get_order_from_komoju_session($session, $this->invoice_prefix);
 
             // null payment on a session indicates incomplete payment flow
             if ($session->status === 'completed' && !is_null($order)) {
@@ -62,11 +62,10 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
                 $checkout_url = wc_get_checkout_url();
                 wp_safe_redirect($checkout_url);
                 exit;
-            } else {
-                $payment_url = $order->get_checkout_payment_url(false);
-                wp_safe_redirect($payment_url);
-                exit;
             }
+            $payment_url = $order->get_checkout_payment_url(false);
+            wp_safe_redirect($payment_url);
+            exit;
 
             return true;
         }

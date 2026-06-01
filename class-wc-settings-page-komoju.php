@@ -106,7 +106,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             <p><strong><?php
                 /* translators: %s: merchant account name */
                 echo sprintf(esc_html__('Successfully connected to KOMOJU account %s.', 'komoju-japanese-payments'), esc_html($merchant_name));
-            ?></strong></p>
+        ?></strong></p>
         </div>
         <?php
     }
@@ -130,7 +130,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
                echo 'disabled';
            } ?>>
     <p class="description">
-        <?php echo esc_html__( "Only modify this if you know what you're doing.", 'komoju-japanese-payments' ); ?>
+        <?php echo esc_html__("Only modify this if you know what you're doing.", 'komoju-japanese-payments'); ?>
     </p>
     <div>
         <?php if ($untainted) { ?>

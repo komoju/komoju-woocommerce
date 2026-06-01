@@ -1,6 +1,6 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit;
 }
 
@@ -104,10 +104,10 @@ class KomojuApi
     private function post($uri, $payload)
     {
         $payload['fraud_details'] = [
-            'customer_ip'        => sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) ),
-            'customer_email'     => sanitize_email( $payload['customer_email'] ?? '' ),
-            'browser_language'   => sanitize_text_field( wp_unslash( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '' ) ),
-            'browser_user_agent' => sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) ),
+            'customer_ip'        => sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'] ?? '')),
+            'customer_email'     => sanitize_email($payload['customer_email'] ?? ''),
+            'browser_language'   => sanitize_text_field(wp_unslash($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '')),
+            'browser_user_agent' => sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'] ?? '')),
         ];
 
         $url       = $this->endpoint . $uri;
