@@ -205,7 +205,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
             token name="komoju_payment_token"
             komoju-api="<?php echo esc_url(KomojuApi::endpoint()); ?>"
             publishable-key="<?php echo esc_attr($this->publishableKey); ?>"
-            session="<?php echo esc_attr(json_encode($checkout_session)); ?>"
+            session="<?php echo esc_attr(wp_json_encode($checkout_session)); ?>"
             payment-type="<?php echo esc_attr($payment_type); ?>"
             style="display: block"
         >

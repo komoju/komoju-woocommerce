@@ -7,19 +7,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 
 /*
- * Plugin Name: KOMOJU Payments
- * Plugin URI: https://github.com/komoju/komoju-woocommerce
- * Description: Extends WooCommerce with KOMOJU gateway.
- * Author: KOMOJU
- * Author URI: https://komoju.com
- * Version: 3.2.7
- * Text Domain: komoju-japanese-payments
- * Domain Path: /languages
- * License: GPL-2.0-or-later
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * WC requires at least: 6.0
- * WC tested up to: 10.7.0
- */
+* Plugin Name: KOMOJU Payments
+* Plugin URI: https://github.com/komoju/komoju-woocommerce
+* Description: Extends WooCommerce with KOMOJU gateway.
+* Author: KOMOJU
+* Author URI: https://komoju.com
+* Version: 3.2.7
+* Requires at least: 6.0
+* Requires PHP: 7.2
+* Text Domain: komoju-japanese-payments
+* Domain Path: /languages
+* License: GPL-2.0-or-later
+* License URI: https://www.gnu.org/licenses/gpl-2.0.html
+* WC requires at least: 6.0
+* WC tested up to: 10.8.1
+*/
 
 add_action('before_woocommerce_init', function () {
     if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {

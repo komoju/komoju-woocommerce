@@ -65,7 +65,7 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
             'tokenName'      => 'komoju_payment_token',
             'komojuApi'      => KomojuApi::endpoint(),
             'publishableKey' => $this->gateway->publishableKey,
-            'session'        => json_encode($checkout_session),
+            'session'        => wp_json_encode($checkout_session),
             'paymentType'    => $this->gateway->payment_method['type_slug'],
             'locale'         => $this->gateway->locale,
             'inlineFields'   => $this->gateway->has_fields,
