@@ -75,7 +75,7 @@ class WC_Gateway_Komoju_Request
             'timestamp'                          => time(),
             'via'                                => 'woocommerce',
         ];
-        WC_Gateway_Komoju::log('Raw parameters: ' . print_r($params, true));
+        WC_Gateway_Komoju::log('Raw parameters: ' . wp_json_encode($params));
 
         $qs_params = [];
         foreach ($params as $key => $val) {

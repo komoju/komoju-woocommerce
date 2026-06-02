@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  *
  * @extends     WC_Settings_Page
  *
- * @version     3.2.6
+ * @version     3.2.7
  *
  * @author      Komoju
  */
@@ -22,7 +22,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     public function __construct()
     {
         $this->id    = 'komoju_settings';
-        $this->label = __('Komoju', 'komoju-woocommerce');
+        $this->label = __('Komoju', 'komoju-japanese-payments');
 
         add_action(
             'woocommerce_admin_field_komoju_payment_types',
@@ -46,8 +46,8 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     public function get_sections()
     {
         $sections = [
-            ''             => __('Payment methods', 'komoju-woocommerce'),
-            'api_settings' => __('API settings', 'komoju-woocommerce'),
+            ''             => __('Payment methods', 'komoju-japanese-payments'),
+            'api_settings' => __('API settings', 'komoju-japanese-payments'),
         ];
 
         return apply_filters('woocommerce_get_sections_' . $this->id, $sections);
@@ -103,7 +103,10 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     {
         ?>
         <div id="message" class="updated inline">
-            <p><strong><?php echo sprintf(__('Successfully connected to KOMOJU account %s.'), $merchant_name); ?></strong></p>
+            <p><strong><?php
+                /* translators: %s: merchant account name */
+                echo sprintf(esc_html__('Successfully connected to KOMOJU account %s.', 'komoju-japanese-payments'), esc_html($merchant_name));
+        ?></strong></p>
         </div>
         <?php
     }
@@ -115,7 +118,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         $untainted = $value === $setting['default']; ?>
 <tr valign="top">
 <th class="titledesc" scope="row">
-    <label for="<?php echo esc_attr($setting['id']); ?>"><?php echo $setting['title']; ?></label>
+    <label for="<?php echo esc_attr($setting['id']); ?>"><?php echo esc_html($setting['title']); ?></label>
 </th>
 <td class="forminp forminp-text komoju-endpoint-field komoju-endpoint-<?php echo esc_attr($setting['id']); ?>">
     <input id="<?php echo esc_attr($setting['id']); ?>"
@@ -127,7 +130,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
                echo 'disabled';
            } ?>>
     <p class="description">
-        <?php echo __("Only modify this if you know what you're doing.", 'komoju-woocommerce'); ?>
+        <?php echo esc_html__("Only modify this if you know what you're doing.", 'komoju-japanese-payments'); ?>
     </p>
     <div>
         <?php if ($untainted) { ?>
@@ -136,7 +139,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
                 class="komoju-endpoint-edit"
                 data-target="<?php echo esc_attr($setting['id']); ?>"
                 onclick="komoju_woocommerce_enable_endpoint_field(event)">
-                <?php echo __('Edit', 'komoju-woocommerce'); ?>
+                <?php echo esc_html__('Edit', 'komoju-japanese-payments'); ?>
             </button>
         <?php } ?>
 
@@ -145,7 +148,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             class="komoju-endpoint-reset"
             data-target="<?php echo esc_attr($setting['id']); ?>"
             onclick="komoju_woocommerce_reset_endpoint_field(event)">
-            <?php echo __('Reset', 'komoju-woocommerce'); ?>
+            <?php echo esc_html__('Reset', 'komoju-japanese-payments'); ?>
         </button>
     </div>
 
@@ -196,16 +199,16 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             'nonce=' . rawurlencode($nonce); ?>
         <tr>
             <th class="titledesc" scope="row">
-                <label><?php echo $setting['title']; ?></label>
+                <label><?php echo esc_html($setting['title']); ?></label>
             </th>
             <td class="forminp forminp-text komoju-setup-button" style="height: 60px">
-                <a href="<?php echo esc_attr($setup_url); ?>"
+                <a href="<?php echo esc_url($setup_url); ?>"
                    class='komoju-setup <?php echo $already_connected ? 'connected' : ''; ?>'>
                     <?php
                         if ($already_connected) {
-                            echo __('Reconnect with KOMOJU', 'komoju-woocommerce');
+                            echo esc_html__('Reconnect with KOMOJU', 'komoju-japanese-payments');
                         } else {
-                            echo __('Sign into KOMOJU', 'komoju-woocommerce');
+                            echo esc_html__('Sign into KOMOJU', 'komoju-japanese-payments');
                         } ?>
                 </a>
 
@@ -250,9 +253,9 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
                     <?php
                         $secret_key = $this->secret_key();
             if ($secret_key && $secret_key !== '') {
-                echo __('Unable to reach KOMOJU. Is your secret key correct?', 'komoju-woocommerce');
+                echo esc_html__('Unable to reach KOMOJU. Is your secret key correct?', 'komoju-japanese-payments');
             } else {
-                echo __('Once signed into KOMOJU, you can select payment methods to use as WooCommerce gateways.', 'komoju-woocommerce');
+                echo esc_html__('Once signed into KOMOJU, you can select payment methods to use as WooCommerce gateways.', 'komoju-japanese-payments');
             } ?>
                 </td></tr>
             <?php
@@ -262,7 +265,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         // Show each payment method as a checkbox with an icon?>
         <tr>
         <th class="titledesc" scope="row">
-            <label><?php echo $setting['title']; ?></label>
+            <label><?php echo esc_html($setting['title']); ?></label>
         </th>
         <td class="forminp forminp-text komoju-payment-methods"
             style="display: flex; flex-flow: row wrap; max-width: 800px; margin-bottom: 12px">
@@ -282,7 +285,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
                   width="38"
                   height="24"
                   src="https://komoju.com/payment_methods/<?php echo esc_attr($slug); ?>.svg">
-                <?php echo $payment_method['name_' . $locale]; ?>
+                <?php echo esc_html($payment_method['name_' . $locale]); ?>
                 </label>
                 <?php
             } ?>

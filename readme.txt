@@ -2,15 +2,17 @@
 Contributors: KOMOJU
 Tags: WooCommerce,Payment Gateway,Komoju
 Requires at least: 6.0
-Tested up to: 6.9.4
-Stable tag: trunk
-Requires PHP: 7.2
+Tested up to: 7.0
+Stable tag: 3.2.7
+Requires PHP: 7.4
 WC requires at least: 6.0.0
 WC tested up to: 10.7.0
-License: MIT
-License URI: https://directory.fsf.org/wiki/License:X11
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
+
+Accept payments in Japan, South-Korea, South-East Asia and Europe with KOMOJU. Supports credit cards, convenience store payments, digital wallets and more.
 
 ## Quick Start Guide
 
@@ -176,6 +178,12 @@ Ensure that the "Active" checkbox is also ticked and then click "Create Webhook"
 Go back to your Wordpress instance and set the "Webhook Secret Token" value on the Komoju Woocommerce plugin to be the same as the secret set for the webhook.
 
 == Changelog ==
+
+= 3.2.7 =
+
+Security and code quality improvements
+Updated minimum PHP requirement to 7.4
+Updated "Tested up to" WordPress 7.0
 
 = 3.2.6 =
 

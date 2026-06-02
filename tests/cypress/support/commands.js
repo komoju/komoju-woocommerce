@@ -104,9 +104,8 @@ Cypress.Commands.add('installKomoju', () => {
 
 Cypress.Commands.add('setupKomoju', (
   paymentTypes = [],
-  // fake-mart
-  secretKey = 'sk_27dbcf7af57ad9088b8c95792c6f24d2398e771c',
-  publishableKey = 'pk_c05e982fa446efa4ff740d1f055a45a4e0c21d5f'
+  secretKey = Cypress.env('KOMOJU_SECRET_KEY'),
+  publishableKey = Cypress.env('KOMOJU_PUBLISHABLE_KEY')
 ) => {
   cy.visit('/wp-admin/admin.php?page=wc-settings&tab=komoju_settings&section=api_settings');
 

@@ -23,8 +23,8 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     public function __construct($gateway, $webhookSecretToken = '', $secret_key = '', $invoice_prefix = '', $useOnHold = false)
     {
-        add_filter('invoke_komoju_ipn_handler', [$this, 'check_response'], 10, 1);
-        add_action('valid_komoju_standard_ipn_request', [$this, 'valid_response']);
+        add_filter('komoju_japanese_payments_invoke_ipn_handler', [$this, 'check_response'], 10, 1);
+        add_action('komoju_japanese_payments_valid_ipn_request', [$this, 'valid_response']);
         add_action('komoju_capture_payment_async', [$this, 'payment_complete_async'], 10, 3);
 
         $this->gateway            = $gateway;
@@ -39,36 +39,40 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     public function check_response($_handled)
     {
-        // callback from session page
-        if (isset($_GET['session_id'])) {
-            $session = $this->get_session($_GET['session_id']);
-            $order   = $this->get_order_from_komoju_session($session, $this->invoice_prefix);
+        // callback from session page (external redirect from KOMOJU, nonce not applicable)
+        if (isset($_GET['session_id'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $session_id = sanitize_text_field(wp_unslash($_GET['session_id']));
+            $session    = $this->get_session($session_id);
+            $order      = $this->get_order_from_komoju_session($session, $this->invoice_prefix);
 
             // null payment on a session indicates incomplete payment flow
             if ($session->status === 'completed' && !is_null($order)) {
                 $success_url = $this->gateway->get_return_url($order);
-                wp_redirect($success_url);
+                wp_safe_redirect($success_url);
+                exit;
             } elseif (is_null($session)) {
                 $checkout_url = wc_get_checkout_url();
-                wp_redirect($checkout_url);
+                wp_safe_redirect($checkout_url);
                 wc_add_notice(
-                    __('Encountered an issue communicating with KOMOJU. Please wait a moment and try again.'),
+                    __('Encountered an issue communicating with KOMOJU. Please wait a moment and try again.', 'komoju-japanese-payments'),
                     'error'
                 );
+                exit;
             } elseif (is_null($order)) {
                 $checkout_url = wc_get_checkout_url();
-                wp_redirect($checkout_url);
-            } else {
-                $payment_url = $order->get_checkout_payment_url(false);
-                wp_redirect($payment_url);
+                wp_safe_redirect($checkout_url);
+                exit;
             }
+            $payment_url = $order->get_checkout_payment_url(false);
+            wp_safe_redirect($payment_url);
+            exit;
 
             return true;
         }
 
-        // Quick setup POST from KOMOJU
-        if (isset($_POST['secret_key'])) {
-            $this->quick_setup($_POST);
+        // Quick setup POST from KOMOJU (validated via stored nonce in quick_setup method)
+        if (isset($_POST['secret_key'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            $this->quick_setup($_POST); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
             return true;
         }
@@ -79,7 +83,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
             $webhookEvent = new WC_Gateway_Komoju_Webhook_Event($entityBody);
 
             // NOTE: direct function call doesn't work
-            do_action('valid_komoju_standard_ipn_request', $webhookEvent);
+            do_action('komoju_japanese_payments_valid_ipn_request', $webhookEvent);
 
             return true;
         }
@@ -105,7 +109,8 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
 
         update_option('komoju_woocommerce_just_connected_merchant_name', $post['merchant_name']);
 
-        wp_redirect(admin_url() . 'admin.php?page=wc-settings&tab=komoju_settings');
+        wp_safe_redirect(admin_url('admin.php?page=wc-settings&tab=komoju_settings'));
+        exit;
     }
 
     /**
@@ -158,7 +163,9 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
 
         $isDevEnv = getenv('WORDPRESS_DEV_ENV');
 
-        $hmacHeader = $_SERVER['HTTP_X_KOMOJU_SIGNATURE'];
+        $hmacHeader = isset($_SERVER['HTTP_X_KOMOJU_SIGNATURE'])
+            ? sanitize_text_field(wp_unslash($_SERVER['HTTP_X_KOMOJU_SIGNATURE']))
+            : '';
 
         $calcHmac = hash_hmac('sha256', $requestBody, $this->webhookSecretToken);
 
@@ -189,7 +196,8 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
             WC_Gateway_Komoju::log('Payment error: Amounts do not match (total: ' . $amount . ') for order #' . $order->get_id() . '(' . $order->get_total() . ')');
 
             // Put this order on-hold for manual checking
-            $order->update_status('on-hold', sprintf(__('Validation error: Komoju amounts do not match (total %s).', 'komoju-woocommerce'), $amount));
+            /* translators: %s: payment total amount */
+            $order->update_status('on-hold', sprintf(__('Validation error: Komoju amounts do not match (total %s).', 'komoju-japanese-payments'), $amount));
             exit;
         }
     }
@@ -216,7 +224,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
         }
 
         if ('captured' === $webhookEvent->status()) {
-            $this->payment_complete($order, !empty($webhookEvent->uuid()) ? wc_clean($webhookEvent->uuid()) : '', __('IPN payment captured', 'komoju-woocommerce'));
+            $this->payment_complete($order, !empty($webhookEvent->uuid()) ? wc_clean($webhookEvent->uuid()) : '', __('IPN payment captured', 'komoju-japanese-payments'));
 
             if (!empty($webhookEvent->payment_method_fee())) {
                 // log komoju transaction fee
@@ -224,7 +232,8 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
                 $order->save();
             }
         } else {
-            $this->payment_on_hold($order, sprintf(__('Payment pending: %s', 'komoju-woocommerce'), $webhookEvent->additional_information()));
+            /* translators: %s: additional payment information */
+            $this->payment_on_hold($order, sprintf(__('Payment pending: %s', 'komoju-japanese-payments'), $webhookEvent->additional_information()));
         }
     }
 
@@ -269,7 +278,8 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
         } else {
             $order->update_status('pending-payment');
         }
-        $order->add_order_note(sprintf(__('Payment %s via IPN.', 'komoju-woocommerce'), wc_clean($webhookEvent->status())));
+        /* translators: %s: payment status */
+        $order->add_order_note(sprintf(__('Payment %s via IPN.', 'komoju-japanese-payments'), wc_clean($webhookEvent->status())));
     }
 
     /**
@@ -285,7 +295,8 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
         WC_Gateway_Komoju::log('Only handling full refund. Controlling that order total equals amount refunded. Does ' . $amount_in_cents . ' equals ' . $webhookEvent->grand_total() . ' ?');
         if ($amount_in_cents == $webhookEvent->amount_refunded()) {
             WC_Gateway_Komoju::log('Refunding order: ' . $order->get_id());
-            $order->update_status('refunded', sprintf(__('Payment %s via IPN.', 'komoju-woocommerce'), strtolower($webhookEvent->status())));
+            /* translators: %s: payment status */
+            $order->update_status('refunded', sprintf(__('Payment %s via IPN.', 'komoju-japanese-payments'), strtolower($webhookEvent->status())));
         }
     }
 
@@ -322,7 +333,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
             $order->update_meta_data('Amount', wc_clean($webhookEvent->amount()));
         }
         if (!empty($webhookEvent->additional_information())) {
-            $order->update_meta_data('Additional info', wc_clean(print_r($webhookEvent->additional_information(), true)));
+            $order->update_meta_data('Additional info', wc_clean(wp_json_encode($webhookEvent->additional_information())));
         }
         if (!empty($webhookEvent->uuid())) {
             $komoju_session_id = $order->get_meta('komoju_session_id');

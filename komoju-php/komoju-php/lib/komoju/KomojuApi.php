@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 class KomojuApi
 {
     /* Fix for Deprecated: Creation of dynamic property */
@@ -66,31 +70,29 @@ class KomojuApi
 
     private function get($uri, $asArray = false)
     {
-        $ch = curl_init($this->endpoint . $uri);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers());
-        curl_setopt($ch, CURLOPT_USERPWD, $this->secretKey . ':');
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            $error = curl_error($ch);
-            curl_close($ch);
-            throw new KomojuExceptionBadServer($error);
+        $url = $this->endpoint . $uri;
+
+        $response = wp_remote_get($url, [
+            'headers'   => $this->wp_headers(),
+            'timeout'   => 30,
+        ]);
+
+        if (is_wp_error($response)) {
+            throw new KomojuExceptionBadServer($response->get_error_message());
         }
 
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $http_code = wp_remote_retrieve_response_code($response);
+        $body      = wp_remote_retrieve_body($response);
+
         if ($http_code !== 200) {
-            $komojuException           = new KomojuExceptionBadServer($result);
+            $komojuException           = new KomojuExceptionBadServer($body);
             $komojuException->httpCode = $http_code;
             throw $komojuException;
         }
 
-        curl_close($ch);
-
-        $decoded = json_decode($result, $asArray);
+        $decoded = json_decode($body, $asArray);
         if ($decoded === null) {
-            throw new KomojuExceptionBadJson($result);
+            throw new KomojuExceptionBadJson($body);
         }
 
         return $decoded;
@@ -102,58 +104,60 @@ class KomojuApi
     private function post($uri, $payload)
     {
         $payload['fraud_details'] = [
-            // Null-coalesce to avoid undefined index notices in logs.
-            'customer_ip'        => $_SERVER['REMOTE_ADDR']          ?? '',
-            'customer_email'     => $payload['customer_email']       ?? '',
-            'browser_language'   => $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '',
-            'browser_user_agent' => $_SERVER['HTTP_USER_AGENT']      ?? '',
+            'customer_ip'        => sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'] ?? '')),
+            'customer_email'     => sanitize_email($payload['customer_email'] ?? ''),
+            'browser_language'   => sanitize_text_field(wp_unslash($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '')),
+            'browser_user_agent' => sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'] ?? '')),
         ];
 
-        $ch        = curl_init($this->endpoint . $uri);
-        $data_json = json_encode($payload);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers());
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERPWD, $this->secretKey . ':');
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            $error = curl_error($ch);
-            curl_close($ch);
-            throw new KomojuExceptionBadServer($error);
+        $url       = $this->endpoint . $uri;
+        $data_json = wp_json_encode($payload);
+
+        $response = wp_remote_post($url, [
+            'headers' => $this->wp_headers(),
+            'body'    => $data_json,
+            'timeout' => 30,
+        ]);
+
+        if (is_wp_error($response)) {
+            throw new KomojuExceptionBadServer($response->get_error_message());
         }
 
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $http_code = wp_remote_retrieve_response_code($response);
+        $body      = wp_remote_retrieve_body($response);
+
         if ($http_code !== 200) {
-            $komojuException           = new KomojuExceptionBadServer($result);
+            $komojuException           = new KomojuExceptionBadServer($body);
             $komojuException->httpCode = $http_code;
             throw $komojuException;
         }
 
-        curl_close($ch);
-
-        $decoded = json_decode($result);
+        $decoded = json_decode($body);
         if ($decoded === null) {
-            throw new KomojuExceptionBadJson($result);
+            throw new KomojuExceptionBadJson($body);
         }
 
         return $decoded;
     }
 
-    private function headers()
+    /**
+     * Build headers array for wp_remote_* functions.
+     *
+     * @return array
+     */
+    private function wp_headers()
     {
-        $result = [
-            'Content-Type: application/json',
-            "komoju-via: {$this->via}",
+        $headers = [
+            'Content-Type'  => 'application/json',
+            'komoju-via'    => $this->via,
+            'Authorization' => 'Basic ' . base64_encode($this->secretKey . ':'),
         ];
 
         $waf_token = get_option('komoju_woocommerce_waf_staging_token');
         if ($waf_token) {
-            $result[] = "Cookie: waf_staging_token=$waf_token";
+            $headers['Cookie'] = 'waf_staging_token=' . $waf_token;
         }
 
-        return $result;
+        return $headers;
     }
 }

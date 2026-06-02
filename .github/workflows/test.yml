@@ -7,15 +7,21 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+
 jobs:
   cypress-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: hoverkraft-tech/compose-action@v2.0.2
+      - uses: hoverkraft-tech/compose-action@v2.2.0
         with:
           down-flags: '--volumes'
       - name: Run tests
+        env:
+          KOMOJU_SECRET_KEY: ${{ secrets.KOMOJU_SECRET_KEY }}
+          KOMOJU_PUBLISHABLE_KEY: ${{ secrets.KOMOJU_PUBLISHABLE_KEY }}
         run: |
           cd tests
           npm install

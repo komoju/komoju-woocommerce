@@ -4,13 +4,16 @@ on:
     tags:
       - "*"
 
+permissions:
+  contents: read
+
 jobs:
   tag:
     name: Deploy Wordpress Plugin
     runs-on: ubuntu-latest
     steps:
     - name: setup
-      uses: actions/checkout@master
+      uses: actions/checkout@v4
     - name: Install SVN
       run: sudo apt-get update && sudo apt-get install -y subversion
     - name: deploy plugin

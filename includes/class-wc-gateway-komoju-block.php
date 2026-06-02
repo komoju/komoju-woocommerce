@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 
 final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
@@ -17,7 +21,6 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
     public function initialize()
     {
         $this->settings = $this->gateway->payment_method['settings'] ?? [];
-        $this->settings = get_option('woocommerce_test_komoju_settings', []);
     }
 
     public function is_active()
@@ -65,7 +68,7 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
             'tokenName'      => 'komoju_payment_token',
             'komojuApi'      => KomojuApi::endpoint(),
             'publishableKey' => $this->gateway->publishableKey,
-            'session'        => json_encode($checkout_session),
+            'session'        => wp_json_encode($checkout_session),
             'paymentType'    => $this->gateway->payment_method['type_slug'],
             'locale'         => $this->gateway->locale,
             'inlineFields'   => $this->gateway->has_fields,
