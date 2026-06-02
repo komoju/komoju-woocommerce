@@ -12,6 +12,10 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost:8000',
     defaultCommandTimeout: 6000
   },
+  env: {
+    KOMOJU_SECRET_KEY: process.env.KOMOJU_SECRET_KEY || '',
+    KOMOJU_PUBLISHABLE_KEY: process.env.KOMOJU_PUBLISHABLE_KEY || '',
+  },
   retries: {
     runMode: 2,
     openMode: 0,

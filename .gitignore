@@ -4,6 +4,8 @@
 /tests/node_modules/
 /tests/cypress/screenshots/
 /tests/cypress/videos/
+/tests/cypress.env.json
 
 .DS_Store
 site
+.php_cs.cache
