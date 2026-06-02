@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) {
 /**
  * Generates requests to send to Komoju
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound -- Follows WooCommerce gateway naming conventions.
 class WC_Gateway_Komoju_Request
 {
     /**

@@ -78,21 +78,21 @@ class KomojuApi
         ]);
 
         if (is_wp_error($response)) {
-            throw new KomojuExceptionBadServer($response->get_error_message());
+            throw new KomojuExceptionBadServer(esc_html($response->get_error_message()));
         }
 
         $http_code = wp_remote_retrieve_response_code($response);
         $body      = wp_remote_retrieve_body($response);
 
         if ($http_code !== 200) {
-            $komojuException           = new KomojuExceptionBadServer($body);
+            $komojuException           = new KomojuExceptionBadServer(esc_html($body));
             $komojuException->httpCode = $http_code;
             throw $komojuException;
         }
 
         $decoded = json_decode($body, $asArray);
         if ($decoded === null) {
-            throw new KomojuExceptionBadJson($body);
+            throw new KomojuExceptionBadJson(esc_html($body));
         }
 
         return $decoded;
@@ -120,21 +120,21 @@ class KomojuApi
         ]);
 
         if (is_wp_error($response)) {
-            throw new KomojuExceptionBadServer($response->get_error_message());
+            throw new KomojuExceptionBadServer(esc_html($response->get_error_message()));
         }
 
         $http_code = wp_remote_retrieve_response_code($response);
         $body      = wp_remote_retrieve_body($response);
 
         if ($http_code !== 200) {
-            $komojuException           = new KomojuExceptionBadServer($body);
+            $komojuException           = new KomojuExceptionBadServer(esc_html($body));
             $komojuException->httpCode = $http_code;
             throw $komojuException;
         }
 
         $decoded = json_decode($body);
         if ($decoded === null) {
-            throw new KomojuExceptionBadJson($body);
+            throw new KomojuExceptionBadJson(esc_html($body));
         }
 
         return $decoded;

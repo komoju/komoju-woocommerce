@@ -1,0 +1,35 @@
+# VCS
+/.git
+/.github
+/.gitattributes
+/.gitignore
+/.distignore
+
+# Development files
+/.php-cs-fixer.dist
+/.php_cs.dist
+/.php_cs.cache
+/.env
+
+# Build/dev tooling
+/bin
+/vendor
+/docs
+/node_modules
+/composer.phar
+/composer.lock
+/composer.json
+/package.json
+/package-lock.json
+
+# Docker
+/docker-compose.yml
+/Dockerfile
+
+# Tests
+/tests
+
+# Editor/IDE
+/.editorconfig
+/.vscode
+/.idea
