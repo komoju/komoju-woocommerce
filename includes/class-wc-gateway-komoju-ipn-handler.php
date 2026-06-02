@@ -37,6 +37,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
     /**
      * Check for Komoju IPN or Session Response
      */
+    // phpcs:disable WordPress.Security.NonceVerification.Missing -- External redirect from KOMOJU; nonce not applicable.
     public function check_response($_handled)
     {
         // callback from session page (external redirect from KOMOJU, nonce not applicable)
@@ -90,6 +91,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
 
         wp_die('Failed to verify KOMOJU authenticity', 'Komoju IPN', ['response' => 401]);
     }
+    // phpcs:enable WordPress.Security.NonceVerification.Missing
 
     public function quick_setup($post)
     {
