@@ -54,8 +54,30 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
 
         // We lazily fetch one session to be shared by all payment methods with dynamic fields.
         static $checkout_session;
+        static $checkout_session_failed = false;
+        if ($checkout_session_failed) {
+            return [
+                'id'          => $this->name,
+                'title'       => $this->gateway->title,
+                'description' => $this->gateway->description,
+                'supports'    => array_filter($this->gateway->supports, [$this->gateway, 'supports']),
+                'icon'           => $this->gateway->icon,
+                'tokenName'      => 'komoju_payment_token',
+                'komojuApi'      => KomojuApi::endpoint(),
+                'publishableKey' => $this->gateway->publishableKey,
+                'session'        => null,
+                'paymentType'    => $this->gateway->payment_method['type_slug'],
+                'locale'         => $this->gateway->locale,
+                'inlineFields'   => false,
+            ];
+        }
         if (is_null($checkout_session)) {
-            $checkout_session = $this->gateway->create_session_for_fields();
+            try {
+                $checkout_session = $this->gateway->create_session_for_fields();
+            } catch (KomojuExceptionBadServer|KomojuExceptionBadJson $e) {
+                $checkout_session_failed = true;
+                $checkout_session        = null;
+            }
         }
 
         return [
@@ -71,7 +93,7 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
             'session'        => wp_json_encode($checkout_session),
             'paymentType'    => $this->gateway->payment_method['type_slug'],
             'locale'         => $this->gateway->locale,
-            'inlineFields'   => $this->gateway->has_fields,
+            'inlineFields'   => $checkout_session ? $this->gateway->has_fields : false,
         ];
     }
 }

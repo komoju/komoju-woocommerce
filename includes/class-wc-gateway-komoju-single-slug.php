@@ -118,7 +118,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
 
         $refund = $payment->refunds[count($payment->refunds) - 1];
 
-        if ($refund && $refund->amount == self::to_cents($amount, $currency)) {
+        if ($refund && (is_null($amount) || $refund->amount == self::to_cents($amount, $currency))) {
             return true;
         }
 

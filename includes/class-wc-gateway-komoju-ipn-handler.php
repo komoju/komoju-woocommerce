@@ -171,7 +171,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
 
         $calcHmac = hash_hmac('sha256', $requestBody, $this->webhookSecretToken);
 
-        if ($hmacHeader != $calcHmac) {
+        if (!hash_equals($calcHmac, $hmacHeader)) {
             if ($isDevEnv) {
                 WC_Gateway_Komoju::log('hmac codes (sent by Komoju / recalculated) don\'t match. Continuing the process because it\'s running in dev mode....');
 
@@ -194,7 +194,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
     protected function validate_amount($order, $amount)
     {
         $order_amount = WC_Gateway_Komoju::to_cents($order->get_total(), $order->get_currency());
-        if (number_format($order_amount != $amount)) {
+        if ($order_amount != $amount) {
             WC_Gateway_Komoju::log('Payment error: Amounts do not match (total: ' . $amount . ') for order #' . $order->get_id() . '(' . $order->get_total() . ')');
 
             // Put this order on-hold for manual checking
