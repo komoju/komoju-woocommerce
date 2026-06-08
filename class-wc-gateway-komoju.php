@@ -300,7 +300,7 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
             $secret_key = self::get_legacy_setting('secretKey');
         }
 
-        return $secret_key && str_starts_with($secret_key, 'sk_test_');
+        return $secret_key && strpos($secret_key, 'sk_test_') === 0;
     }
 
     public static function get_locale_or_fallback()
