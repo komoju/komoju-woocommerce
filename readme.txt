@@ -184,12 +184,11 @@ Go back to your Wordpress instance and set the "Webhook Secret Token" value on t
 = 3.2.9 =
 
 Security and code quality improvements
-
+Added banners to indicate when a test merchant is being used
 
 = 3.2.8 =
 
 Security and code quality improvements
-Added banners to indicate when a test merchant is being used
 
 = 3.2.7 =
 
