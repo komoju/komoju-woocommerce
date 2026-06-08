@@ -303,3 +303,19 @@ msgid ""
 "When checked, your Komoju sandbox will be used in order to test payments. "
 "Sign up for a developer account <a href=\"%s\">here</a>."
 msgstr ""
+
+#: class-wc-gateway-komoju.php class-wc-settings-page-komoju.php
+msgid "Test Mode Active"
+msgstr ""
+
+#: class-wc-gateway-komoju.php class-wc-settings-page-komoju.php
+msgid "Your store is using KOMOJU test keys. No real charges will be processed."
+msgstr ""
+
+#: includes/class-wc-gateway-komoju-single-slug.php
+msgid "Test Mode"
+msgstr ""
+
+#: includes/class-wc-gateway-komoju-single-slug.php
+msgid "No real charges will be processed."
+msgstr ""
