@@ -120,6 +120,7 @@ function woocommerce_komoju_init()
     add_filter('woocommerce_payment_gateways', 'woocommerce_add_komoju_gateway');
     add_filter('woocommerce_get_settings_pages', 'woocommerce_add_komoju_settings_page');
     add_action('woocommerce_api_wc_gateway_komoju', 'woocommerce_komoju_handle_http_request');
+    add_action('admin_footer', 'woocommerce_komoju_test_mode_badge_script');
 
     add_action('wp_enqueue_scripts', 'woocommerce_komoju_load_scripts');
     add_filter('script_loader_tag', 'woocommerce_komoju_load_script_as_module', 10, 3);
@@ -157,5 +158,42 @@ function woocommerce_komoju_init()
                 }
             }
         );
+    }
+
+    /**
+     * Output a script on the WooCommerce Payments settings page (tab=checkout)
+     * that appends a "Test Mode" badge next to each KOMOJU gateway row.
+     */
+    function woocommerce_komoju_test_mode_badge_script()
+    {
+        if (!class_exists('WC_Gateway_Komoju')) {
+            return;
+        }
+        if (!WC_Gateway_Komoju::is_test_mode()) {
+            return;
+        }
+
+        $screen = get_current_screen();
+        if (!$screen || $screen->id !== 'woocommerce_page_wc-settings') {
+            return;
+        }
+        if (!isset($_GET['tab']) || $_GET['tab'] !== 'checkout') { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            return;
+        }
+        ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var rows = document.querySelectorAll('tr[data-gateway_id^="komoju"]');
+                rows.forEach(function(row) {
+                    var nameCell = row.querySelector('td.name a, td.name');
+                    if (!nameCell) return;
+                    var badge = document.createElement('span');
+                    badge.textContent = <?php echo wp_json_encode(__('Test Mode', 'komoju-japanese-payments')); ?>;
+                    badge.style.cssText = 'background: #f0b849; color: #000; font-size: 11px; padding: 2px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle;';
+                    nameCell.appendChild(badge);
+                });
+            });
+        </script>
+        <?php
     }
 }
