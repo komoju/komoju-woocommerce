@@ -76,11 +76,6 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
         $this->instructions         = $this->get_option('instructions', $this->description);
         $this->useOnHold            = $this->get_option_compat('use_on_hold', 'useOnHold');
 
-        // Append test mode badge to admin gateway list title
-        if (self::is_test_mode()) {
-            $this->method_title .= ' <span style="background: #f0b849; color: #000; font-size: 11px; padding: 2px 6px; border-radius: 3px; vertical-align: middle;">' . esc_html__('Test Mode', 'komoju-japanese-payments') . '</span>';
-        }
-
         // Filters
         // Actions
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
@@ -131,6 +126,21 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
             }
             self::$log->add('komoju', $message);
         }
+    }
+
+    /**
+     * Output the gateway settings page with test mode notice if applicable.
+     */
+    public function admin_options()
+    {
+        if (self::is_test_mode()) {
+            echo '<div class="notice notice-warning inline" style="border-left-color: #f0b849; background: #fff8e5; padding: 12px 16px; margin-bottom: 16px;">';
+            echo '<p style="margin: 0; font-size: 14px;">';
+            echo '<strong>⚠️ ' . esc_html__('Test Mode Active', 'komoju-japanese-payments') . '</strong> — ';
+            echo esc_html__('Your store is using KOMOJU test keys. No real charges will be processed.', 'komoju-japanese-payments');
+            echo '</p></div>';
+        }
+        parent::admin_options();
     }
 
     /**

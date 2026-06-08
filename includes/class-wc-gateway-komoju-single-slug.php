@@ -79,11 +79,6 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
             __('%s payments powered by KOMOJU', 'komoju-japanese-payments'),
             $this->default_title()
         );
-
-        // Append test mode badge to admin gateway list title
-        if (WC_Gateway_Komoju::is_test_mode()) {
-            $this->method_title .= ' <span style="background: #f0b849; color: #000; font-size: 11px; padding: 2px 6px; border-radius: 3px; vertical-align: middle;">' . esc_html__('Test Mode', 'komoju-japanese-payments') . '</span>';
-        }
     }
 
     /**
