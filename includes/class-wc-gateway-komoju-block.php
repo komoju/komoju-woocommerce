@@ -74,7 +74,10 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
         if (is_null($checkout_session)) {
             try {
                 $checkout_session = $this->gateway->create_session_for_fields();
-            } catch (KomojuExceptionBadServer|KomojuExceptionBadJson $e) {
+            } catch (KomojuExceptionBadServer $e) {
+                $checkout_session_failed = true;
+                $checkout_session        = null;
+            } catch (KomojuExceptionBadJson $e) {
                 $checkout_session_failed = true;
                 $checkout_session        = null;
             }

@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  *
  * @extends     WC_Payment_Gateway
  *
- * @version     3.2.8
+ * @version     3.2.9
  *
  * @author      Komoju
  */
@@ -75,6 +75,11 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
         $this->description          = $this->get_option('description');
         $this->instructions         = $this->get_option('instructions', $this->description);
         $this->useOnHold            = $this->get_option_compat('use_on_hold', 'useOnHold');
+
+        // Append test mode badge to admin gateway list title
+        if (self::is_test_mode()) {
+            $this->method_title .= ' <span style="background: #f0b849; color: #000; font-size: 11px; padding: 2px 6px; border-radius: 3px; vertical-align: middle;">' . esc_html__('Test Mode', 'komoju-japanese-payments') . '</span>';
+        }
 
         // Filters
         // Actions
@@ -271,6 +276,21 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
         $suffix = substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6);
 
         return $this->invoice_prefix . $order->get_order_number() . '-' . $suffix;
+    }
+
+    /**
+     * Check if the store is using KOMOJU test keys.
+     *
+     * @return bool
+     */
+    public static function is_test_mode()
+    {
+        $secret_key = get_option('komoju_woocommerce_secret_key');
+        if (!$secret_key) {
+            $secret_key = self::get_legacy_setting('secretKey');
+        }
+
+        return $secret_key && str_starts_with($secret_key, 'sk_test_');
     }
 
     public static function get_locale_or_fallback()

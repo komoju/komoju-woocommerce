@@ -23,6 +23,9 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
     {
         $slug = $payment_method['type_slug'];
 
+        // NOTE: These assignments must happen before parent::__construct() because the parent
+        // constructor references $this->id, $this->has_fields, and $this->method_title.
+        // get_option_compat() only uses global WordPress functions and does not depend on parent state.
         $this->publishableKey = $this->get_option_compat('publishable_key', 'publishable_key');
         $this->payment_method = $payment_method;
         $this->id             = 'komoju_' . $slug;
@@ -76,6 +79,11 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
             __('%s payments powered by KOMOJU', 'komoju-japanese-payments'),
             $this->default_title()
         );
+
+        // Append test mode badge to admin gateway list title
+        if (WC_Gateway_Komoju::is_test_mode()) {
+            $this->method_title .= ' <span style="background: #f0b849; color: #000; font-size: 11px; padding: 2px 6px; border-radius: 3px; vertical-align: middle;">' . esc_html__('Test Mode', 'komoju-japanese-payments') . '</span>';
+        }
     }
 
     /**
@@ -109,7 +117,12 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
 
         try {
             $payment = $this->komoju_api->refund($payment_id, $payload);
-        } catch (KomojuExceptionBadServer|KomojuExceptionBadJson $e) {
+        } catch (KomojuExceptionBadServer $e) {
+            $error_message = $e->getMessage();
+            $this->log($error_message);
+
+            return new WP_Error('komoju_refund_failed', $error_message);
+        } catch (KomojuExceptionBadJson $e) {
             $error_message = $e->getMessage();
             $this->log($error_message);
 
@@ -184,6 +197,13 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
 
     public function payment_fields()
     {
+        if (WC_Gateway_Komoju::is_test_mode()) {
+            echo '<p class="komoju-test-mode-checkout" style="background: #fff8e5; border: 1px solid #f0b849; border-radius: 4px; padding: 8px 12px; margin-bottom: 10px; font-size: 13px;">';
+            echo '<strong>' . esc_html__('Test Mode', 'komoju-japanese-payments') . '</strong> — ';
+            echo esc_html__('No real charges will be processed.', 'komoju-japanese-payments');
+            echo '</p>';
+        }
+
         if (!$this->has_fields) {
             return;
         }
@@ -193,7 +213,9 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         if (is_null($checkout_session)) {
             try {
                 $checkout_session = $this->create_session_for_fields();
-            } catch (KomojuExceptionBadServer|KomojuExceptionBadJson $e) {
+            } catch (KomojuExceptionBadServer $e) {
+                $checkout_session = false;
+            } catch (KomojuExceptionBadJson $e) {
                 $checkout_session = false;
             }
         }
@@ -242,7 +264,9 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         if (!empty($komoju_payment_id)) {
             try {
                 $this->komoju_api->cancel($komoju_payment_id, []);
-            } catch (KomojuExceptionBadServer|KomojuExceptionBadJson $e) {
+            } catch (KomojuExceptionBadServer $e) {
+                // Best-effort: the payment may already be cancelled or expired.
+            } catch (KomojuExceptionBadJson $e) {
                 // Best-effort: the payment may already be cancelled or expired.
             }
         }
@@ -267,13 +291,17 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
             return ['result' => 'failure'];
         }
 
-        if ($result->redirect_url) {
+        if (isset($result->redirect_url) && $result->redirect_url) {
             return [
                 'result'   => 'success',
                 'redirect' => $result->redirect_url,
             ];
         }
-        wc_add_notice(__('Payment error:', 'komoju-japanese-payments') . $result->error, 'error');
+
+        $error_message = isset($result->error) ? $result->error : '';
+        wc_add_notice(__('Payment error:', 'komoju-japanese-payments') . ' ' . $error_message, 'error');
+
+        return ['result' => 'failure'];
     }
 
     public function default_title()
