@@ -95,7 +95,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             $this->output_connected_notice($just_connected);
         }
 
-        if (WC_Gateway_Komoju::is_test_mode()) {
+        if (WC_Gateway_Komoju::komoju_is_test_mode()) {
             $this->output_test_mode_notice();
         }
 

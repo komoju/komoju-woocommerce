@@ -133,7 +133,7 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
      */
     public function admin_options()
     {
-        if (self::is_test_mode()) {
+        if (self::komoju_is_test_mode()) {
             echo '<div class="notice notice-warning inline" style="border-left-color: #f0b849; background: #fff8e5; padding: 12px 16px; margin-bottom: 16px;">';
             echo '<p style="margin: 0; font-size: 14px;">';
             echo '<strong>⚠️ ' . esc_html__('Test Mode Active', 'komoju-japanese-payments') . '</strong> — ';
@@ -293,7 +293,7 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
      *
      * @return bool
      */
-    public static function is_test_mode()
+    public static function komoju_is_test_mode()
     {
         $secret_key = get_option('komoju_woocommerce_secret_key');
         if (!$secret_key) {
