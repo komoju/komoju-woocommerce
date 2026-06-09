@@ -394,7 +394,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     private function mark_event_processed($order, $event_id)
     {
-        $raw = $order->get_meta('_komoju_processed_events');
+        $raw       = $order->get_meta('_komoju_processed_events');
         $processed = [];
         if (!empty($raw)) {
             $decoded = json_decode($raw, true);

@@ -121,7 +121,6 @@ function woocommerce_komoju_init()
     add_filter('woocommerce_get_settings_pages', 'woocommerce_add_komoju_settings_page');
     add_action('woocommerce_api_wc_gateway_komoju', 'woocommerce_komoju_handle_http_request');
 
-
     add_action('wp_enqueue_scripts', 'woocommerce_komoju_load_scripts');
     add_filter('script_loader_tag', 'woocommerce_komoju_load_script_as_module', 10, 3);
 
@@ -159,5 +158,4 @@ function woocommerce_komoju_init()
             }
         );
     }
-
 }

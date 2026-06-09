@@ -57,10 +57,10 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
         static $checkout_session_failed = false;
         if ($checkout_session_failed) {
             return [
-                'id'          => $this->name,
-                'title'       => $this->gateway->title,
-                'description' => $this->gateway->description,
-                'supports'    => array_filter($this->gateway->supports, [$this->gateway, 'supports']),
+                'id'             => $this->name,
+                'title'          => $this->gateway->title,
+                'description'    => $this->gateway->description,
+                'supports'       => array_filter($this->gateway->supports, [$this->gateway, 'supports']),
                 'icon'           => $this->gateway->icon,
                 'tokenName'      => 'komoju_payment_token',
                 'komojuApi'      => KomojuApi::endpoint(),

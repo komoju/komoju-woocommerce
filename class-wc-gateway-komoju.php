@@ -187,7 +187,7 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
         // construct line items
         $line_items = [];
         foreach ($order->get_items() as $item) {
-            $product = $item->get_product();
+            $product   = $item->get_product();
             $image_url = '';
 
             if ($product) {
