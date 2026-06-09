@@ -34,7 +34,7 @@ add_action('plugins_loaded', 'woocommerce_komoju_init', 0);
 
 function woocommerce_komoju_init()
 {
-    // Translations are loaded automatically by WordPress for plugins hosted on WordPress.org.
+    load_plugin_textdomain('komoju-japanese-payments', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
     /**
      * Add the Gateway to WooCommerce
