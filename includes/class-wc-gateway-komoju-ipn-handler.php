@@ -44,20 +44,23 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
         if (isset($_GET['session_id'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $session_id = sanitize_text_field(wp_unslash($_GET['session_id']));
             $session    = $this->get_session($session_id);
-            $order      = $this->get_order_from_komoju_session($session, $this->invoice_prefix);
 
-            // null payment on a session indicates incomplete payment flow
-            if ($session->status === 'completed' && !is_null($order)) {
-                $success_url = $this->gateway->get_return_url($order);
-                wp_safe_redirect($success_url);
-                exit;
-            } elseif (is_null($session)) {
+            if (is_null($session)) {
                 $checkout_url = wc_get_checkout_url();
                 wp_safe_redirect($checkout_url);
                 wc_add_notice(
                     __('Encountered an issue communicating with KOMOJU. Please wait a moment and try again.', 'komoju-japanese-payments'),
                     'error'
                 );
+                exit;
+            }
+
+            $order = $this->get_order_from_komoju_session($session, $this->invoice_prefix);
+
+            // null payment on a session indicates incomplete payment flow
+            if ($session->status === 'completed' && !is_null($order)) {
+                $success_url = $this->gateway->get_return_url($order);
+                wp_safe_redirect($success_url);
                 exit;
             } elseif (is_null($order)) {
                 $checkout_url = wc_get_checkout_url();
@@ -128,6 +131,17 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
 
         $order = $this->get_komoju_order($webhookEvent, $this->invoice_prefix);
         if ($order) {
+            // Replay protection: skip duplicate webhook events
+            $event_id = $webhookEvent->event_type() . '_' . $webhookEvent->uuid();
+            if ($this->is_event_already_processed($order, $event_id)) {
+                WC_Gateway_Komoju::log('Skipping duplicate webhook event: ' . $event_id);
+
+                return;
+            }
+
+            // Record this event as processed immediately to prevent concurrent replays
+            $this->mark_event_processed($order, $event_id);
+
             $this->save_komoju_meta_data($order, $webhookEvent);
             switch ($webhookEvent->status()) {
                 case 'captured':
@@ -171,7 +185,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
 
         $calcHmac = hash_hmac('sha256', $requestBody, $this->webhookSecretToken);
 
-        if ($hmacHeader != $calcHmac) {
+        if (!hash_equals($calcHmac, $hmacHeader)) {
             if ($isDevEnv) {
                 WC_Gateway_Komoju::log('hmac codes (sent by Komoju / recalculated) don\'t match. Continuing the process because it\'s running in dev mode....');
 
@@ -194,7 +208,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
     protected function validate_amount($order, $amount)
     {
         $order_amount = WC_Gateway_Komoju::to_cents($order->get_total(), $order->get_currency());
-        if (number_format($order_amount != $amount)) {
+        if ($order_amount != $amount) {
             WC_Gateway_Komoju::log('Payment error: Amounts do not match (total: ' . $amount . ') for order #' . $order->get_id() . '(' . $order->get_total() . ')');
 
             // Put this order on-hold for manual checking
@@ -315,7 +329,9 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
             $session = $client->session($session_id);
 
             return $session;
-        } catch (KomojuExceptionBadServer|KomojuExceptionBadJson $e) {
+        } catch (KomojuExceptionBadServer $e) {
+            return null;
+        } catch (KomojuExceptionBadJson $e) {
             return null;
         }
     }
@@ -343,6 +359,52 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
                 $order->update_meta_data('komoju_payment_id', $webhookEvent->uuid(), true);
             }
         }
+        $order->save();
+    }
+
+    /**
+     * Check if a webhook event has already been processed for this order.
+     *
+     * @param WC_Order $order
+     * @param string $event_id
+     *
+     * @return bool
+     */
+    private function is_event_already_processed($order, $event_id)
+    {
+        $raw = $order->get_meta('_komoju_processed_events');
+        if (empty($raw)) {
+            return false;
+        }
+
+        $processed = json_decode($raw, true);
+        if (!is_array($processed)) {
+            return false;
+        }
+
+        return in_array($event_id, $processed, true);
+    }
+
+    /**
+     * Record a webhook event as processed for this order.
+     * Saves immediately so that concurrent/retry requests see the update.
+     *
+     * @param WC_Order $order
+     * @param string $event_id
+     */
+    private function mark_event_processed($order, $event_id)
+    {
+        $raw       = $order->get_meta('_komoju_processed_events');
+        $processed = [];
+        if (!empty($raw)) {
+            $decoded = json_decode($raw, true);
+            if (is_array($decoded)) {
+                $processed = $decoded;
+            }
+        }
+
+        $processed[] = $event_id;
+        $order->update_meta_data('_komoju_processed_events', wp_json_encode($processed));
         $order->save();
     }
 }

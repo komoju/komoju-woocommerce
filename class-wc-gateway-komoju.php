@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  *
  * @extends     WC_Payment_Gateway
  *
- * @version     3.2.8
+ * @version     3.2.9
  *
  * @author      Komoju
  */
@@ -129,6 +129,21 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
     }
 
     /**
+     * Output the gateway settings page with test mode notice if applicable.
+     */
+    public function admin_options()
+    {
+        if (self::komoju_is_test_mode()) {
+            echo '<div class="notice notice-warning inline" style="border-left-color: #f0b849; background: #fff8e5; padding: 12px 16px; margin-bottom: 16px;">';
+            echo '<p style="margin: 0; font-size: 14px;">';
+            echo '<strong>⚠️ ' . esc_html__('Test Mode Active', 'komoju-japanese-payments') . '</strong> — ';
+            echo esc_html__('Your store is using KOMOJU test keys. No real charges will be processed.', 'komoju-japanese-payments');
+            echo '</p></div>';
+        }
+        parent::admin_options();
+    }
+
+    /**
      * Initialise Gateway Settings Form Fields
      */
     public function init_form_fields()
@@ -150,6 +165,9 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
 
         $order = wc_get_order($order_id);
         $order->update_meta_data('komoju_session_id', $session->id);
+        if (self::komoju_is_test_mode()) {
+            $order->update_meta_data('komoju_test_mode', 'true');
+        }
         $order->save();
 
         return [
@@ -172,14 +190,26 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
         // construct line items
         $line_items = [];
         foreach ($order->get_items() as $item) {
-            $image_parser = new DOMDocument();
-            $image_parser->loadHTML($item->get_product()->get_image());
-            $img = $image_parser->getElementsByTagName('img')->item(0);
+            $product   = $item->get_product();
+            $image_url = '';
+
+            if ($product) {
+                $image_parser = new DOMDocument();
+                @$image_parser->loadHTML($product->get_image());
+                $img = $image_parser->getElementsByTagName('img')->item(0);
+
+                if ($img) {
+                    $src = $img->attributes->getNamedItem('src');
+                    if ($src) {
+                        $image_url = $src->nodeValue;
+                    }
+                }
+            }
 
             $line_items[] = [
                 'description' => $item->get_name(),
                 'quantity'    => $item->get_quantity(),
-                'image'       => $img->attributes->getNamedItem('src')->nodeValue,
+                'image'       => $image_url,
             ];
         }
 
@@ -259,6 +289,21 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
         $suffix = substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6);
 
         return $this->invoice_prefix . $order->get_order_number() . '-' . $suffix;
+    }
+
+    /**
+     * Check if the store is using KOMOJU test keys.
+     *
+     * @return bool
+     */
+    public static function komoju_is_test_mode()
+    {
+        $secret_key = get_option('komoju_woocommerce_secret_key');
+        if (!$secret_key) {
+            $secret_key = self::get_legacy_setting('secretKey');
+        }
+
+        return $secret_key && strpos($secret_key, 'sk_test_') === 0;
     }
 
     public static function get_locale_or_fallback()

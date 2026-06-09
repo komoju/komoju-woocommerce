@@ -219,3 +219,20 @@ msgstr "保留中ステータスを利用する"
 #, php-format
 msgid "Use 'on-hold' status for payments that are authorized on komoju but awaiting capture. If not selected, 'payment pending' status will be used."
 msgstr "承認済みで決済を待っている状態の取引には保留中ステータスをご利用ください。指定されない場合支払い待ちステータスが適用されます。"
+
+#: class-wc-gateway-komoju.php class-wc-settings-page-komoju.php
+msgid "Test Mode Active"
+msgstr "テストモード有効"
+
+#: class-wc-gateway-komoju.php class-wc-settings-page-komoju.php
+msgid "Your store is using KOMOJU test keys. No real charges will be processed."
+msgstr "現在KOMOJUのテストキーを使用しています。実際の決済は処理されません。"
+
+#: includes/class-wc-gateway-komoju-single-slug.php
+msgid "Test Mode"
+msgstr "テストモード"
+
+#: includes/class-wc-gateway-komoju-single-slug.php
+msgid "No real charges will be processed."
+msgstr "実際の決済は処理されません。"
+

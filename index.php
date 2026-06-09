@@ -12,7 +12,7 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 * Description: Extends WooCommerce with KOMOJU gateway.
 * Author: KOMOJU
 * Author URI: https://komoju.com
-* Version: 3.2.8
+* Version: 3.2.9
 * Requires at least: 6.0
 * Requires PHP: 7.4
 * Text Domain: komoju-japanese-payments
@@ -30,12 +30,25 @@ add_action('before_woocommerce_init', function () {
     }
 });
 
+add_action('init', 'woocommerce_komoju_load_textdomain');
+
+function woocommerce_komoju_load_textdomain()
+{
+    $domain = 'komoju-japanese-payments';
+    $locale = determine_locale();
+
+    // Load the plugin's bundled translations directly. This ensures new strings
+    // not yet available on translate.wordpress.org are always translated.
+    $mofile = dirname(__FILE__) . "/languages/{$domain}-{$locale}.mo";
+    if (file_exists($mofile)) {
+        load_textdomain($domain, $mofile);
+    }
+}
+
 add_action('plugins_loaded', 'woocommerce_komoju_init', 0);
 
 function woocommerce_komoju_init()
 {
-    // Translations are loaded automatically by WordPress for plugins hosted on WordPress.org.
-
     /**
      * Add the Gateway to WooCommerce
      **/

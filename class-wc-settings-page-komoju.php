@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  *
  * @extends     WC_Settings_Page
  *
- * @version     3.2.8
+ * @version     3.2.9
  *
  * @author      Komoju
  */
@@ -94,7 +94,28 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             delete_option('komoju_woocommerce_just_connected_merchant_name');
             $this->output_connected_notice($just_connected);
         }
+
+        if (WC_Gateway_Komoju::komoju_is_test_mode()) {
+            $this->output_test_mode_notice();
+        }
+
         parent::output();
+    }
+
+    /**
+     * Display a prominent notice when KOMOJU is in test mode.
+     */
+    public function output_test_mode_notice()
+    {
+        ?>
+        <div class="notice notice-warning komoju-test-mode-notice" style="border-left-color: #f0b849; background: #fff8e5; padding: 12px 16px; margin-bottom: 16px;">
+            <p style="margin: 0; font-size: 14px;">
+                <strong>⚠️ <?php echo esc_html__('Test Mode Active', 'komoju-japanese-payments'); ?></strong>
+                —
+                <?php echo esc_html__('Your store is using KOMOJU test keys. No real charges will be processed.', 'komoju-japanese-payments'); ?>
+            </p>
+        </div>
+        <?php
     }
 
     // This shows a flash message (meant for the top of the KOMOJU settings page) for when

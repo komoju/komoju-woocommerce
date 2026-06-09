@@ -23,6 +23,9 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
     {
         $slug = $payment_method['type_slug'];
 
+        // NOTE: These assignments must happen before parent::__construct() because the parent
+        // constructor references $this->id, $this->has_fields, and $this->method_title.
+        // get_option_compat() only uses global WordPress functions and does not depend on parent state.
         $this->publishableKey = $this->get_option_compat('publishable_key', 'publishable_key');
         $this->payment_method = $payment_method;
         $this->id             = 'komoju_' . $slug;
@@ -109,7 +112,12 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
 
         try {
             $payment = $this->komoju_api->refund($payment_id, $payload);
-        } catch (KomojuExceptionBadServer|KomojuExceptionBadJson $e) {
+        } catch (KomojuExceptionBadServer $e) {
+            $error_message = $e->getMessage();
+            $this->log($error_message);
+
+            return new WP_Error('komoju_refund_failed', $error_message);
+        } catch (KomojuExceptionBadJson $e) {
             $error_message = $e->getMessage();
             $this->log($error_message);
 
@@ -118,7 +126,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
 
         $refund = $payment->refunds[count($payment->refunds) - 1];
 
-        if ($refund && $refund->amount == self::to_cents($amount, $currency)) {
+        if ($refund && (is_null($amount) || $refund->amount == self::to_cents($amount, $currency))) {
             return true;
         }
 
@@ -184,6 +192,13 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
 
     public function payment_fields()
     {
+        if (WC_Gateway_Komoju::komoju_is_test_mode()) {
+            echo '<p class="komoju-test-mode-checkout" style="color: #666; font-size: 12px; margin-bottom: 8px;">';
+            echo '<strong>' . esc_html__('Test Mode', 'komoju-japanese-payments') . '</strong> — ';
+            echo esc_html__('No real charges will be processed.', 'komoju-japanese-payments');
+            echo '</p>';
+        }
+
         if (!$this->has_fields) {
             return;
         }
@@ -193,7 +208,9 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         if (is_null($checkout_session)) {
             try {
                 $checkout_session = $this->create_session_for_fields();
-            } catch (KomojuExceptionBadServer|KomojuExceptionBadJson $e) {
+            } catch (KomojuExceptionBadServer $e) {
+                $checkout_session = false;
+            } catch (KomojuExceptionBadJson $e) {
                 $checkout_session = false;
             }
         }
@@ -242,7 +259,9 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         if (!empty($komoju_payment_id)) {
             try {
                 $this->komoju_api->cancel($komoju_payment_id, []);
-            } catch (KomojuExceptionBadServer|KomojuExceptionBadJson $e) {
+            } catch (KomojuExceptionBadServer $e) {
+                // Best-effort: the payment may already be cancelled or expired.
+            } catch (KomojuExceptionBadJson $e) {
                 // Best-effort: the payment may already be cancelled or expired.
             }
         }
@@ -255,6 +274,9 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
             $session = $this->create_session_for_order($order_id, $payment_type);
 
             $order->update_meta_data('komoju_session_id', $session->id);
+            if (WC_Gateway_Komoju::komoju_is_test_mode()) {
+                $order->update_meta_data('komoju_test_mode', 'true');
+            }
             $order->save();
 
             $result = $this->komoju_api->paySession($session->id, [
@@ -267,13 +289,17 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
             return ['result' => 'failure'];
         }
 
-        if ($result->redirect_url) {
+        if (isset($result->redirect_url) && $result->redirect_url) {
             return [
                 'result'   => 'success',
                 'redirect' => $result->redirect_url,
             ];
         }
-        wc_add_notice(__('Payment error:', 'komoju-japanese-payments') . $result->error, 'error');
+
+        $error_message = isset($result->error) ? $result->error : '';
+        wc_add_notice(__('Payment error:', 'komoju-japanese-payments') . ' ' . $error_message, 'error');
+
+        return ['result' => 'failure'];
     }
 
     public function default_title()

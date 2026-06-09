@@ -3,10 +3,10 @@ Contributors: KOMOJU
 Tags: WooCommerce,Payment Gateway,Komoju
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 3.2.8
+Stable tag: 3.2.9
 Requires PHP: 7.4
 WC requires at least: 6.0.0
-WC tested up to: 10.7.0
+WC tested up to: 10.8.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,13 +110,13 @@ We currently accept the following payment methods:
 = What versions of WordPress and WooCommerce is this compatible with? =
 
 At the moment, this plugin has been tested and is known to work up to WordPress
-6.7.2 and WooCommerce 9.7.1 If you are using a later version, please check the
+7.0 and WooCommerce 10.8.1. If you are using a later version, please check the
 next section or contact us regarding this.
 
 = What should I do if I am using newer versions of WordPress and WooCommerce? =
 
-We recommend performing a fresh install of WordPress 6.7.2 and WooCommerce
-9.7.1 before proceeding to install this plugin. You can temporarily downgrade
+We recommend performing a fresh install of WordPress 7.0 and WooCommerce
+10.8.1 before proceeding to install this plugin. You can temporarily downgrade
 from a newer version of WordPress and WooCommerce before continuing installation.
 However, downgrading from newer versions of WordPress and WooCommerce may result in
 issues with installing this plugin. If you are experiencing problems, please
@@ -128,11 +128,11 @@ Please contact contact@komoju.com if you have any questions about
 the installation of the module.
 
 = どのWordPress・WooCommerceのバージョンに対応していますか？=
-現時点でこのプラグインは、WordPress 6.7.2およびWooCommerce 9.7.1まで動作することが確認されています。
+現時点でこのプラグインは、WordPress 7.0およびWooCommerce 10.8.1まで動作することが確認されています。
 それ以降のバージョンをお使いの場合は、以下をお試し頂くか、contact@komoju.comまでご連絡ください。
 
 = 新しいバージョンのWordPressとWooCommerceを使用している場合はどうすればよいですか？ =
-このプラグインをインストールする前に、まずWordPress 6.7.2とWooCommerce 9.7.1を新規インストールすることをお勧めします。
+このプラグインをインストールする前に、まずWordPress 7.0とWooCommerce 10.8.1を新規インストールすることをお勧めします。
 新しいバージョンから旧バージョンへ一時的にダウングレードし、接続頂くことも可能ですが、新しいバージョンからダウングレードすると、このプラグインのインストールに問題が生じる可能性がございます。
 問題が発生した場合は、サポートチーム（contact@komoju.com）までご連絡ください。
 
@@ -180,6 +180,11 @@ Ensure that the "Active" checkbox is also ticked and then click "Create Webhook"
 Go back to your Wordpress instance and set the "Webhook Secret Token" value on the Komoju Woocommerce plugin to be the same as the secret set for the webhook.
 
 == Changelog ==
+
+= 3.2.9 =
+
+Security and code quality improvements
+Added banners to indicate when a test merchant is being used
 
 = 3.2.8 =
 
