@@ -319,3 +319,7 @@ msgstr ""
 #: includes/class-wc-gateway-komoju-single-slug.php
 msgid "No real charges will be processed."
 msgstr ""
+
+#: class-wc-gateway-komoju.php
+msgid "test"
+msgstr ""

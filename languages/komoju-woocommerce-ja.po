@@ -235,3 +235,7 @@ msgstr "テストモード"
 #: includes/class-wc-gateway-komoju-single-slug.php
 msgid "No real charges will be processed."
 msgstr "実際の決済は処理されません。"
+
+#: class-wc-gateway-komoju.php
+msgid "test"
+msgstr "テスト"

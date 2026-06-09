@@ -109,6 +109,9 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
             <a href="<?php echo esc_url($url); ?>">
                 <?php echo esc_html__('View payment on KOMOJU', 'komoju-japanese-payments'); ?>
             </a>
+            <?php if ($order->get_meta('_komoju_test_mode') === 'yes') { ?>
+                <span style="color: #856404; font-size: 12px; margin-left: 6px;">(<?php echo esc_html__('test', 'komoju-japanese-payments'); ?>)</span>
+            <?php } ?>
         </p>
 <?php
     }
@@ -165,6 +168,9 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
 
         $order = wc_get_order($order_id);
         $order->update_meta_data('komoju_session_id', $session->id);
+        if (self::komoju_is_test_mode()) {
+            $order->update_meta_data('_komoju_test_mode', 'yes');
+        }
         $order->save();
 
         return [

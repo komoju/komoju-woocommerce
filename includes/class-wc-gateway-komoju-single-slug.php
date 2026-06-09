@@ -274,6 +274,9 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
             $session = $this->create_session_for_order($order_id, $payment_type);
 
             $order->update_meta_data('komoju_session_id', $session->id);
+            if (WC_Gateway_Komoju::komoju_is_test_mode()) {
+                $order->update_meta_data('_komoju_test_mode', 'yes');
+            }
             $order->save();
 
             $result = $this->komoju_api->paySession($session->id, [
