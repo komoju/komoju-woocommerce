@@ -57,18 +57,22 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
         static $checkout_session_failed = false;
         if ($checkout_session_failed) {
             return [
-                'id'             => $this->name,
-                'title'          => $this->gateway->title,
-                'description'    => $this->gateway->description,
-                'supports'       => array_filter($this->gateway->supports, [$this->gateway, 'supports']),
-                'icon'           => $this->gateway->icon,
-                'tokenName'      => 'komoju_payment_token',
-                'komojuApi'      => KomojuApi::endpoint(),
-                'publishableKey' => $this->gateway->publishableKey,
-                'session'        => null,
-                'paymentType'    => $this->gateway->payment_method['type_slug'],
-                'locale'         => $this->gateway->locale,
-                'inlineFields'   => false,
+                'id'              => $this->name,
+                'title'           => $this->gateway->title,
+                'description'     => $this->gateway->description,
+                'supports'        => array_filter($this->gateway->supports, [$this->gateway, 'supports']),
+                'icon'            => $this->gateway->icon,
+                'tokenName'       => 'komoju_payment_token',
+                'komojuApi'       => KomojuApi::endpoint(),
+                'publishableKey'  => $this->gateway->publishableKey,
+                'session'         => null,
+                'paymentType'     => $this->gateway->payment_method['type_slug'],
+                'locale'          => $this->gateway->locale,
+                'inlineFields'    => false,
+                'testMode'        => WC_Gateway_Komoju::komoju_is_test_mode(),
+                'testModeMessage' => WC_Gateway_Komoju::komoju_is_test_mode()
+                    ? esc_html__('Test Mode', 'komoju-japanese-payments') . ' — ' . esc_html__('No real charges will be processed.', 'komoju-japanese-payments')
+                    : '',
             ];
         }
         if (is_null($checkout_session)) {
@@ -84,19 +88,22 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
         }
 
         return [
-            'id'          => $this->name,
-            'title'       => $this->gateway->title,
-            'description' => $this->gateway->description,
-            'supports'    => array_filter($this->gateway->supports, [$this->gateway, 'supports']),
-            // 'paymentFields' => $this->gateway->payment_fields(),
-            'icon'           => $this->gateway->icon,
-            'tokenName'      => 'komoju_payment_token',
-            'komojuApi'      => KomojuApi::endpoint(),
-            'publishableKey' => $this->gateway->publishableKey,
-            'session'        => wp_json_encode($checkout_session),
-            'paymentType'    => $this->gateway->payment_method['type_slug'],
-            'locale'         => $this->gateway->locale,
-            'inlineFields'   => $checkout_session ? $this->gateway->has_fields : false,
+            'id'              => $this->name,
+            'title'           => $this->gateway->title,
+            'description'     => $this->gateway->description,
+            'supports'        => array_filter($this->gateway->supports, [$this->gateway, 'supports']),
+            'icon'            => $this->gateway->icon,
+            'tokenName'       => 'komoju_payment_token',
+            'komojuApi'       => KomojuApi::endpoint(),
+            'publishableKey'  => $this->gateway->publishableKey,
+            'session'         => wp_json_encode($checkout_session),
+            'paymentType'     => $this->gateway->payment_method['type_slug'],
+            'locale'          => $this->gateway->locale,
+            'inlineFields'    => $checkout_session ? $this->gateway->has_fields : false,
+            'testMode'        => WC_Gateway_Komoju::komoju_is_test_mode(),
+            'testModeMessage' => WC_Gateway_Komoju::komoju_is_test_mode()
+                ? esc_html__('Test Mode', 'komoju-japanese-payments') . ' — ' . esc_html__('No real charges will be processed.', 'komoju-japanese-payments')
+                : '',
         ];
     }
 }

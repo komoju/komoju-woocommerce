@@ -30,12 +30,17 @@ add_action('before_woocommerce_init', function () {
     }
 });
 
+add_action('init', 'woocommerce_komoju_load_textdomain');
+
+function woocommerce_komoju_load_textdomain()
+{
+    load_plugin_textdomain('komoju-japanese-payments', false, basename(__DIR__) . '/languages');
+}
+
 add_action('plugins_loaded', 'woocommerce_komoju_init', 0);
 
 function woocommerce_komoju_init()
 {
-    load_plugin_textdomain('komoju-japanese-payments', false, dirname(plugin_basename(__FILE__)) . '/languages');
-
     /**
      * Add the Gateway to WooCommerce
      **/

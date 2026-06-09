@@ -33,6 +33,12 @@ const KomojuPaymentModule = (() => {
             const { onPaymentSetup } = eventRegistration;
             const komojuFieldEnabledMethods = ['komoju_credit_card', 'komoju_konbini', 'komoju_bank_transfer']
 
+            const testModeNotice = settings.testMode
+                ? createElement('p', {
+                    style: { background: '#fff8e5', border: '1px solid #f0b849', borderRadius: '4px', padding: '8px 12px', marginBottom: '10px', fontSize: '13px' }
+                }, settings.testModeMessage)
+                : null;
+
             useEffect(() => {
                 if (paymentMethod.id != activePaymentMethod) return;
 
@@ -122,7 +128,7 @@ const KomojuPaymentModule = (() => {
                 })
                 : null;
 
-            return komojuFields;
+            return createElement('div', null, testModeNotice, komojuFields);
         };
 
         const Block_Gateway = {
