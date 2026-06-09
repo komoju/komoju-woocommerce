@@ -193,7 +193,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
     public function payment_fields()
     {
         if (WC_Gateway_Komoju::komoju_is_test_mode()) {
-            echo '<p class="komoju-test-mode-checkout" style="background: #fff8e5; border: 1px solid #f0b849; border-radius: 4px; padding: 8px 12px; margin-bottom: 10px; font-size: 13px;">';
+            echo '<p class="komoju-test-mode-checkout" style="color: #666; font-size: 12px; margin-bottom: 8px;">';
             echo '<strong>' . esc_html__('Test Mode', 'komoju-japanese-payments') . '</strong> — ';
             echo esc_html__('No real charges will be processed.', 'komoju-japanese-payments');
             echo '</p>';

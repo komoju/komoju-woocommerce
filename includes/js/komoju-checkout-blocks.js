@@ -35,7 +35,7 @@ const KomojuPaymentModule = (() => {
 
             const testModeNotice = settings.testMode
                 ? createElement('p', {
-                    style: { background: '#fff8e5', border: '1px solid #f0b849', borderRadius: '4px', padding: '8px 12px', marginBottom: '10px', fontSize: '13px' }
+                    style: { color: '#666', fontSize: '12px', marginBottom: '8px' }
                 }, settings.testModeMessage)
                 : null;
 
