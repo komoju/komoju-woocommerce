@@ -275,7 +275,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
 
             $order->update_meta_data('komoju_session_id', $session->id);
             if (WC_Gateway_Komoju::komoju_is_test_mode()) {
-                $order->update_meta_data('_komoju_test_mode', 'yes');
+                $order->update_meta_data('komoju_test_mode', 'true');
             }
             $order->save();
 

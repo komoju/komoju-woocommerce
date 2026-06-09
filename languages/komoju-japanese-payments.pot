@@ -320,6 +320,3 @@ msgstr ""
 msgid "No real charges will be processed."
 msgstr ""
 
-#: class-wc-gateway-komoju.php
-msgid "test"
-msgstr ""
