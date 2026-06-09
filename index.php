@@ -34,7 +34,15 @@ add_action('init', 'woocommerce_komoju_load_textdomain');
 
 function woocommerce_komoju_load_textdomain()
 {
-    load_plugin_textdomain('komoju-japanese-payments', false, basename(__DIR__) . '/languages');
+    $domain = 'komoju-japanese-payments';
+    $locale = determine_locale();
+
+    // Load the plugin's bundled translations directly. This ensures new strings
+    // not yet available on translate.wordpress.org are always translated.
+    $mofile = dirname(__FILE__) . "/languages/{$domain}-{$locale}.mo";
+    if (file_exists($mofile)) {
+        load_textdomain($domain, $mofile);
+    }
 }
 
 add_action('plugins_loaded', 'woocommerce_komoju_init', 0);
