@@ -178,6 +178,14 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
 
     public function should_use_inline_fields($slug)
     {
+        // Apple Pay must never use inline Hosted Fields. Hosted Fields would require
+        // registering each merchant's domain with Apple (which we don't do), and even
+        // when it loads it conflicts with WooCommerce's own "Pay" button (two competing
+        // pay actions). Apple Pay must always go through the full KOMOJU Hosted Page
+        // redirect flow instead, like other methods that don't support Hosted Fields.
+        if ($slug === 'apple_pay') {
+            return false;
+        }
         // Merchants can disable inline payment fields via gateway settings.
         if ($this->get_option('inlineFields') !== 'yes') {
             return false;
