@@ -39,6 +39,20 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             [$this, 'output_endpoint_field']
         );
 
+        add_filter(
+            'woocommerce_admin_settings_sanitize_option_komoju_woocommerce_secret_key',
+            [$this, 'validate_secret_key'],
+            10,
+            3
+        );
+
+        add_filter(
+            'woocommerce_admin_settings_sanitize_option_komoju_woocommerce_publishable_key',
+            [$this, 'validate_publishable_key'],
+            10,
+            3
+        );
+
         parent::__construct();
     }
 
@@ -130,6 +144,36 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         ?></strong></p>
         </div>
         <?php
+    }
+
+    // Validate the secret key on save. Must start with sk_live_ or sk_test_.
+    public function validate_secret_key($value, $option, $raw_value)
+    {
+        $value = trim($value);
+        if ($value !== '' && !preg_match('/^sk_(live|test)_[A-Za-z0-9]+$/', $value)) {
+            WC_Admin_Settings::add_error(
+                __('Invalid KOMOJU secret key. It should start with sk_live_ or sk_test_.', 'komoju-japanese-payments')
+            );
+
+            return get_option('komoju_woocommerce_secret_key');
+        }
+
+        return $value;
+    }
+
+    // Validate the publishable key on save. Must start with pk_live_ or pk_test_.
+    public function validate_publishable_key($value, $option, $raw_value)
+    {
+        $value = trim($value);
+        if ($value !== '' && !preg_match('/^pk_(live|test)_[A-Za-z0-9]+$/', $value)) {
+            WC_Admin_Settings::add_error(
+                __('Invalid KOMOJU publishable key. It should start with pk_live_ or pk_test_.', 'komoju-japanese-payments')
+            );
+
+            return get_option('komoju_woocommerce_publishable_key');
+        }
+
+        return $value;
     }
 
     // Action handler for rendering settings with type = 'komoju_endpoint'
