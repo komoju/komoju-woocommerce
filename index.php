@@ -100,6 +100,45 @@ function woocommerce_komoju_init()
 
         wp_enqueue_script('komoju-fields', $komoju_fields_js, [], null, true); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
         wp_script_add_data('komoju-fields', 'type', 'module');
+
+        wp_enqueue_style(
+            'komoju-checkout',
+            plugins_url('includes/css/checkout-komoju.css', __FILE__),
+            [],
+            '3.2.9'
+        );
+    }
+
+    /**
+     * Enqueue admin styles and scripts for the KOMOJU settings page.
+     **/
+    function woocommerce_komoju_load_admin_assets($hook)
+    {
+        if ($hook !== 'woocommerce_page_wc-settings') {
+            return;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (!isset($_GET['tab']) || $_GET['tab'] !== 'komoju_settings') {
+            return;
+        }
+
+        $version = '3.2.9';
+
+        wp_enqueue_style(
+            'komoju-admin',
+            plugins_url('includes/css/admin-komoju.css', __FILE__),
+            [],
+            $version
+        );
+
+        wp_enqueue_script(
+            'komoju-admin',
+            plugins_url('includes/js/admin-komoju.js', __FILE__),
+            [],
+            $version,
+            true
+        );
     }
 
     function woocommerce_komoju_load_script_as_module($tag, $handle, $src)
@@ -135,6 +174,7 @@ function woocommerce_komoju_init()
     add_action('woocommerce_api_wc_gateway_komoju', 'woocommerce_komoju_handle_http_request');
 
     add_action('wp_enqueue_scripts', 'woocommerce_komoju_load_scripts');
+    add_action('admin_enqueue_scripts', 'woocommerce_komoju_load_admin_assets');
     add_filter('script_loader_tag', 'woocommerce_komoju_load_script_as_module', 10, 3);
 
     add_action('plugins_loaded', 'woocommerce_komoju_blocks');

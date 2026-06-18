@@ -1,0 +1,32 @@
+/* Admin styles for the KOMOJU settings page. */
+
+.komoju-endpoint-field {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.komoju-endpoint-field p.description {
+    margin: 0;
+}
+
+.komoju-endpoint-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.komoju-payment-methods {
+    display: flex;
+    flex-flow: row wrap;
+    max-width: 800px;
+    margin-bottom: 12px;
+}
+
+.komoju-payment-method {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+    width: 200px;
+}

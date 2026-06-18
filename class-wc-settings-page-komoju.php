@@ -197,54 +197,23 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     <p class="description">
         <?php echo esc_html__("Only modify this if you know what you're doing.", 'komoju-japanese-payments'); ?>
     </p>
-    <div>
+    <div class="komoju-endpoint-buttons">
         <?php if ($untainted) { ?>
             <button
                 type="button"
-                class="komoju-endpoint-edit"
-                data-target="<?php echo esc_attr($setting['id']); ?>"
-                onclick="komoju_woocommerce_enable_endpoint_field(event)">
+                class="button button-secondary komoju-endpoint-edit"
+                data-target="<?php echo esc_attr($setting['id']); ?>">
                 <?php echo esc_html__('Edit', 'komoju-japanese-payments'); ?>
             </button>
         <?php } ?>
 
         <button
             type="button"
-            class="komoju-endpoint-reset"
-            data-target="<?php echo esc_attr($setting['id']); ?>"
-            onclick="komoju_woocommerce_reset_endpoint_field(event)">
+            class="button button-link-delete komoju-endpoint-reset"
+            data-target="<?php echo esc_attr($setting['id']); ?>">
             <?php echo esc_html__('Reset', 'komoju-japanese-payments'); ?>
         </button>
     </div>
-
-    <script>
-        function komoju_woocommerce_enable_endpoint_field(event) {
-            const button = event.target;
-            const input = document.getElementById(button.dataset.target);
-            input.disabled = false;
-            event.target.remove();
-        }
-        function komoju_woocommerce_reset_endpoint_field(event) {
-            const button = event.target;
-            const input = document.getElementById(button.dataset.target);
-            input.value = input.dataset.default;
-        }
-    </script>
-
-    <style>
-        .komoju-endpoint-field {
-            display: flex;
-            flex-flow: column wrap;
-            align-items: flex-start;
-            gap: 4px;
-        }
-        .komoju-endpoint-field button {
-            min-width: 80px;
-        }
-        .komoju-endpoint-field p.description {
-            margin: 0;
-        }
-    </style>
 </td>
 </tr>
 <?php
@@ -332,23 +301,21 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         <th class="titledesc" scope="row">
             <label><?php echo esc_html($setting['title']); ?></label>
         </th>
-        <td class="forminp forminp-text komoju-payment-methods"
-            style="display: flex; flex-flow: row wrap; max-width: 800px; margin-bottom: 12px">
+        <td class="forminp forminp-text komoju-payment-methods">
             <?php
             foreach ($all_payment_methods as $slug => $payment_method) {
                 ?>
-                <label style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px; width: 200px">
+                <label class="komoju-payment-method">
                 <input
                   type="checkbox"
                   name="<?php echo esc_attr($setting['id']); ?>[]"
                   value="<?php echo esc_attr($slug); ?>"
-                  <?php if (in_array($slug, $value)) {
-                      echo 'checked';
-                  } ?>
+                  <?php checked(in_array($slug, $value, true)); ?>
                 >
                 <img
                   width="38"
                   height="24"
+                  alt=""
                   src="https://komoju.com/payment_methods/<?php echo esc_attr($slug); ?>.svg">
                 <?php echo esc_html($payment_method['name_' . $locale]); ?>
                 </label>
