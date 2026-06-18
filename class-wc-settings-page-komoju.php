@@ -122,9 +122,9 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     public function output_test_mode_notice()
     {
         ?>
-        <div class="notice notice-warning komoju-test-mode-notice" style="border-left-color: #f0b849; background: #fff8e5; padding: 12px 16px; margin-bottom: 16px;">
-            <p style="margin: 0; font-size: 14px;">
-                <strong>⚠️ <?php echo esc_html__('Test Mode Active', 'komoju-japanese-payments'); ?></strong>
+        <div class="notice notice-warning komoju-test-mode-notice">
+            <p>
+                <strong><?php echo esc_html__('Test Mode Active', 'komoju-japanese-payments'); ?></strong>
                 —
                 <?php echo esc_html__('Your store is using KOMOJU test keys. No real charges will be processed.', 'komoju-japanese-payments'); ?>
             </p>
@@ -137,7 +137,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     public function output_connected_notice($merchant_name)
     {
         ?>
-        <div id="message" class="updated inline">
+        <div class="notice notice-success is-dismissible">
             <p><strong><?php
                 /* translators: %s: merchant account name */
                 echo sprintf(esc_html__('Successfully connected to KOMOJU account %s.', 'komoju-japanese-payments'), esc_html($merchant_name));

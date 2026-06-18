@@ -134,9 +134,9 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
     public function admin_options()
     {
         if (self::komoju_is_test_mode()) {
-            echo '<div class="notice notice-warning inline" style="border-left-color: #f0b849; background: #fff8e5; padding: 12px 16px; margin-bottom: 16px;">';
-            echo '<p style="margin: 0; font-size: 14px;">';
-            echo '<strong>⚠️ ' . esc_html__('Test Mode Active', 'komoju-japanese-payments') . '</strong> — ';
+            echo '<div class="notice notice-warning inline komoju-test-mode-notice">';
+            echo '<p>';
+            echo '<strong>' . esc_html__('Test Mode Active', 'komoju-japanese-payments') . '</strong> — ';
             echo esc_html__('Your store is using KOMOJU test keys. No real charges will be processed.', 'komoju-japanese-payments');
             echo '</p></div>';
         }
