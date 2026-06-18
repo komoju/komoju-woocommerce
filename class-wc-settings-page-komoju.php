@@ -235,9 +235,9 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             <th class="titledesc" scope="row">
                 <label><?php echo esc_html($setting['title']); ?></label>
             </th>
-            <td class="forminp forminp-text komoju-setup-button" style="height: 60px">
+            <td class="forminp forminp-text komoju-setup-button">
                 <a href="<?php echo esc_url($setup_url); ?>"
-                   class='komoju-setup <?php echo $already_connected ? 'connected' : ''; ?>'>
+                   class="button button-hero komoju-setup <?php echo $already_connected ? 'button-secondary' : 'button-primary'; ?>">
                     <?php
                         if ($already_connected) {
                             echo esc_html__('Reconnect with KOMOJU', 'komoju-japanese-payments');
@@ -245,31 +245,6 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
                             echo esc_html__('Sign into KOMOJU', 'komoju-japanese-payments');
                         } ?>
                 </a>
-
-                <style>
-                a.komoju-setup {
-                    text-decoration: none;
-                    background-color: #1880DE;
-                    font-size: 18px;
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 26px;
-                    margin-bottom: 12px;
-                }
-                a.komoju-setup:hover {
-                    background-color: #3590E1;
-                }
-
-                a.komoju-setup.connected {
-                    background-color: white;
-                    color: #172E44;
-                    border: 2px solid #C1CDD8;
-                }
-                a.komoju-setup.connected:hover {
-                    background-color: #F0F8FF;
-                }
-                </style>
             </td>
         </tr>
         <?php
