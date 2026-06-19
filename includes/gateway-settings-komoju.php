@@ -12,7 +12,7 @@ return [
     'enabled' => [
         'title'   => __('Enable/Disable', 'komoju-japanese-payments'),
         'type'    => 'checkbox',
-        'label'   => __('Enable Komoju', 'komoju-japanese-payments'),
+        'label'   => __('Enable KOMOJU', 'komoju-japanese-payments'),
         'default' => 'no',
     ],
     'showIcon' => [

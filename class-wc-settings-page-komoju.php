@@ -22,7 +22,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     public function __construct()
     {
         $this->id    = 'komoju_settings';
-        $this->label = __('Komoju', 'komoju-japanese-payments');
+        $this->label = __('KOMOJU', 'komoju-japanese-payments');
 
         add_action(
             'woocommerce_admin_field_komoju_payment_types',

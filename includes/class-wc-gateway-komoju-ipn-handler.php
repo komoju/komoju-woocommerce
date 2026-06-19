@@ -213,7 +213,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
 
             // Put this order on-hold for manual checking
             /* translators: %s: payment total amount */
-            $order->update_status('on-hold', sprintf(__('Validation error: Komoju amounts do not match (total %s).', 'komoju-japanese-payments'), $amount));
+            $order->update_status('on-hold', sprintf(__('Validation error: KOMOJU amounts do not match (total %s).', 'komoju-japanese-payments'), $amount));
             exit;
         }
     }
