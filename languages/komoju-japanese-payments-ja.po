@@ -236,3 +236,22 @@ msgstr "テストモード"
 msgid "No real charges will be processed."
 msgstr "実際の決済は処理されません。"
 
+#: includes/api-settings-komoju.php
+msgid "API credentials"
+msgstr "API認証情報"
+
+#: includes/api-settings-komoju.php
+msgid "Payment behavior"
+msgstr "決済の挙動"
+
+#: includes/api-settings-komoju.php
+msgid "Control how orders and payments are processed in your store."
+msgstr "ストアでの注文と決済の処理方法を設定します。"
+
+#: includes/api-settings-komoju.php
+msgid "Advanced"
+msgstr "詳細設定"
+
+#: includes/api-settings-komoju.php
+msgid "Developer settings. Leave these as their defaults unless KOMOJU support has asked you to change them."
+msgstr "開発者向け設定です。KOMOJUサポートから変更を依頼された場合を除き、デフォルトのままにしてください。"

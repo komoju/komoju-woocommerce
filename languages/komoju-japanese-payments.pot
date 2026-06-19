@@ -320,3 +320,22 @@ msgstr ""
 msgid "No real charges will be processed."
 msgstr ""
 
+#: includes/api-settings-komoju.php
+msgid "API credentials"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "Payment behavior"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "Control how orders and payments are processed in your store."
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "Advanced"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "Developer settings. Leave these as their defaults unless KOMOJU support has asked you to change them."
+msgstr ""

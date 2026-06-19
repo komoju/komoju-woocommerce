@@ -9,10 +9,13 @@ if (!defined('ABSPATH')) {
  */
 
 return [
+    // ---------------------------------------------------------------------
+    // API credentials
+    // ---------------------------------------------------------------------
     [
-        'title'       => 'API Settings',
+        'title'       => __('API credentials', 'komoju-japanese-payments'),
         'type'        => 'title',
-        'id'          => 'api-settings-in-komoju',
+        'id'          => 'komoju-api-credentials',
         /* translators: %s: webhook URL */
         'desc'        => sprintf(__('Default url for the webhook is %s. Use this if you\'re not sure what it should be.', 'komoju-japanese-payments'), $this->url_for_webhooks()),
     ],
@@ -55,6 +58,20 @@ return [
         ],
     ],
     [
+        'id'       => 'komoju-api-credentials-end',
+        'type'     => 'sectionend',
+    ],
+
+    // ---------------------------------------------------------------------
+    // Payment behavior
+    // ---------------------------------------------------------------------
+    [
+        'title'       => __('Payment behavior', 'komoju-japanese-payments'),
+        'type'        => 'title',
+        'id'          => 'komoju-payment-behavior',
+        'desc'        => __('Control how orders and payments are processed in your store.', 'komoju-japanese-payments'),
+    ],
+    [
         'id'          => 'komoju_woocommerce_invoice_prefix',
         'placeholder' => __('Please enter a prefix for your invoice numbers. If you use your Komoju account for multiple stores ensure this prefix is unique.', 'komoju-japanese-payments'),
         'title'       => __('Invoice Prefix', 'komoju-japanese-payments'),
@@ -76,6 +93,20 @@ return [
         'title'        => __('Process IPNs Asynchronously', 'komoju-japanese-payments'),
         'desc'         => __('When true, IPNs will return immediately, and order completion will be processed in the background.', 'komoju-japanese-payments'),
         'default'      => 'no',
+    ],
+    [
+        'id'       => 'komoju-payment-behavior-end',
+        'type'     => 'sectionend',
+    ],
+
+    // ---------------------------------------------------------------------
+    // Advanced (developer settings - infrequently changed)
+    // ---------------------------------------------------------------------
+    [
+        'title'       => __('Advanced', 'komoju-japanese-payments'),
+        'type'        => 'title',
+        'id'          => 'komoju-advanced-settings',
+        'desc'        => __('Developer settings. Leave these as their defaults unless KOMOJU support has asked you to change them.', 'komoju-japanese-payments'),
     ],
     [
         'id'          => 'komoju_woocommerce_debug_log',
@@ -107,7 +138,7 @@ return [
         'default'     => '',
     ],
     [
-        'id'       => 'api-settings-in-komoju-end',
+        'id'       => 'komoju-advanced-settings-end',
         'type'     => 'sectionend',
     ],
 ];
