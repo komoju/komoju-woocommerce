@@ -39,6 +39,11 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             [$this, 'output_endpoint_field']
         );
 
+        add_action(
+            'woocommerce_admin_field_komoju_secret',
+            [$this, 'output_secret_field']
+        );
+
         add_filter(
             'woocommerce_admin_settings_sanitize_option_komoju_woocommerce_secret_key',
             [$this, 'validate_secret_key'],
@@ -49,6 +54,13 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         add_filter(
             'woocommerce_admin_settings_sanitize_option_komoju_woocommerce_publishable_key',
             [$this, 'validate_publishable_key'],
+            10,
+            3
+        );
+
+        add_filter(
+            'woocommerce_admin_settings_sanitize_option_komoju_woocommerce_webhook_secret',
+            [$this, 'validate_webhook_secret'],
             10,
             3
         );
@@ -147,10 +159,14 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     }
 
     // Validate the secret key on save. Must start with sk_live_ or sk_test_.
+    // The field is write-only: a blank submission keeps the stored key.
     public function validate_secret_key($value, $option, $raw_value)
     {
         $value = trim($value);
-        if ($value !== '' && !preg_match('/^sk_(live|test)_[A-Za-z0-9]+$/', $value)) {
+        if ($value === '') {
+            return get_option('komoju_woocommerce_secret_key');
+        }
+        if (!preg_match('/^sk_(live|test)_[A-Za-z0-9]+$/', $value)) {
             WC_Admin_Settings::add_error(
                 __('Invalid KOMOJU secret key. It should start with sk_live_ or sk_test_.', 'komoju-japanese-payments')
             );
@@ -162,10 +178,14 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     }
 
     // Validate the publishable key on save. Must start with pk_live_ or pk_test_.
+    // The field is write-only: a blank submission keeps the stored key.
     public function validate_publishable_key($value, $option, $raw_value)
     {
         $value = trim($value);
-        if ($value !== '' && !preg_match('/^pk_(live|test)_[A-Za-z0-9]+$/', $value)) {
+        if ($value === '') {
+            return get_option('komoju_woocommerce_publishable_key');
+        }
+        if (!preg_match('/^pk_(live|test)_[A-Za-z0-9]+$/', $value)) {
             WC_Admin_Settings::add_error(
                 __('Invalid KOMOJU publishable key. It should start with pk_live_ or pk_test_.', 'komoju-japanese-payments')
             );
@@ -174,6 +194,62 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         }
 
         return $value;
+    }
+
+    // Validate the webhook secret on save.
+    // The field is write-only: a blank submission keeps the stored value.
+    public function validate_webhook_secret($value, $option, $raw_value)
+    {
+        $value = trim($value);
+        if ($value === '') {
+            return get_option('komoju_woocommerce_webhook_secret');
+        }
+
+        return $value;
+    }
+
+    // Action handler for rendering settings with type = 'komoju_secret'.
+    //
+    // Renders a password input that never echoes the stored value into the
+    // HTML. When a value is already saved, an indicator placeholder is shown
+    // and leaving the field blank preserves the existing value on save.
+    public function output_secret_field($setting)
+    {
+        $has_value         = (bool) get_option($setting['id']);
+        $custom_attributes = '';
+        if (!empty($setting['custom_attributes']) && is_array($setting['custom_attributes'])) {
+            foreach ($setting['custom_attributes'] as $attribute => $attribute_value) {
+                $custom_attributes .= ' ' . esc_attr($attribute) . '="' . esc_attr($attribute_value) . '"';
+            }
+        }
+
+        $placeholder = $has_value
+            ? __('A key is saved. Leave blank to keep it.', 'komoju-japanese-payments')
+            : (isset($setting['placeholder']) ? $setting['placeholder'] : '');
+
+        $description = isset($setting['desc']) ? $setting['desc'] : '';
+        if ($has_value) {
+            $description = trim($description . ' ' . __('A key is currently saved. Enter a new value to replace it.', 'komoju-japanese-payments'));
+        }
+        ?>
+<tr valign="top">
+<th class="titledesc" scope="row">
+    <label for="<?php echo esc_attr($setting['id']); ?>"><?php echo esc_html($setting['title']); ?></label>
+</th>
+<td class="forminp forminp-password">
+    <input id="<?php echo esc_attr($setting['id']); ?>"
+           name="<?php echo esc_attr($setting['id']); ?>"
+           type="password"
+           value=""
+           placeholder="<?php echo esc_attr($placeholder); ?>"
+           autocomplete="off"
+           spellcheck="false"<?php echo $custom_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>>
+    <?php if ($description !== '') { ?>
+        <p class="description"><?php echo esc_html($description); ?></p>
+    <?php } ?>
+</td>
+</tr>
+<?php
     }
 
     // Action handler for rendering settings with type = 'komoju_endpoint'

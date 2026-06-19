@@ -255,3 +255,11 @@ msgstr "詳細設定"
 #: includes/api-settings-komoju.php
 msgid "Developer settings. Leave these as their defaults unless KOMOJU support has asked you to change them."
 msgstr "開発者向け設定です。KOMOJUサポートから変更を依頼された場合を除き、デフォルトのままにしてください。"
+
+#: class-wc-settings-page-komoju.php
+msgid "A key is saved. Leave blank to keep it."
+msgstr "キーは保存済みです。変更しない場合は空欄のままにしてください。"
+
+#: class-wc-settings-page-komoju.php
+msgid "A key is currently saved. Enter a new value to replace it."
+msgstr "現在キーが保存されています。変更するには新しい値を入力してください。"
