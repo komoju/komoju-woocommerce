@@ -30,6 +30,17 @@ add_action('before_woocommerce_init', function () {
     }
 });
 
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'woocommerce_komoju_plugin_action_links');
+
+function woocommerce_komoju_plugin_action_links($links)
+{
+    $settings_url  = admin_url('admin.php?page=wc-settings&tab=komoju_settings');
+    $settings_link = '<a href="' . esc_url($settings_url) . '">' . esc_html__('Settings', 'komoju-japanese-payments') . '</a>';
+    array_unshift($links, $settings_link);
+
+    return $links;
+}
+
 add_action('init', 'woocommerce_komoju_load_textdomain');
 
 function woocommerce_komoju_load_textdomain()
