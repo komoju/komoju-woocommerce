@@ -211,8 +211,8 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     // Action handler for rendering settings with type = 'komoju_secret'.
     //
     // Renders a password input that never echoes the stored value into the
-    // HTML. When a value is already saved, an indicator placeholder is shown
-    // and leaving the field blank preserves the existing value on save.
+    // HTML. When a value is already saved, the field shows masked dots so it
+    // looks like a saved password, and leaving it blank keeps the stored value.
     public function output_secret_field($setting)
     {
         $has_value         = (bool) get_option($setting['id']);
@@ -224,13 +224,10 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         }
 
         $placeholder = $has_value
-            ? __('A key is saved. Leave blank to keep it.', 'komoju-japanese-payments')
+            ? str_repeat('•', 24)
             : (isset($setting['placeholder']) ? $setting['placeholder'] : '');
 
         $description = isset($setting['desc']) ? $setting['desc'] : '';
-        if ($has_value) {
-            $description = trim($description . ' ' . __('A key is currently saved. Enter a new value to replace it.', 'komoju-japanese-payments'));
-        }
         ?>
 <tr valign="top">
 <th class="titledesc" scope="row">

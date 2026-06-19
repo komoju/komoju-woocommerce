@@ -339,11 +339,3 @@ msgstr ""
 #: includes/api-settings-komoju.php
 msgid "Developer settings. Leave these as their defaults unless KOMOJU support has asked you to change them."
 msgstr ""
-
-#: class-wc-settings-page-komoju.php
-msgid "A key is saved. Leave blank to keep it."
-msgstr ""
-
-#: class-wc-settings-page-komoju.php
-msgid "A key is currently saved. Enter a new value to replace it."
-msgstr ""
