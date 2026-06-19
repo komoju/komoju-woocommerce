@@ -255,3 +255,19 @@ msgstr "詳細設定"
 #: includes/api-settings-komoju.php
 msgid "Developer settings. Leave these as their defaults unless KOMOJU support has asked you to change them."
 msgstr "開発者向け設定です。KOMOJUサポートから変更を依頼された場合を除き、デフォルトのままにしてください。"
+
+#: includes/account-settings-komoju.php
+msgid "KOMOJU Account"
+msgstr "KOMOJU アカウント"
+
+#: includes/api-settings-komoju.php
+msgid "Publishable Key from Komoju"
+msgstr "Komoju 公開鍵"
+
+#: includes/api-settings-komoju.php
+msgid "Process IPNs Asynchronously"
+msgstr "IPN を非同期で処理する"
+
+#: includes/api-settings-komoju.php
+msgid "KOMOJU Fields script URL"
+msgstr "KOMOJU Fields スクリプト URL"

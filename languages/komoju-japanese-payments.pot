@@ -339,3 +339,19 @@ msgstr ""
 #: includes/api-settings-komoju.php
 msgid "Developer settings. Leave these as their defaults unless KOMOJU support has asked you to change them."
 msgstr ""
+
+#: includes/account-settings-komoju.php
+msgid "KOMOJU Account"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "Publishable Key from Komoju"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "Process IPNs Asynchronously"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "KOMOJU Fields script URL"
+msgstr ""
