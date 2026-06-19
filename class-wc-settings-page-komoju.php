@@ -211,11 +211,14 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     // Action handler for rendering settings with type = 'komoju_secret'.
     //
     // Renders a password input that never echoes the stored value into the
-    // HTML. When a value is already saved, the field shows masked dots so it
+    // HTML. When a value is already saved, the field shows a masked hint so it
     // looks like a saved password, and leaving it blank keeps the stored value.
+    // For KOMOJU keys the non-sensitive prefix (e.g. sk_test_, pk_live_) is
+    // revealed so the merchant can confirm which key and mode is in use.
     public function output_secret_field($setting)
     {
-        $has_value         = (bool) get_option($setting['id']);
+        $stored_value      = get_option($setting['id']);
+        $has_value         = (bool) $stored_value;
         $custom_attributes = '';
         if (!empty($setting['custom_attributes']) && is_array($setting['custom_attributes'])) {
             foreach ($setting['custom_attributes'] as $attribute => $attribute_value) {
@@ -223,9 +226,11 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             }
         }
 
-        $placeholder = $has_value
-            ? str_repeat('•', 24)
-            : (isset($setting['placeholder']) ? $setting['placeholder'] : '');
+        if ($has_value) {
+            $placeholder = $this->masked_secret_hint($stored_value);
+        } else {
+            $placeholder = isset($setting['placeholder']) ? $setting['placeholder'] : '';
+        }
 
         $description = isset($setting['desc']) ? $setting['desc'] : '';
         ?>
@@ -247,6 +252,20 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
 </td>
 </tr>
 <?php
+    }
+
+    // Builds a masked hint for a saved secret. The non-sensitive KOMOJU key
+    // prefix (e.g. "sk_test_", "pk_live_") is shown followed by dots; any
+    // other value falls back to dots only so nothing sensitive is revealed.
+    private function masked_secret_hint($value)
+    {
+        $dots = str_repeat('•', 16);
+
+        if (preg_match('/^((?:sk|pk)_(?:live|test)_)/', $value, $matches)) {
+            return $matches[1] . $dots;
+        }
+
+        return $dots;
     }
 
     // Action handler for rendering settings with type = 'komoju_endpoint'
