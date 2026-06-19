@@ -15,6 +15,7 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 * Version: 3.2.9
 * Requires at least: 6.0
 * Requires PHP: 7.4
+* Requires Plugins: woocommerce
 * Text Domain: komoju-japanese-payments
 * Domain Path: /languages
 * License: GPL-2.0-or-later
