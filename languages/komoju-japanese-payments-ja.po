@@ -203,7 +203,7 @@ msgstr "ほとんどの場合、これは空でいい"
 
 #: includes/api-settings-komoju.php:60
 msgid "Staging token"
-msgstr "Staging token"
+msgstr "ステージングトークン"
 
 #: includes/settings-komoju.php:107 includes/settings-komoju.php:112
 #, php-format
@@ -271,3 +271,19 @@ msgstr "IPN を非同期で処理する"
 #: includes/api-settings-komoju.php
 msgid "KOMOJU Fields script URL"
 msgstr "KOMOJU Fields スクリプト URL"
+
+#: includes/account-settings-komoju.php
+msgid "On this page, you can connect your KOMOJU account to your WooCommerce store."
+msgstr "このページでは、KOMOJU アカウントを WooCommerce ストアと連携できます。"
+
+#: includes/account-settings-komoju.php
+msgid "Quick Connect"
+msgstr "KOMOJUと連携"
+
+#: class-wc-settings-page-komoju.php
+msgid "Reconnect with KOMOJU"
+msgstr "KOMOJUと再連携"
+
+#: includes/api-settings-komoju.php
+msgid "When true, IPNs will return immediately, and order completion will be processed in the background."
+msgstr "有効にすると、IPN は即座に応答を返し、注文の完了はバックグラウンドで処理されます。"

@@ -355,3 +355,19 @@ msgstr ""
 #: includes/api-settings-komoju.php
 msgid "KOMOJU Fields script URL"
 msgstr ""
+
+#: includes/account-settings-komoju.php
+msgid "On this page, you can connect your KOMOJU account to your WooCommerce store."
+msgstr ""
+
+#: includes/account-settings-komoju.php
+msgid "Quick Connect"
+msgstr ""
+
+#: class-wc-settings-page-komoju.php
+msgid "Reconnect with KOMOJU"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "When true, IPNs will return immediately, and order completion will be processed in the background."
+msgstr ""
