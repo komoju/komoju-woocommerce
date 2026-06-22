@@ -24,6 +24,12 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 * WC tested up to: 10.8.1
 */
 
+// Plugin version. Keep this in sync with the "Version:" header above.
+// Used to cache-bust enqueued styles and scripts.
+if (!defined('KOMOJU_WC_VERSION')) {
+    define('KOMOJU_WC_VERSION', '3.2.9');
+}
+
 add_action('before_woocommerce_init', function () {
     if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
         Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('cart_checkout_blocks', __FILE__, true);
@@ -117,7 +123,7 @@ function woocommerce_komoju_init()
             'komoju-checkout',
             plugins_url('includes/css/checkout-komoju.css', __FILE__),
             [],
-            '3.2.9'
+            KOMOJU_WC_VERSION
         );
     }
 
@@ -135,20 +141,18 @@ function woocommerce_komoju_init()
             return;
         }
 
-        $version = '3.2.9';
-
         wp_enqueue_style(
             'komoju-admin',
             plugins_url('includes/css/admin-komoju.css', __FILE__),
             [],
-            $version
+            KOMOJU_WC_VERSION
         );
 
         wp_enqueue_script(
             'komoju-admin',
             plugins_url('includes/js/admin-komoju.js', __FILE__),
             [],
-            $version,
+            KOMOJU_WC_VERSION,
             true
         );
     }
