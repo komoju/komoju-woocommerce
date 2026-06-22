@@ -329,3 +329,11 @@ msgstr "有効にすると、この決済方法の入力フィールドをチェ
 #, php-format
 msgid "%s payments powered by KOMOJU"
 msgstr "%s 決済（KOMOJU 提供）"
+
+#: class-wc-settings-page-komoju.php
+msgid "Sign into KOMOJU"
+msgstr "KOMOJU にログイン"
+
+#: class-wc-settings-page-komoju.php
+msgid "Once signed into KOMOJU, you can select payment methods to use as WooCommerce gateways."
+msgstr "KOMOJU にログインすると、WooCommerce のゲートウェイとして使用する決済方法を選択できます。"

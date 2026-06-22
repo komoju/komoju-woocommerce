@@ -413,3 +413,11 @@ msgstr ""
 #, php-format
 msgid "%s payments powered by KOMOJU"
 msgstr ""
+
+#: class-wc-settings-page-komoju.php
+msgid "Sign into KOMOJU"
+msgstr ""
+
+#: class-wc-settings-page-komoju.php
+msgid "Once signed into KOMOJU, you can select payment methods to use as WooCommerce gateways."
+msgstr ""
