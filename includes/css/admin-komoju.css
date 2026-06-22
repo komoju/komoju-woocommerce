@@ -30,3 +30,12 @@
     margin-bottom: 5px;
     width: 200px;
 }
+
+/* Keep the help tip inline next to the section title instead of WooCommerce's
+   default absolute positioning, which pushes it to the far right of the
+   fixed-width title column. */
+.komoju-payment-methods-label .woocommerce-help-tip {
+    position: static;
+    margin: 0 0 0 4px;
+    float: none;
+}

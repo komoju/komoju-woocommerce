@@ -368,7 +368,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         // Show each payment method as a checkbox with an icon?>
         <tr>
         <th class="titledesc" scope="row">
-            <label><?php echo esc_html($setting['title']); ?> <?php echo wc_help_tip($help_tip); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?></label>
+            <label class="komoju-payment-methods-label"><?php echo esc_html($setting['title']); ?> <?php echo wc_help_tip($help_tip); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?></label>
         </th>
         <td class="forminp forminp-text komoju-payment-methods">
             <?php
