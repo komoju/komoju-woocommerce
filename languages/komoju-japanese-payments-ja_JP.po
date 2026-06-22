@@ -353,13 +353,13 @@ msgid "Selecting payment methods here makes them available as WooCommerce gatewa
 msgstr "ここで決済方法を選択すると、WooCommerce のゲートウェイとして利用できるようになります。購入手続き画面で有効にするには、WooCommerce > 設定 > 決済 で各決済方法を個別に有効化してください。"
 
 #: class-wc-gateway-komoju.php
-msgid "<strong>Deprecated — will be removed in a future version.</strong> This shows as \"KOMOJU\" at checkout and doesn't support refunds. Enable individual payment methods instead."
-msgstr "<strong>非推奨です。今後のバージョンで削除される予定です。</strong>購入手続きでは「KOMOJU」と表示され、返金には対応していません。個別の決済方法を有効にしてご利用ください。"
+msgid "<strong>Deprecated — will be removed in a future version.</strong> This option doesn't support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page."
+msgstr "<strong>非推奨です。今後のバージョンで削除される予定です。</strong>このオプションは返金に対応していません。KOMOJU設定ページで決済方法を選択した後、決済ページで各決済方法を有効にしてください。"
 
 #: class-wc-gateway-komoju.php
 msgid "Deprecated — will be removed in a future version."
 msgstr "非推奨です。今後のバージョンで削除される予定です。"
 
 #: class-wc-gateway-komoju.php
-msgid "This shows as \"KOMOJU\" at checkout and doesn't support refunds. Enable individual payment methods instead."
-msgstr "購入手続きでは「KOMOJU」と表示され、返金には対応していません。個別の決済方法を有効にしてご利用ください。"
+msgid "This option doesn't support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page."
+msgstr "このオプションは返金に対応していません。KOMOJU設定ページで決済方法を選択した後、決済ページで各決済方法を有効にしてください。"

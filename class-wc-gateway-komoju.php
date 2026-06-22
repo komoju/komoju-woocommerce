@@ -58,7 +58,7 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
     {
         $this->id                   = $this->id ? $this->id : 'komoju';
         $this->method_title         = $this->method_title ? $this->method_title : __('KOMOJU', 'komoju-japanese-payments');
-        $this->method_description   = __('<strong>Deprecated — will be removed in a future version.</strong> This shows as "KOMOJU" at checkout and doesn\'t support refunds. Enable individual payment methods instead.', 'komoju-japanese-payments');
+        $this->method_description   = __('<strong>Deprecated — will be removed in a future version.</strong> This option doesn\'t support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page.', 'komoju-japanese-payments');
         $this->debug                = 'yes' === $this->get_option_compat('debug_log', 'debug');
         $this->invoice_prefix       = $this->get_option_compat('invoice_prefix', 'invoice_prefix');
         $this->secretKey            = $this->get_option_compat('secret_key', 'secretKey');
@@ -138,7 +138,7 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
         echo '<div class="notice notice-error inline komoju-deprecation-notice">';
         echo '<p>';
         echo '<strong>' . esc_html__('Deprecated — will be removed in a future version.', 'komoju-japanese-payments') . '</strong> ';
-        echo esc_html__('This shows as "KOMOJU" at checkout and doesn\'t support refunds. Enable individual payment methods instead.', 'komoju-japanese-payments');
+        echo esc_html__('This option doesn\'t support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page.', 'komoju-japanese-payments');
         echo '</p></div>';
 
         if (self::komoju_is_test_mode()) {

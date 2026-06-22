@@ -437,7 +437,7 @@ msgid "Selecting payment methods here makes them available as WooCommerce gatewa
 msgstr ""
 
 #: class-wc-gateway-komoju.php
-msgid "<strong>Deprecated — will be removed in a future version.</strong> This shows as \"KOMOJU\" at checkout and doesn't support refunds. Enable individual payment methods instead."
+msgid "<strong>Deprecated — will be removed in a future version.</strong> This option doesn't support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page."
 msgstr ""
 
 #: class-wc-gateway-komoju.php
@@ -445,5 +445,5 @@ msgid "Deprecated — will be removed in a future version."
 msgstr ""
 
 #: class-wc-gateway-komoju.php
-msgid "This shows as \"KOMOJU\" at checkout and doesn't support refunds. Enable individual payment methods instead."
+msgid "This option doesn't support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page."
 msgstr ""
