@@ -63,6 +63,29 @@ function woocommerce_komoju_load_textdomain()
     }
 }
 
+// Always prefer the translations bundled with this plugin over the community
+// language pack from translate.wordpress.org. The wp.org pack only contains
+// strings that have been submitted and approved there, so newly added strings
+// would otherwise fall back to English. This filter also covers WordPress's
+// just-in-time loading, which can run before the init hook above (e.g. when
+// payment gateway form fields are built during gateway construction).
+add_filter('load_textdomain_mofile', 'woocommerce_komoju_override_mofile', 10, 2);
+
+function woocommerce_komoju_override_mofile($mofile, $domain)
+{
+    if ($domain !== 'komoju-japanese-payments') {
+        return $mofile;
+    }
+
+    $locale         = determine_locale();
+    $bundled_mofile = dirname(__FILE__) . "/languages/{$domain}-{$locale}.mo";
+    if (file_exists($bundled_mofile)) {
+        return $bundled_mofile;
+    }
+
+    return $mofile;
+}
+
 add_action('plugins_loaded', 'woocommerce_komoju_init', 0);
 
 function woocommerce_komoju_init()
