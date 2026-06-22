@@ -182,6 +182,15 @@ Go back to your Wordpress instance and set the "Webhook Secret Token" value on t
 
 == Changelog ==
 
+= 3.3.0 =
+
+UI/UX improvements using standard WordPress/WooCommerce components
+API keys are now masked password fields with input validation
+Added Japanese translations across the settings and payment method pages
+Debug logs now appear under WooCommerce > Status > Logs
+Added a Settings link and declared WooCommerce as a required plugin
+Deprecated the legacy combined "KOMOJU" payment method
+
 = 3.2.9 =
 
 Security and code quality improvements
