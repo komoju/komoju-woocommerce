@@ -363,10 +363,12 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             return;
         }
 
+        $help_tip = __('Selecting payment methods here makes them available as WooCommerce gateways. To turn them on at checkout, enable each one individually under WooCommerce > Settings > Payments.', 'komoju-japanese-payments');
+
         // Show each payment method as a checkbox with an icon?>
         <tr>
         <th class="titledesc" scope="row">
-            <label><?php echo esc_html($setting['title']); ?></label>
+            <label><?php echo esc_html($setting['title']); ?> <?php echo wc_help_tip($help_tip); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?></label>
         </th>
         <td class="forminp forminp-text komoju-payment-methods">
             <?php

@@ -431,3 +431,7 @@ msgstr ""
 #, php-format
 msgid "Enable %s"
 msgstr ""
+
+#: class-wc-settings-page-komoju.php
+msgid "Selecting payment methods here makes them available as WooCommerce gateways. To turn them on at checkout, enable each one individually under WooCommerce > Settings > Payments."
+msgstr ""
