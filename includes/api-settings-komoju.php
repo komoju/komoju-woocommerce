@@ -16,7 +16,7 @@ return [
         'id'          => 'komoju-api-credentials',
         /* translators: %s: webhook URL */
         /* translators: %s: link to the KOMOJU settings page */
-        'desc'        => sprintf(__('Unless you need to enter keys manually, we recommend connecting via the button on the %s.', 'komoju-japanese-payments'), '<a href="' . esc_url(admin_url('admin.php?page=wc-settings&tab=komoju_settings')) . '">' . __('KOMOJU settings page', 'komoju-japanese-payments') . '</a>') . ' ' . sprintf(__('Default url for the webhook is %s. Use this if you\'re not sure what it should be.', 'komoju-japanese-payments'), $this->url_for_webhooks()),
+        'desc'        => sprintf(__('Unless you need to enter keys manually, we recommend connecting via the button on the %s.', 'komoju-japanese-payments'), '<a href="' . esc_url(admin_url('admin.php?page=wc-settings&tab=komoju_settings')) . '">' . __('KOMOJU settings page', 'komoju-japanese-payments') . '</a>') . '<br>' . sprintf(__('Default url for the webhook is %s. Use this if you\'re not sure what it should be.', 'komoju-japanese-payments'), $this->url_for_webhooks()),
     ],
     [
         'id'                => 'komoju_woocommerce_secret_key',
