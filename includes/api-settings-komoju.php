@@ -115,7 +115,7 @@ return [
     ],
     [
         'id'          => 'komoju_woocommerce_waf_staging_token',
-        'desc'        => __('Usually you want this to be empty.', 'komoju-japanese-payments'),
+        'desc'        => __("Only modify this if you know what you're doing.", 'komoju-japanese-payments'),
         'title'       => __('Staging token', 'komoju-japanese-payments'),
         'type'        => 'text',
         'default'     => '',
