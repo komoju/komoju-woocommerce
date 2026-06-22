@@ -12,7 +12,7 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 * Description: Extends WooCommerce with KOMOJU gateway.
 * Author: KOMOJU
 * Author URI: https://komoju.com
-* Version: 3.2.9
+* Version: 3.3.0
 * Requires at least: 6.0
 * Requires PHP: 7.4
 * Requires Plugins: woocommerce
@@ -27,7 +27,7 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 // Plugin version. Keep this in sync with the "Version:" header above.
 // Used to cache-bust enqueued styles and scripts.
 if (!defined('KOMOJU_WC_VERSION')) {
-    define('KOMOJU_WC_VERSION', '3.2.9');
+    define('KOMOJU_WC_VERSION', '3.3.0');
 }
 
 add_action('before_woocommerce_init', function () {
