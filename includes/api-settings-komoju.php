@@ -9,9 +9,7 @@ if (!defined('ABSPATH')) {
  */
 
 return [
-    // ---------------------------------------------------------------------
     // API credentials
-    // ---------------------------------------------------------------------
     [
         'title'       => __('API credentials', 'komoju-japanese-payments'),
         'type'        => 'title',
@@ -52,9 +50,7 @@ return [
         'type'     => 'sectionend',
     ],
 
-    // ---------------------------------------------------------------------
     // Payment behavior
-    // ---------------------------------------------------------------------
     [
         'title'       => __('Payment behavior', 'komoju-japanese-payments'),
         'type'        => 'title',
@@ -89,9 +85,7 @@ return [
         'type'     => 'sectionend',
     ],
 
-    // ---------------------------------------------------------------------
-    // Advanced (developer settings - infrequently changed)
-    // ---------------------------------------------------------------------
+    // Advanced (developer settings)
     [
         'title'       => __('Advanced', 'komoju-japanese-payments'),
         'type'        => 'title',

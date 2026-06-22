@@ -158,8 +158,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         <?php
     }
 
-    // Validate the secret key on save. Must start with sk_live_ or sk_test_.
-    // The field is write-only: a blank submission keeps the stored key.
+    // Blank keeps the stored key; otherwise require an sk_live_/sk_test_ prefix.
     public function validate_secret_key($value, $option, $raw_value)
     {
         $value = trim($value);
@@ -177,8 +176,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         return $value;
     }
 
-    // Validate the publishable key on save. Must start with pk_live_ or pk_test_.
-    // The field is write-only: a blank submission keeps the stored key.
+    // Blank keeps the stored key; otherwise require a pk_live_/pk_test_ prefix.
     public function validate_publishable_key($value, $option, $raw_value)
     {
         $value = trim($value);
@@ -196,8 +194,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         return $value;
     }
 
-    // Validate the webhook secret on save.
-    // The field is write-only: a blank submission keeps the stored value.
+    // Blank keeps the stored webhook secret.
     public function validate_webhook_secret($value, $option, $raw_value)
     {
         $value = trim($value);
@@ -208,13 +205,8 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         return $value;
     }
 
-    // Action handler for rendering settings with type = 'komoju_secret'.
-    //
-    // Renders a password input that never echoes the stored value into the
-    // HTML. When a value is already saved, the field shows a masked hint so it
-    // looks like a saved password, and leaving it blank keeps the stored value.
-    // For KOMOJU keys the non-sensitive prefix (e.g. sk_test_, pk_live_) is
-    // revealed so the merchant can confirm which key and mode is in use.
+    // Write-only password field for type = 'komoju_secret'. The stored value is
+    // never echoed back; a saved key is shown only as a masked hint placeholder.
     public function output_secret_field($setting)
     {
         $stored_value      = get_option($setting['id']);
@@ -254,9 +246,8 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
 <?php
     }
 
-    // Builds a masked hint for a saved secret. The non-sensitive KOMOJU key
-    // prefix (e.g. "sk_test_", "pk_live_") is shown followed by dots; any
-    // other value falls back to dots only so nothing sensitive is revealed.
+    // Masked hint for a saved secret: the non-sensitive sk_/pk_ prefix + dots,
+    // or dots only for other values.
     private function masked_secret_hint($value)
     {
         $dots = str_repeat('•', 16);

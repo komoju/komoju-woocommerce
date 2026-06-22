@@ -102,14 +102,10 @@ Cypress.Commands.add('installKomoju', () => {
   });
 });
 
-// Persist KOMOJU API credentials via the quick-setup endpoint instead of the
-// settings form. The credential fields are write-only password inputs (the
-// saved value is never rendered back, and a blank submission keeps the existing
-// value), so driving them through the form is unreliable: typing/clearing does
-// not always mark WooCommerce's form "dirty", leaving "Save changes" disabled.
-// The quick-setup POST writes the options directly (the same path used by the
-// real one-click connect flow), which is deterministic. A fresh nonce is
-// generated every time the KOMOJU settings page renders the connect button.
+// Persist credentials via the quick-setup POST rather than the settings form:
+// the write-only key fields don't reliably mark the form dirty, so the form's
+// "Save changes" button may stay disabled. The POST writes the options directly
+// (the real connect flow's path). A fresh nonce is rendered on each page load.
 Cypress.Commands.add('saveKomojuCredentials', (
   secretKey = Cypress.env('KOMOJU_SECRET_KEY'),
   publishableKey = Cypress.env('KOMOJU_PUBLISHABLE_KEY')
@@ -143,9 +139,7 @@ Cypress.Commands.add('setupKomoju', (
 ) => {
   cy.saveKomojuCredentials(secretKey, publishableKey);
 
-  // Set the Fields script URL via the endpoint field. Its "Edit" button only
-  // appears while the value is still the default; once changed the input is
-  // already enabled, so click Edit only when present.
+  // The endpoint field's "Edit" button only appears while the value is default.
   cy.visit('/wp-admin/admin.php?page=wc-settings&tab=komoju_settings&section=api_settings');
   cy.get('.komoju-endpoint-komoju_woocommerce_fields_url').then($element => {
     const $edit = $element.find('.komoju-endpoint-edit');
@@ -156,11 +150,9 @@ Cypress.Commands.add('setupKomoju', (
 
   cy.contains('Payment methods').click();
 
-  // The payment-method checkboxes only render once the saved secret key lets
-  // the plugin reach the KOMOJU API. Wait for them, scoped to the KOMOJU list.
+  // Checkboxes only render once the saved key lets the plugin reach the API.
   cy.get('.komoju-payment-methods input[type="checkbox"]', { timeout: 20000 }).should('exist');
 
-  // Uncheck any currently-selected KOMOJU payment methods.
   cy.get('.komoju-payment-methods input[type="checkbox"]').each($match => {
     if ($match.prop('checked')) cy.wrap($match).uncheck();
   });

@@ -24,8 +24,7 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 * WC tested up to: 10.8.1
 */
 
-// Plugin version. Keep this in sync with the "Version:" header above.
-// Used to cache-bust enqueued styles and scripts.
+// Keep in sync with the "Version:" header above; used to cache-bust assets.
 if (!defined('KOMOJU_WC_VERSION')) {
     define('KOMOJU_WC_VERSION', '3.3.0');
 }
@@ -63,12 +62,9 @@ function woocommerce_komoju_load_textdomain()
     }
 }
 
-// Always prefer the translations bundled with this plugin over the community
-// language pack from translate.wordpress.org. The wp.org pack only contains
-// strings that have been submitted and approved there, so newly added strings
-// would otherwise fall back to English. This filter also covers WordPress's
-// just-in-time loading, which can run before the init hook above (e.g. when
-// payment gateway form fields are built during gateway construction).
+// Prefer the bundled translations over the translate.wordpress.org language
+// pack, which lacks newly added strings. Also covers just-in-time loading,
+// which can run before the init hook above (e.g. during gateway construction).
 add_filter('load_textdomain_mofile', 'woocommerce_komoju_override_mofile', 10, 2);
 
 function woocommerce_komoju_override_mofile($mofile, $domain)

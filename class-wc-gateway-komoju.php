@@ -124,8 +124,7 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
             if (empty(self::$log)) {
                 self::$log = wc_get_logger();
             }
-            // Logs are filed under the 'komoju' source and viewable at
-            // WooCommerce > Status > Logs.
+            // Viewable under WooCommerce > Status > Logs (source: komoju).
             self::$log->debug($message, ['source' => 'komoju']);
         }
     }
