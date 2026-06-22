@@ -337,3 +337,8 @@ msgstr "KOMOJU にログイン"
 #: class-wc-settings-page-komoju.php
 msgid "Once signed into KOMOJU, you can select payment methods to use as WooCommerce gateways."
 msgstr "KOMOJU にログインすると、WooCommerce のゲートウェイとして使用する決済方法を選択できます。"
+
+#: class-wc-settings-page-komoju.php
+#, php-format
+msgid "Successfully connected to KOMOJU account %s."
+msgstr "KOMOJU アカウント %s に正常に接続しました。"
