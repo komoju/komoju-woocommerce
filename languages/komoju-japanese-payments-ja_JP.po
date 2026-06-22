@@ -112,7 +112,7 @@ msgstr "有効 / 無効"
 
 #: includes/settings-komoju.php:14
 msgid "Enable KOMOJU"
-msgstr "有効 KOMOJU"
+msgstr "KOMOJU を有効化"
 
 #: includes/settings-komoju.php:18
 msgid "Title"
@@ -300,3 +300,32 @@ msgstr "WooCommerce に KOMOJU 決済ゲートウェイを追加します。"
 #: index.php
 msgid "Settings"
 msgstr "設定"
+
+#: includes/gateway-settings-komoju.php
+msgid "Icon"
+msgstr "アイコン"
+
+#: includes/gateway-settings-komoju.php
+msgid "Show icon on checkout"
+msgstr "チェックアウトにアイコンを表示する"
+
+#: includes/gateway-settings-komoju.php
+msgid "Description"
+msgstr "説明"
+
+#: includes/gateway-settings-komoju.php
+msgid "This controls the description which the user sees during checkout."
+msgstr "チェックアウト時にユーザーに表示される説明文です。"
+
+#: includes/gateway-settings-komoju.php
+msgid "Inline payment fields"
+msgstr "インライン決済フィールド"
+
+#: includes/gateway-settings-komoju.php
+msgid "If checked, this payment method will show fields directly in the checkout page (if supported)."
+msgstr "有効にすると、この決済方法の入力フィールドをチェックアウトページに直接表示します（対応している場合）。"
+
+#: class-wc-gateway-komoju.php includes/class-wc-gateway-komoju-single-slug.php
+#, php-format
+msgid "%s payments powered by KOMOJU"
+msgstr "%s 決済（KOMOJU 提供）"

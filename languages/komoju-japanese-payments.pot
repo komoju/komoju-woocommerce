@@ -384,3 +384,32 @@ msgstr ""
 #: index.php
 msgid "Settings"
 msgstr ""
+
+#: includes/gateway-settings-komoju.php
+msgid "Icon"
+msgstr ""
+
+#: includes/gateway-settings-komoju.php
+msgid "Show icon on checkout"
+msgstr ""
+
+#: includes/gateway-settings-komoju.php
+msgid "Description"
+msgstr ""
+
+#: includes/gateway-settings-komoju.php
+msgid "This controls the description which the user sees during checkout."
+msgstr ""
+
+#: includes/gateway-settings-komoju.php
+msgid "Inline payment fields"
+msgstr ""
+
+#: includes/gateway-settings-komoju.php
+msgid "If checked, this payment method will show fields directly in the checkout page (if supported)."
+msgstr ""
+
+#: class-wc-gateway-komoju.php includes/class-wc-gateway-komoju-single-slug.php
+#, php-format
+msgid "%s payments powered by KOMOJU"
+msgstr ""
