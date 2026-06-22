@@ -134,11 +134,14 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
      */
     public function admin_options()
     {
-        echo '<div class="notice notice-error inline komoju-deprecation-notice">';
-        echo '<p>';
-        echo '<strong>' . esc_html__('Deprecated — will be removed in a future version.', 'komoju-japanese-payments') . '</strong> ';
-        echo esc_html__('This option doesn\'t support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page.', 'komoju-japanese-payments');
-        echo '</p></div>';
+        // Only the legacy combined gateway is deprecated, not the per-method ones.
+        if ($this->id === 'komoju') {
+            echo '<div class="notice notice-error inline komoju-deprecation-notice">';
+            echo '<p>';
+            echo '<strong>' . esc_html__('Deprecated — will be removed in a future version.', 'komoju-japanese-payments') . '</strong> ';
+            echo esc_html__('This option doesn\'t support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page.', 'komoju-japanese-payments');
+            echo '</p></div>';
+        }
 
         if (self::komoju_is_test_mode()) {
             echo '<div class="notice notice-warning inline komoju-test-mode-notice">';
