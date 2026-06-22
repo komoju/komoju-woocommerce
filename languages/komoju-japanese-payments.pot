@@ -447,3 +447,12 @@ msgstr ""
 #: class-wc-gateway-komoju.php
 msgid "This option doesn't support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page."
 msgstr ""
+
+#: includes/api-settings-komoju.php
+#, php-format
+msgid "Unless you need to enter keys manually, we recommend connecting via the button on the %s."
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "KOMOJU settings page"
+msgstr ""

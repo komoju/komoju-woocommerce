@@ -363,3 +363,12 @@ msgstr "非推奨です。今後のバージョンで削除される予定です
 #: class-wc-gateway-komoju.php
 msgid "This option doesn't support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page."
 msgstr "このオプションは返金に対応していません。KOMOJU設定ページで決済方法を選択した後、決済ページで各決済方法を有効にしてください。"
+
+#: includes/api-settings-komoju.php
+#, php-format
+msgid "Unless you need to enter keys manually, we recommend connecting via the button on the %s."
+msgstr "手動入力が必要な場合を除き、%s のボタンから接続することをおすすめします。"
+
+#: includes/api-settings-komoju.php
+msgid "KOMOJU settings page"
+msgstr "KOMOJU設定ページ"
