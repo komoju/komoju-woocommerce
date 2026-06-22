@@ -39,7 +39,7 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
                 'wp-element',
                 'wp-html-entities',
             ],
-            null,
+            defined('KOMOJU_WC_VERSION') ? KOMOJU_WC_VERSION : false,
             true
         );
 

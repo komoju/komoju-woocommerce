@@ -3,8 +3,9 @@ Contributors: KOMOJU
 Tags: WooCommerce,Payment Gateway,Komoju
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 3.2.9
+Stable tag: 3.3.0
 Requires PHP: 7.4
+Requires Plugins: woocommerce
 WC requires at least: 6.0.0
 WC tested up to: 10.8.1
 License: GPL-2.0-or-later
@@ -180,6 +181,15 @@ Ensure that the "Active" checkbox is also ticked and then click "Create Webhook"
 Go back to your Wordpress instance and set the "Webhook Secret Token" value on the Komoju Woocommerce plugin to be the same as the secret set for the webhook.
 
 == Changelog ==
+
+= 3.3.0 =
+
+UI/UX improvements using standard WordPress/WooCommerce components
+API keys are now masked password fields with input validation
+Added Japanese translations across the settings and payment method pages
+Debug logs now appear under WooCommerce > Status > Logs
+Added a Settings link and declared WooCommerce as a required plugin
+Deprecated the legacy combined "KOMOJU" payment method
 
 = 3.2.9 =
 

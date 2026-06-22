@@ -17,63 +17,75 @@ describe('KOMOJU for WooCommerce: Admin', () => {
     cy.setupKomoju(['konbini', 'credit_card']);
     cy.clickPaymentTab();
 
-    cy.contains('Komoju - Konbini');
-    cy.contains('Komoju - Credit Card');
+    cy.contains('KOMOJU - Konbini');
+    cy.contains('KOMOJU - Credit Card');
 
     cy.setupKomoju(['paypay']);
     cy.clickPaymentTab();
 
-    cy.contains('Komoju - PayPay');
+    cy.contains('KOMOJU - PayPay');
   })
 
   it('LINE pay should not exist', () => {
     cy.setupKomoju(['konbini', 'credit_card']);
     cy.clickPaymentTab();
 
-    cy.contains('Komoju - Konbini');
-    cy.contains('Komoju - Credit Card');
+    cy.contains('KOMOJU - Konbini');
+    cy.contains('KOMOJU - Credit Card');
 
     cy.setupKomoju(['paypay', 'linepay']);
     cy.clickPaymentTab();
 
-    cy.contains('Komoju - PayPay')
-    cy.contains('Komoju - LINE Pay').should('not.exist');
+    cy.contains('KOMOJU - PayPay')
+    cy.contains('KOMOJU - LINE Pay').should('not.exist');
   });
 
   it('lets me change the KOMOJU endpoint', () => {
     cy.visit('/wp-admin/admin.php?page=wc-settings&tab=komoju_settings&section=api_settings');
 
-    cy.get('.komoju-endpoint-komoju_woocommerce_api_endpoint').contains('Edit').click();
-    cy.get('#komoju_woocommerce_api_endpoint').clear().type('https://example.com');
-    cy.contains('Save changes').click();
+    // "Edit" only shows while the endpoint is default; otherwise it's enabled.
+    cy.get('.komoju-endpoint-komoju_woocommerce_api_endpoint').then($td => {
+      const $edit = $td.find('.komoju-endpoint-edit');
+      if ($edit.length > 0) { cy.wrap($edit).click(); }
+    });
+    cy.get('#komoju_woocommerce_api_endpoint').should('not.be.disabled').clear().type('https://example.com');
+    cy.contains('Save changes').should('not.be.disabled').click();
 
     cy.contains('Payment methods').click();
-    cy.get('#mainform').should('include.text', 'Unable to reach KOMOJU. Is your secret key correct?');
+    cy.get('#mainform').should('include.text', 'Failed to connect to KOMOJU. Please ensure the correct secret key is set by reconnecting via the "Reconnect with KOMOJU" button above.');
     cy.contains('API settings').click();
 
-    cy.get('#komoju_woocommerce_api_endpoint').clear().type('https://komoju.com');
-    cy.contains('Save changes').click();
+    cy.get('#komoju_woocommerce_api_endpoint').should('not.be.disabled').clear().type('https://komoju.com');
+    cy.contains('Save changes').should('not.be.disabled').click();
 
     cy.contains('Payment methods').click();
-    cy.get('#mainform').should('not.include.text', 'Unable to reach KOMOJU. Is your secret key correct?');
+    cy.get('#mainform').should('not.include.text', 'Failed to connect to KOMOJU. Please ensure the correct secret key is set by reconnecting via the "Reconnect with KOMOJU" button above.');
   })
 
   it('updates secret key with one-click setup', () => {
-    cy.visit('/wp-admin/admin.php?page=wc-settings&tab=komoju_settings&section=api_settings');
+    // Keys can't be cleared via the write-only form, so reset to a disconnected
+    // state via the quick-setup POST (writes options directly; fresh nonce per load).
+    cy.visit('/wp-admin/admin.php?page=wc-settings&tab=komoju_settings');
+    cy.get('a.komoju-setup').invoke('attr', 'href').then((href) => {
+      const nonce = new URL(href, 'http://localhost:8000').searchParams.get('nonce');
+      cy.request({
+        method: 'POST',
+        url: '/?wc-api=WC_Gateway_Komoju',
+        form: true,
+        body: { secret_key: '', publishable_key: '', webhook_secret: '', merchant_name: '', nonce },
+      }).its('status').should('eq', 200);
+    });
 
-    cy.get('#komoju_woocommerce_secret_key').clear();
-    cy.get('#komoju_woocommerce_webhook_secret').clear();
-    cy.contains('Save changes').click();
-
+    // No key saved -> "not connected" prompt and "Sign into KOMOJU" button.
+    cy.visit('/wp-admin/admin.php?page=wc-settings&tab=komoju_settings');
     cy.contains('Payment methods').click();
-
     cy.get('#mainform').should('include.text', 'Once signed into KOMOJU, you can select payment methods to use as WooCommerce gateways.');
+    cy.get('.komoju-setup').should('include.text', 'Sign into KOMOJU');
 
     let nonce;
-    cy.contains('Sign into KOMOJU').then((connectButton) => {
-      const href = connectButton.attr('href');
-      nonce = href.split('&nonce=')[1];
-    })
+    cy.get('a.komoju-setup').invoke('attr', 'href').then((href) => {
+      nonce = new URL(href, 'http://localhost:8000').searchParams.get('nonce');
+    });
 
     const options = {
       method: 'POST',
@@ -105,7 +117,12 @@ describe('KOMOJU for WooCommerce: Admin', () => {
     cy.reload()
     cy.get('.komoju-setup').should('include.text', 'Reconnect with KOMOJU')
     cy.contains('API settings').click()
-    cy.get('#komoju_woocommerce_secret_key').should('have.value', 'abc123')
-    cy.get('#komoju_woocommerce_webhook_secret').should('have.value', 'webhooks123')
+    // Write-only fields render empty with a masked "saved" placeholder.
+    cy.get('#komoju_woocommerce_secret_key')
+      .should('have.value', '')
+      .and('have.attr', 'placeholder', '••••••••••••••••')
+    cy.get('#komoju_woocommerce_webhook_secret')
+      .should('have.value', '')
+      .and('have.attr', 'placeholder', '••••••••••••••••')
   })
 });

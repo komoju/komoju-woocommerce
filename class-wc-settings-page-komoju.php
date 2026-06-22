@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  *
  * @extends     WC_Settings_Page
  *
- * @version     3.2.9
+ * @version     3.3.0
  *
  * @author      Komoju
  */
@@ -22,7 +22,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     public function __construct()
     {
         $this->id    = 'komoju_settings';
-        $this->label = __('Komoju', 'komoju-japanese-payments');
+        $this->label = __('KOMOJU', 'komoju-japanese-payments');
 
         add_action(
             'woocommerce_admin_field_komoju_payment_types',
@@ -37,6 +37,32 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
         add_action(
             'woocommerce_admin_field_komoju_endpoint',
             [$this, 'output_endpoint_field']
+        );
+
+        add_action(
+            'woocommerce_admin_field_komoju_secret',
+            [$this, 'output_secret_field']
+        );
+
+        add_filter(
+            'woocommerce_admin_settings_sanitize_option_komoju_woocommerce_secret_key',
+            [$this, 'validate_secret_key'],
+            10,
+            3
+        );
+
+        add_filter(
+            'woocommerce_admin_settings_sanitize_option_komoju_woocommerce_publishable_key',
+            [$this, 'validate_publishable_key'],
+            10,
+            3
+        );
+
+        add_filter(
+            'woocommerce_admin_settings_sanitize_option_komoju_woocommerce_webhook_secret',
+            [$this, 'validate_webhook_secret'],
+            10,
+            3
         );
 
         parent::__construct();
@@ -108,9 +134,9 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     public function output_test_mode_notice()
     {
         ?>
-        <div class="notice notice-warning komoju-test-mode-notice" style="border-left-color: #f0b849; background: #fff8e5; padding: 12px 16px; margin-bottom: 16px;">
-            <p style="margin: 0; font-size: 14px;">
-                <strong>⚠️ <?php echo esc_html__('Test Mode Active', 'komoju-japanese-payments'); ?></strong>
+        <div class="notice notice-warning komoju-test-mode-notice">
+            <p>
+                <strong><?php echo esc_html__('Test Mode Active', 'komoju-japanese-payments'); ?></strong>
                 —
                 <?php echo esc_html__('Your store is using KOMOJU test keys. No real charges will be processed.', 'komoju-japanese-payments'); ?>
             </p>
@@ -123,13 +149,114 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     public function output_connected_notice($merchant_name)
     {
         ?>
-        <div id="message" class="updated inline">
+        <div class="notice notice-success is-dismissible">
             <p><strong><?php
                 /* translators: %s: merchant account name */
                 echo sprintf(esc_html__('Successfully connected to KOMOJU account %s.', 'komoju-japanese-payments'), esc_html($merchant_name));
         ?></strong></p>
         </div>
         <?php
+    }
+
+    // Blank keeps the stored key; otherwise require an sk_live_/sk_test_ prefix.
+    public function validate_secret_key($value, $option, $raw_value)
+    {
+        $value = trim($value);
+        if ($value === '') {
+            return get_option('komoju_woocommerce_secret_key');
+        }
+        if (!preg_match('/^sk_(live|test)_[A-Za-z0-9]+$/', $value)) {
+            WC_Admin_Settings::add_error(
+                __('Invalid KOMOJU secret key. It should start with sk_live_ or sk_test_.', 'komoju-japanese-payments')
+            );
+
+            return get_option('komoju_woocommerce_secret_key');
+        }
+
+        return $value;
+    }
+
+    // Blank keeps the stored key; otherwise require a pk_live_/pk_test_ prefix.
+    public function validate_publishable_key($value, $option, $raw_value)
+    {
+        $value = trim($value);
+        if ($value === '') {
+            return get_option('komoju_woocommerce_publishable_key');
+        }
+        if (!preg_match('/^pk_(live|test)_[A-Za-z0-9]+$/', $value)) {
+            WC_Admin_Settings::add_error(
+                __('Invalid KOMOJU publishable key. It should start with pk_live_ or pk_test_.', 'komoju-japanese-payments')
+            );
+
+            return get_option('komoju_woocommerce_publishable_key');
+        }
+
+        return $value;
+    }
+
+    // Blank keeps the stored webhook secret.
+    public function validate_webhook_secret($value, $option, $raw_value)
+    {
+        $value = trim($value);
+        if ($value === '') {
+            return get_option('komoju_woocommerce_webhook_secret');
+        }
+
+        return $value;
+    }
+
+    // Write-only password field for type = 'komoju_secret'. The stored value is
+    // never echoed back; a saved key is shown only as a masked hint placeholder.
+    public function output_secret_field($setting)
+    {
+        $stored_value      = get_option($setting['id']);
+        $has_value         = (bool) $stored_value;
+        $custom_attributes = '';
+        if (!empty($setting['custom_attributes']) && is_array($setting['custom_attributes'])) {
+            foreach ($setting['custom_attributes'] as $attribute => $attribute_value) {
+                $custom_attributes .= ' ' . esc_attr($attribute) . '="' . esc_attr($attribute_value) . '"';
+            }
+        }
+
+        if ($has_value) {
+            $placeholder = $this->masked_secret_hint($stored_value);
+        } else {
+            $placeholder = isset($setting['placeholder']) ? $setting['placeholder'] : '';
+        }
+
+        $description = isset($setting['desc']) ? $setting['desc'] : '';
+        ?>
+<tr valign="top">
+<th class="titledesc" scope="row">
+    <label for="<?php echo esc_attr($setting['id']); ?>"><?php echo esc_html($setting['title']); ?></label>
+</th>
+<td class="forminp forminp-password">
+    <input id="<?php echo esc_attr($setting['id']); ?>"
+           name="<?php echo esc_attr($setting['id']); ?>"
+           type="password"
+           value=""
+           placeholder="<?php echo esc_attr($placeholder); ?>"
+           autocomplete="off"
+           spellcheck="false"<?php echo $custom_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>>
+    <?php if ($description !== '') { ?>
+        <p class="description"><?php echo esc_html($description); ?></p>
+    <?php } ?>
+</td>
+</tr>
+<?php
+    }
+
+    // Masked hint for a saved secret: the non-sensitive sk_/pk_ prefix + dots,
+    // or dots only for other values.
+    private function masked_secret_hint($value)
+    {
+        $dots = str_repeat('•', 16);
+
+        if (preg_match('/^((?:sk|pk)_(?:live|test)_)/', $value, $matches)) {
+            return $matches[1] . $dots;
+        }
+
+        return $dots;
     }
 
     // Action handler for rendering settings with type = 'komoju_endpoint'
@@ -153,54 +280,23 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
     <p class="description">
         <?php echo esc_html__("Only modify this if you know what you're doing.", 'komoju-japanese-payments'); ?>
     </p>
-    <div>
+    <div class="komoju-endpoint-buttons">
         <?php if ($untainted) { ?>
             <button
                 type="button"
-                class="komoju-endpoint-edit"
-                data-target="<?php echo esc_attr($setting['id']); ?>"
-                onclick="komoju_woocommerce_enable_endpoint_field(event)">
+                class="button button-secondary komoju-endpoint-edit"
+                data-target="<?php echo esc_attr($setting['id']); ?>">
                 <?php echo esc_html__('Edit', 'komoju-japanese-payments'); ?>
             </button>
         <?php } ?>
 
         <button
             type="button"
-            class="komoju-endpoint-reset"
-            data-target="<?php echo esc_attr($setting['id']); ?>"
-            onclick="komoju_woocommerce_reset_endpoint_field(event)">
+            class="button button-link-delete komoju-endpoint-reset"
+            data-target="<?php echo esc_attr($setting['id']); ?>">
             <?php echo esc_html__('Reset', 'komoju-japanese-payments'); ?>
         </button>
     </div>
-
-    <script>
-        function komoju_woocommerce_enable_endpoint_field(event) {
-            const button = event.target;
-            const input = document.getElementById(button.dataset.target);
-            input.disabled = false;
-            event.target.remove();
-        }
-        function komoju_woocommerce_reset_endpoint_field(event) {
-            const button = event.target;
-            const input = document.getElementById(button.dataset.target);
-            input.value = input.dataset.default;
-        }
-    </script>
-
-    <style>
-        .komoju-endpoint-field {
-            display: flex;
-            flex-flow: column wrap;
-            align-items: flex-start;
-            gap: 4px;
-        }
-        .komoju-endpoint-field button {
-            min-width: 80px;
-        }
-        .komoju-endpoint-field p.description {
-            margin: 0;
-        }
-    </style>
 </td>
 </tr>
 <?php
@@ -222,9 +318,9 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             <th class="titledesc" scope="row">
                 <label><?php echo esc_html($setting['title']); ?></label>
             </th>
-            <td class="forminp forminp-text komoju-setup-button" style="height: 60px">
+            <td class="forminp forminp-text komoju-setup-button">
                 <a href="<?php echo esc_url($setup_url); ?>"
-                   class='komoju-setup <?php echo $already_connected ? 'connected' : ''; ?>'>
+                   class="button button-hero komoju-setup <?php echo $already_connected ? 'button-secondary' : 'button-primary'; ?>">
                     <?php
                         if ($already_connected) {
                             echo esc_html__('Reconnect with KOMOJU', 'komoju-japanese-payments');
@@ -232,31 +328,6 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
                             echo esc_html__('Sign into KOMOJU', 'komoju-japanese-payments');
                         } ?>
                 </a>
-
-                <style>
-                a.komoju-setup {
-                    text-decoration: none;
-                    background-color: #1880DE;
-                    font-size: 18px;
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 26px;
-                    margin-bottom: 12px;
-                }
-                a.komoju-setup:hover {
-                    background-color: #3590E1;
-                }
-
-                a.komoju-setup.connected {
-                    background-color: white;
-                    color: #172E44;
-                    border: 2px solid #C1CDD8;
-                }
-                a.komoju-setup.connected:hover {
-                    background-color: #F0F8FF;
-                }
-                </style>
             </td>
         </tr>
         <?php
@@ -274,7 +345,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
                     <?php
                         $secret_key = $this->secret_key();
             if ($secret_key && $secret_key !== '') {
-                echo esc_html__('Unable to reach KOMOJU. Is your secret key correct?', 'komoju-japanese-payments');
+                echo esc_html__('Failed to connect to KOMOJU. Please ensure the correct secret key is set by reconnecting via the "Reconnect with KOMOJU" button above.', 'komoju-japanese-payments');
             } else {
                 echo esc_html__('Once signed into KOMOJU, you can select payment methods to use as WooCommerce gateways.', 'komoju-japanese-payments');
             } ?>
@@ -283,28 +354,28 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
             return;
         }
 
+        $help_tip = __('Selecting payment methods here makes them available as WooCommerce gateways. To turn them on at checkout, enable each one individually under WooCommerce > Settings > Payments.', 'komoju-japanese-payments');
+
         // Show each payment method as a checkbox with an icon?>
         <tr>
         <th class="titledesc" scope="row">
-            <label><?php echo esc_html($setting['title']); ?></label>
+            <label class="komoju-payment-methods-label"><?php echo esc_html($setting['title']); ?> <?php echo wc_help_tip($help_tip); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?></label>
         </th>
-        <td class="forminp forminp-text komoju-payment-methods"
-            style="display: flex; flex-flow: row wrap; max-width: 800px; margin-bottom: 12px">
+        <td class="forminp forminp-text komoju-payment-methods">
             <?php
             foreach ($all_payment_methods as $slug => $payment_method) {
                 ?>
-                <label style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px; width: 200px">
+                <label class="komoju-payment-method">
                 <input
                   type="checkbox"
                   name="<?php echo esc_attr($setting['id']); ?>[]"
                   value="<?php echo esc_attr($slug); ?>"
-                  <?php if (in_array($slug, $value)) {
-                      echo 'checked';
-                  } ?>
+                  <?php checked(in_array($slug, $value, true)); ?>
                 >
                 <img
                   width="38"
                   height="24"
+                  alt=""
                   src="https://komoju.com/payment_methods/<?php echo esc_attr($slug); ?>.svg">
                 <?php echo esc_html($payment_method['name_' . $locale]); ?>
                 </label>

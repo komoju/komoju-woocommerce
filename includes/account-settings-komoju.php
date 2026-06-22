@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
 
 return [
     [
-        'title'       => 'KOMOJU Account',
+        'title'       => __('KOMOJU Account', 'komoju-japanese-payments'),
         'type'        => 'title',
         'id'          => 'account-settings-in-komoju',
         'desc'        => __('On this page, you can connect your KOMOJU account to your WooCommerce store.', 'komoju-japanese-payments'),

@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  *
  * @extends     WC_Payment_Gateway
  *
- * @version     3.2.9
+ * @version     3.3.0
  *
  * @author      Komoju
  */
@@ -26,7 +26,7 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
     /** @var bool Whether or not logging is enabled */
     public static $log_enabled;
 
-    /** @var WC_Logger Logger instance */
+    /** @var WC_Logger_Interface Logger instance */
     public static $log;
 
     /* Fix for Deprecated: Creation of dynamic property */
@@ -57,8 +57,8 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
     public function __construct()
     {
         $this->id                   = $this->id ? $this->id : 'komoju';
-        $this->method_title         = $this->method_title ? $this->method_title : __('Komoju', 'komoju-japanese-payments');
-        $this->method_description   = __("Includes all Komoju payment methods. Not recommended, since the name 'KOMOJU' is not recognized by most customers and refunds through WooCommerce are not supported.", 'komoju-japanese-payments');
+        $this->method_title         = $this->method_title ? $this->method_title : __('KOMOJU', 'komoju-japanese-payments');
+        $this->method_description   = __('<strong>Deprecated — will be removed in a future version.</strong> This option doesn\'t support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page.', 'komoju-japanese-payments');
         $this->debug                = 'yes' === $this->get_option_compat('debug_log', 'debug');
         $this->invoice_prefix       = $this->get_option_compat('invoice_prefix', 'invoice_prefix');
         $this->secretKey            = $this->get_option_compat('secret_key', 'secretKey');
@@ -122,9 +122,10 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
     {
         if (self::$log_enabled) {
             if (empty(self::$log)) {
-                self::$log = new WC_Logger();
+                self::$log = wc_get_logger();
             }
-            self::$log->add('komoju', $message);
+            // Viewable under WooCommerce > Status > Logs (source: komoju).
+            self::$log->debug($message, ['source' => 'komoju']);
         }
     }
 
@@ -133,10 +134,19 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
      */
     public function admin_options()
     {
+        // Only the legacy combined gateway is deprecated, not the per-method ones.
+        if ($this->id === 'komoju') {
+            echo '<div class="notice notice-error inline komoju-deprecation-notice">';
+            echo '<p>';
+            echo '<strong>' . esc_html__('Deprecated — will be removed in a future version.', 'komoju-japanese-payments') . '</strong> ';
+            echo esc_html__('This option doesn\'t support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page.', 'komoju-japanese-payments');
+            echo '</p></div>';
+        }
+
         if (self::komoju_is_test_mode()) {
-            echo '<div class="notice notice-warning inline" style="border-left-color: #f0b849; background: #fff8e5; padding: 12px 16px; margin-bottom: 16px;">';
-            echo '<p style="margin: 0; font-size: 14px;">';
-            echo '<strong>⚠️ ' . esc_html__('Test Mode Active', 'komoju-japanese-payments') . '</strong> — ';
+            echo '<div class="notice notice-warning inline komoju-test-mode-notice">';
+            echo '<p>';
+            echo '<strong>' . esc_html__('Test Mode Active', 'komoju-japanese-payments') . '</strong> — ';
             echo esc_html__('Your store is using KOMOJU test keys. No real charges will be processed.', 'komoju-japanese-payments');
             echo '</p></div>';
         }
@@ -361,7 +371,7 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
      */
     protected function default_title()
     {
-        return __('Komoju', 'komoju-japanese-payments');
+        return __('KOMOJU', 'komoju-japanese-payments');
     }
 
     protected function default_description()

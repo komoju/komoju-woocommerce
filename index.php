@@ -12,9 +12,10 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 * Description: Extends WooCommerce with KOMOJU gateway.
 * Author: KOMOJU
 * Author URI: https://komoju.com
-* Version: 3.2.9
+* Version: 3.3.0
 * Requires at least: 6.0
 * Requires PHP: 7.4
+* Requires Plugins: woocommerce
 * Text Domain: komoju-japanese-payments
 * Domain Path: /languages
 * License: GPL-2.0-or-later
@@ -23,12 +24,28 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 * WC tested up to: 10.8.1
 */
 
+// Keep in sync with the "Version:" header above; used to cache-bust assets.
+if (!defined('KOMOJU_WC_VERSION')) {
+    define('KOMOJU_WC_VERSION', '3.3.0');
+}
+
 add_action('before_woocommerce_init', function () {
     if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
         Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('cart_checkout_blocks', __FILE__, true);
         Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
     }
 });
+
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'woocommerce_komoju_plugin_action_links');
+
+function woocommerce_komoju_plugin_action_links($links)
+{
+    $settings_url  = admin_url('admin.php?page=wc-settings&tab=komoju_settings');
+    $settings_link = '<a href="' . esc_url($settings_url) . '">' . esc_html__('Settings', 'komoju-japanese-payments') . '</a>';
+    array_unshift($links, $settings_link);
+
+    return $links;
+}
 
 add_action('init', 'woocommerce_komoju_load_textdomain');
 
@@ -43,6 +60,26 @@ function woocommerce_komoju_load_textdomain()
     if (file_exists($mofile)) {
         load_textdomain($domain, $mofile);
     }
+}
+
+// Prefer the bundled translations over the translate.wordpress.org language
+// pack, which lacks newly added strings. Also covers just-in-time loading,
+// which can run before the init hook above (e.g. during gateway construction).
+add_filter('load_textdomain_mofile', 'woocommerce_komoju_override_mofile', 10, 2);
+
+function woocommerce_komoju_override_mofile($mofile, $domain)
+{
+    if ($domain !== 'komoju-japanese-payments') {
+        return $mofile;
+    }
+
+    $locale         = determine_locale();
+    $bundled_mofile = dirname(__FILE__) . "/languages/{$domain}-{$locale}.mo";
+    if (file_exists($bundled_mofile)) {
+        return $bundled_mofile;
+    }
+
+    return $mofile;
 }
 
 add_action('plugins_loaded', 'woocommerce_komoju_init', 0);
@@ -100,6 +137,43 @@ function woocommerce_komoju_init()
 
         wp_enqueue_script('komoju-fields', $komoju_fields_js, [], null, true); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
         wp_script_add_data('komoju-fields', 'type', 'module');
+
+        wp_enqueue_style(
+            'komoju-checkout',
+            plugins_url('includes/css/checkout-komoju.css', __FILE__),
+            [],
+            KOMOJU_WC_VERSION
+        );
+    }
+
+    /**
+     * Enqueue admin styles and scripts for the KOMOJU settings page.
+     **/
+    function woocommerce_komoju_load_admin_assets($hook)
+    {
+        if ($hook !== 'woocommerce_page_wc-settings') {
+            return;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (!isset($_GET['tab']) || $_GET['tab'] !== 'komoju_settings') {
+            return;
+        }
+
+        wp_enqueue_style(
+            'komoju-admin',
+            plugins_url('includes/css/admin-komoju.css', __FILE__),
+            [],
+            KOMOJU_WC_VERSION
+        );
+
+        wp_enqueue_script(
+            'komoju-admin',
+            plugins_url('includes/js/admin-komoju.js', __FILE__),
+            [],
+            KOMOJU_WC_VERSION,
+            true
+        );
     }
 
     function woocommerce_komoju_load_script_as_module($tag, $handle, $src)
@@ -135,6 +209,7 @@ function woocommerce_komoju_init()
     add_action('woocommerce_api_wc_gateway_komoju', 'woocommerce_komoju_handle_http_request');
 
     add_action('wp_enqueue_scripts', 'woocommerce_komoju_load_scripts');
+    add_action('admin_enqueue_scripts', 'woocommerce_komoju_load_admin_assets');
     add_filter('script_loader_tag', 'woocommerce_komoju_load_script_as_module', 10, 3);
 
     add_action('plugins_loaded', 'woocommerce_komoju_blocks');

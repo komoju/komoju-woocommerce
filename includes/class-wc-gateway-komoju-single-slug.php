@@ -30,7 +30,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
         $this->payment_method = $payment_method;
         $this->id             = 'komoju_' . $slug;
         $this->has_fields     = $this->should_use_inline_fields($slug);
-        $this->method_title   = __('Komoju', 'komoju-japanese-payments') . ' - ' . $this->default_title();
+        $this->method_title   = __('KOMOJU', 'komoju-japanese-payments') . ' - ' . $this->default_title();
 
         if ($this->get_option('showIcon') == 'yes') {
             $this->icon = "https://komoju.com/payment_methods/$slug.svg";
@@ -201,7 +201,7 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
     public function payment_fields()
     {
         if (WC_Gateway_Komoju::komoju_is_test_mode()) {
-            echo '<p class="komoju-test-mode-checkout" style="color: #666; font-size: 12px; margin-bottom: 8px;">';
+            echo '<p class="komoju-test-mode-checkout">';
             echo '<strong>' . esc_html__('Test Mode', 'komoju-japanese-payments') . '</strong> — ';
             echo esc_html__('No real charges will be processed.', 'komoju-japanese-payments');
             echo '</p>';
@@ -232,7 +232,6 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
             publishable-key="<?php echo esc_attr($this->publishableKey); ?>"
             session="<?php echo esc_attr(wp_json_encode($checkout_session)); ?>"
             payment-type="<?php echo esc_attr($payment_type); ?>"
-            style="display: block"
         >
         </komoju-fields>
         <script>

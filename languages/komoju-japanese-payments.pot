@@ -22,7 +22,7 @@ msgstr ""
 #: class-wc-settings-page-komoju.php:24
 #: includes/class-wc-gateway-komoju-single-slug.php:22
 #: includes/settings-komoju.php:21
-msgid "Komoju"
+msgid "KOMOJU"
 msgstr ""
 
 #: class-wc-gateway-komoju.php:37 class-wc-gateway-komoju.php:39
@@ -38,7 +38,7 @@ msgstr ""
 
 #: class-wc-gateway-komoju.php:100 class-wc-gateway-komoju.php:102
 #: class-wc-gateway-komoju.php:109
-msgid "Komoju does not support your store currency."
+msgid "KOMOJU does not support your store currency."
 msgstr ""
 
 #: class-wc-gateway-komoju.php:152 class-wc-gateway-komoju.php:154
@@ -73,7 +73,7 @@ msgstr ""
 
 #: class-wc-settings-page-komoju.php:73 class-wc-settings-page-komoju.php:144
 #: class-wc-settings-page-komoju.php:239
-msgid "Unable to reach KOMOJU. Is your secret key correct?"
+msgid "Failed to connect to KOMOJU. Please ensure the correct secret key is set by reconnecting via the \"Reconnect with KOMOJU\" button above."
 msgstr ""
 
 #: class-wc-settings-page-komoju.php:92 class-wc-settings-page-komoju.php:127
@@ -131,12 +131,12 @@ msgstr ""
 
 #: includes/api-settings-komoju.php:21 includes/global-settings-komoju.php:26
 #: includes/settings-komoju.php:81 includes/settings-komoju.php:82
-msgid "Secret Key from Komoju"
+msgid "Secret Key from KOMOJU"
 msgstr ""
 
 #: includes/api-settings-komoju.php:28 includes/global-settings-komoju.php:33
 #: includes/settings-komoju.php:91
-msgid "Please enter your Komoju Webhook Secret Token"
+msgid "Please enter your KOMOJU Webhook Secret Token"
 msgstr ""
 
 #: includes/api-settings-komoju.php:29 includes/global-settings-komoju.php:34
@@ -158,8 +158,7 @@ msgstr ""
 
 #: includes/api-settings-komoju.php:44 includes/global-settings-komoju.php:49
 #: includes/settings-komoju.php:107 includes/settings-komoju.php:112
-#, php-format
-msgid "Log Komoju events inside <code>%s</code>"
+msgid "Log KOMOJU events. View logs under WooCommerce &gt; Status &gt; Logs (source: komoju)."
 msgstr ""
 
 #: includes/api-settings-komoju.php:46 includes/global-settings-komoju.php:51
@@ -190,7 +189,7 @@ msgstr ""
 #: includes/class-wc-gateway-komoju-ipn-handler.php:151
 #: includes/class-wc-gateway-komoju-ipn-handler.php:177
 #, php-format
-msgid "Validation error: Komoju currencies do not match (code %s)."
+msgid "Validation error: KOMOJU currencies do not match (code %s)."
 msgstr ""
 
 #: includes/class-wc-gateway-komoju-ipn-handler.php:108
@@ -199,7 +198,7 @@ msgstr ""
 #: includes/class-wc-gateway-komoju-ipn-handler.php:168
 #: includes/class-wc-gateway-komoju-ipn-handler.php:194
 #, php-format
-msgid "Validation error: Komoju amounts do not match (total %s)."
+msgid "Validation error: KOMOJU amounts do not match (total %s)."
 msgstr ""
 
 #: includes/class-wc-gateway-komoju-ipn-handler.php:128
@@ -245,7 +244,7 @@ msgid "Enable/Disable"
 msgstr ""
 
 #: includes/gateway-settings-komoju.php:15 includes/settings-komoju.php:14
-msgid "Enable Komoju"
+msgid "Enable KOMOJU"
 msgstr ""
 
 #: includes/gateway-settings-komoju.php:19 includes/settings-komoju.php:18
@@ -267,15 +266,15 @@ msgid ""
 msgstr ""
 
 #: includes/settings-komoju.php:74 includes/settings-komoju.php:75
-msgid "Komoju merchant ID"
+msgid "KOMOJU merchant ID"
 msgstr ""
 
 #: includes/settings-komoju.php:76 includes/settings-komoju.php:77
-msgid "Please enter your Komoju account ID."
+msgid "Please enter your KOMOJU account ID."
 msgstr ""
 
 #: includes/settings-komoju.php:83 includes/settings-komoju.php:84
-msgid "Please enter your Komoju secret key."
+msgid "Please enter your KOMOJU secret key."
 msgstr ""
 
 #: includes/settings-komoju.php:88
@@ -290,11 +289,11 @@ msgid ""
 msgstr ""
 
 #: includes/settings-komoju.php:94
-msgid "Komoju Sandbox"
+msgid "KOMOJU Sandbox"
 msgstr ""
 
 #: includes/settings-komoju.php:96
-msgid "Enable Komoju sandbox"
+msgid "Enable KOMOJU sandbox"
 msgstr ""
 
 #: includes/settings-komoju.php:98
@@ -320,3 +319,140 @@ msgstr ""
 msgid "No real charges will be processed."
 msgstr ""
 
+#: includes/api-settings-komoju.php
+msgid "API credentials"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "Payment behavior"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "Control how orders and payments are processed in your store."
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "Advanced"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "Developer settings. Leave these as their defaults unless KOMOJU support has asked you to change them."
+msgstr ""
+
+#: includes/account-settings-komoju.php
+msgid "KOMOJU Account"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "Publishable Key from KOMOJU"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "Process IPNs Asynchronously"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "KOMOJU Fields script URL"
+msgstr ""
+
+#: includes/account-settings-komoju.php
+msgid "On this page, you can connect your KOMOJU account to your WooCommerce store."
+msgstr ""
+
+#: includes/account-settings-komoju.php
+msgid "Quick Connect"
+msgstr ""
+
+#: class-wc-settings-page-komoju.php
+msgid "Reconnect with KOMOJU"
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "When true, IPNs will return immediately, and order completion will be processed in the background."
+msgstr ""
+
+#. Plugin Name of the plugin
+#: index.php
+msgid "KOMOJU Payments"
+msgstr ""
+
+#. Description of the plugin
+#: index.php
+msgid "Extends WooCommerce with KOMOJU gateway."
+msgstr ""
+
+#: index.php
+msgid "Settings"
+msgstr ""
+
+#: includes/gateway-settings-komoju.php
+msgid "Icon"
+msgstr ""
+
+#: includes/gateway-settings-komoju.php
+msgid "Show icon on checkout"
+msgstr ""
+
+#: includes/gateway-settings-komoju.php
+msgid "Description"
+msgstr ""
+
+#: includes/gateway-settings-komoju.php
+msgid "This controls the description which the user sees during checkout."
+msgstr ""
+
+#: includes/gateway-settings-komoju.php
+msgid "Inline payment fields"
+msgstr ""
+
+#: includes/gateway-settings-komoju.php
+msgid "If checked, this payment method will show fields directly in the checkout page (if supported)."
+msgstr ""
+
+#: class-wc-gateway-komoju.php includes/class-wc-gateway-komoju-single-slug.php
+#, php-format
+msgid "%s payments powered by KOMOJU"
+msgstr ""
+
+#: class-wc-settings-page-komoju.php
+msgid "Sign into KOMOJU"
+msgstr ""
+
+#: class-wc-settings-page-komoju.php
+msgid "Once signed into KOMOJU, you can select payment methods to use as WooCommerce gateways."
+msgstr ""
+
+#: class-wc-settings-page-komoju.php
+#, php-format
+msgid "Successfully connected to KOMOJU account %s."
+msgstr ""
+
+#: includes/gateway-settings-komoju.php
+#, php-format
+msgid "Enable %s"
+msgstr ""
+
+#: class-wc-settings-page-komoju.php
+msgid "Selecting payment methods here makes them available as WooCommerce gateways. To turn them on at checkout, enable each one individually under WooCommerce > Settings > Payments."
+msgstr ""
+
+#: class-wc-gateway-komoju.php
+msgid "<strong>Deprecated — will be removed in a future version.</strong> This option doesn't support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page."
+msgstr ""
+
+#: class-wc-gateway-komoju.php
+msgid "Deprecated — will be removed in a future version."
+msgstr ""
+
+#: class-wc-gateway-komoju.php
+msgid "This option doesn't support refunds. After selecting payment methods on the KOMOJU settings page, enable each one on the Payments page."
+msgstr ""
+
+#: includes/api-settings-komoju.php
+#, php-format
+msgid "Unless you need to enter keys manually, we recommend connecting via the button on the %s."
+msgstr ""
+
+#: includes/api-settings-komoju.php
+msgid "KOMOJU settings page"
+msgstr ""

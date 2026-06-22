@@ -102,46 +102,76 @@ Cypress.Commands.add('installKomoju', () => {
   });
 });
 
+// Persist credentials via the quick-setup POST rather than the settings form:
+// the write-only key fields don't reliably mark the form dirty, so the form's
+// "Save changes" button may stay disabled. The POST writes the options directly
+// (the real connect flow's path). A fresh nonce is rendered on each page load.
+Cypress.Commands.add('saveKomojuCredentials', (
+  secretKey = Cypress.env('KOMOJU_SECRET_KEY'),
+  publishableKey = Cypress.env('KOMOJU_PUBLISHABLE_KEY')
+) => {
+  if (!secretKey) {
+    throw new Error('Cypress.env("KOMOJU_SECRET_KEY") is empty. Provide a valid sk_test_... key.');
+  }
+
+  cy.visit('/wp-admin/admin.php?page=wc-settings&tab=komoju_settings');
+  cy.get('a.komoju-setup').invoke('attr', 'href').then((href) => {
+    const nonce = new URL(href, 'http://localhost:8000').searchParams.get('nonce');
+    cy.request({
+      method: 'POST',
+      url: '/?wc-api=WC_Gateway_Komoju',
+      form: true,
+      body: {
+        secret_key: secretKey,
+        publishable_key: publishableKey || '',
+        webhook_secret: 'test_webhook_secret',
+        merchant_name: 'Cypress Test Merchant',
+        nonce,
+      },
+    }).its('status').should('eq', 200);
+  });
+});
+
 Cypress.Commands.add('setupKomoju', (
   paymentTypes = [],
   secretKey = Cypress.env('KOMOJU_SECRET_KEY'),
   publishableKey = Cypress.env('KOMOJU_PUBLISHABLE_KEY')
 ) => {
-  cy.visit('/wp-admin/admin.php?page=wc-settings&tab=komoju_settings&section=api_settings');
+  cy.saveKomojuCredentials(secretKey, publishableKey);
 
-  cy.get('#komoju_woocommerce_secret_key').clear().type(secretKey);
-  cy.get('#komoju_woocommerce_publishable_key').clear().type(publishableKey);
+  // The endpoint field's "Edit" button only appears while the value is default.
+  cy.visit('/wp-admin/admin.php?page=wc-settings&tab=komoju_settings&section=api_settings');
   cy.get('.komoju-endpoint-komoju_woocommerce_fields_url').then($element => {
     const $edit = $element.find('.komoju-endpoint-edit');
     if ($edit.length > 0) { return cy.wrap($edit).click(); }
   });
-  cy.get('#komoju_woocommerce_fields_url').clear().type('https://multipay-staging.test.komoju.com/fields.js');
-  cy.contains('Save changes').click();
+  cy.get('#komoju_woocommerce_fields_url').should('not.be.disabled').clear().type('https://multipay-staging.test.komoju.com/fields.js');
+  cy.contains('Save changes').should('not.be.disabled').click();
 
   cy.contains('Payment methods').click();
-  cy.wait(1000);
 
-  cy.get('input[type="checkbox"]').each($match => {
-    $match.each(function () {
-      if (this.checked) cy.wrap($match).click();
-    });
+  // Checkboxes only render once the saved key lets the plugin reach the API.
+  cy.get('.komoju-payment-methods input[type="checkbox"]', { timeout: 20000 }).should('exist');
+
+  cy.get('.komoju-payment-methods input[type="checkbox"]').each($match => {
+    if ($match.prop('checked')) cy.wrap($match).uncheck();
   });
 
   paymentTypes.forEach(slug => {
-    cy.get('body').then($body => {
-      if ($body.find(`input[type="checkbox"][value="${slug}"]`).length) {
-        cy.get(`input[type="checkbox"][value="${slug}"]`)
-          .click()
+    cy.get('.komoju-payment-methods').then($list => {
+      if ($list.find(`input[type="checkbox"][value="${slug}"]`).length) {
+        cy.get(`.komoju-payment-methods input[type="checkbox"][value="${slug}"]`)
+          .check()
           .then(() => {
-            cy.log(`Komoju payment method checkbox for "${slug}" found and clicked.`);
+            cy.log(`KOMOJU payment method checkbox for "${slug}" found and checked.`);
           });
       } else {
-        cy.log(`Komoju payment method checkbox for "${slug}" not found.`);
+        cy.log(`KOMOJU payment method checkbox for "${slug}" not found.`);
       }
     });
   });
 
-  cy.contains('Save changes').click();
+  cy.contains('Save changes').should('not.be.disabled').click();
 });
 
 Cypress.Commands.add('enablePaymentGateway', (slug) => {

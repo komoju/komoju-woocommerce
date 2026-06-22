@@ -1,0 +1,11 @@
+/* Storefront styles for KOMOJU payment methods. */
+
+.komoju-test-mode-checkout {
+    color: #666;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+komoju-fields {
+    display: block;
+}

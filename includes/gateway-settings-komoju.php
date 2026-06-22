@@ -12,7 +12,8 @@ return [
     'enabled' => [
         'title'   => __('Enable/Disable', 'komoju-japanese-payments'),
         'type'    => 'checkbox',
-        'label'   => __('Enable Komoju', 'komoju-japanese-payments'),
+        /* translators: %s: payment method name (e.g. "KOMOJU - メルペイ") */
+        'label'   => sprintf(__('Enable %s', 'komoju-japanese-payments'), $this->method_title),
         'default' => 'no',
     ],
     'showIcon' => [
