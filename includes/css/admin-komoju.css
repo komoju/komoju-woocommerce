@@ -43,3 +43,13 @@
     margin: 0 0 0 4px;
     float: none;
 }
+
+/* The "?" glyph is drawn by a ::after pseudo-element that WooCommerce positions
+   absolutely. Reset it to flow inline so the icon stays next to the title text
+   regardless of the title width (e.g. the English "Payment Gateways"). */
+.woocommerce table.form-table th label.komoju-payment-methods-label .woocommerce-help-tip::after {
+    position: static;
+    top: auto;
+    left: auto;
+    margin: 0;
+}
