@@ -17,27 +17,27 @@ describe('KOMOJU for WooCommerce: Admin', () => {
     cy.setupKomoju(['konbini', 'credit_card']);
     cy.clickPaymentTab();
 
-    cy.contains('Komoju - Konbini');
-    cy.contains('Komoju - Credit Card');
+    cy.contains('KOMOJU - Konbini');
+    cy.contains('KOMOJU - Credit Card');
 
     cy.setupKomoju(['paypay']);
     cy.clickPaymentTab();
 
-    cy.contains('Komoju - PayPay');
+    cy.contains('KOMOJU - PayPay');
   })
 
   it('LINE pay should not exist', () => {
     cy.setupKomoju(['konbini', 'credit_card']);
     cy.clickPaymentTab();
 
-    cy.contains('Komoju - Konbini');
-    cy.contains('Komoju - Credit Card');
+    cy.contains('KOMOJU - Konbini');
+    cy.contains('KOMOJU - Credit Card');
 
     cy.setupKomoju(['paypay', 'linepay']);
     cy.clickPaymentTab();
 
-    cy.contains('Komoju - PayPay')
-    cy.contains('Komoju - LINE Pay').should('not.exist');
+    cy.contains('KOMOJU - PayPay')
+    cy.contains('KOMOJU - LINE Pay').should('not.exist');
   });
 
   it('lets me change the KOMOJU endpoint', () => {
@@ -48,14 +48,14 @@ describe('KOMOJU for WooCommerce: Admin', () => {
     cy.contains('Save changes').click();
 
     cy.contains('Payment methods').click();
-    cy.get('#mainform').should('include.text', 'Unable to reach KOMOJU. Is your secret key correct?');
+    cy.get('#mainform').should('include.text', 'Failed to connect to KOMOJU. Please ensure the correct secret key is set by reconnecting via the "Reconnect with KOMOJU" button above.');
     cy.contains('API settings').click();
 
     cy.get('#komoju_woocommerce_api_endpoint').clear().type('https://komoju.com');
     cy.contains('Save changes').click();
 
     cy.contains('Payment methods').click();
-    cy.get('#mainform').should('not.include.text', 'Unable to reach KOMOJU. Is your secret key correct?');
+    cy.get('#mainform').should('not.include.text', 'Failed to connect to KOMOJU. Please ensure the correct secret key is set by reconnecting via the "Reconnect with KOMOJU" button above.');
   })
 
   it('updates secret key with one-click setup', () => {
@@ -105,7 +105,15 @@ describe('KOMOJU for WooCommerce: Admin', () => {
     cy.reload()
     cy.get('.komoju-setup').should('include.text', 'Reconnect with KOMOJU')
     cy.contains('API settings').click()
-    cy.get('#komoju_woocommerce_secret_key').should('have.value', 'abc123')
-    cy.get('#komoju_woocommerce_webhook_secret').should('have.value', 'webhooks123')
+    // The key fields are write-only: the stored value is never rendered back
+    // into the input. Instead, a saved key is indicated by a masked placeholder
+    // (dots, or the key prefix for sk_/pk_ keys). Assert the field is empty but
+    // shows the masked "saved" indicator.
+    cy.get('#komoju_woocommerce_secret_key')
+      .should('have.value', '')
+      .and('have.attr', 'placeholder', '••••••••••••••••')
+    cy.get('#komoju_woocommerce_webhook_secret')
+      .should('have.value', '')
+      .and('have.attr', 'placeholder', '••••••••••••••••')
   })
 });
