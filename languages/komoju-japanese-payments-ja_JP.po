@@ -286,3 +286,13 @@ msgstr "KOMOJUと再連携"
 #: includes/api-settings-komoju.php
 msgid "When true, IPNs will return immediately, and order completion will be processed in the background."
 msgstr "有効にすると、IPN は即座に応答を返し、注文の完了はバックグラウンドで処理されます。"
+
+#. Plugin Name of the plugin
+#: index.php
+msgid "KOMOJU Payments"
+msgstr ""
+
+#. Description of the plugin
+#: index.php
+msgid "Extends WooCommerce with KOMOJU gateway."
+msgstr "WooCommerce に KOMOJU 決済ゲートウェイを追加します。"
