@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  *
  * @extends     WC_Settings_Page
  *
- * @version     3.2.9
+ * @version     3.3.0
  *
  * @author      Komoju
  */
@@ -354,7 +354,7 @@ class WC_Settings_Page_Komoju extends WC_Settings_Page
                     <?php
                         $secret_key = $this->secret_key();
             if ($secret_key && $secret_key !== '') {
-                echo esc_html__('Unable to reach KOMOJU. Is your secret key correct?', 'komoju-japanese-payments');
+                echo esc_html__('Failed to connect to KOMOJU. Please ensure the correct secret key is set by reconnecting via the "Reconnect with KOMOJU" button above.', 'komoju-japanese-payments');
             } else {
                 echo esc_html__('Once signed into KOMOJU, you can select payment methods to use as WooCommerce gateways.', 'komoju-japanese-payments');
             } ?>

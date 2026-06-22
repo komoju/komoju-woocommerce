@@ -73,7 +73,7 @@ msgstr ""
 
 #: class-wc-settings-page-komoju.php:73 class-wc-settings-page-komoju.php:144
 #: class-wc-settings-page-komoju.php:239
-msgid "Unable to reach KOMOJU. Is your secret key correct?"
+msgid "Failed to connect to KOMOJU. Please ensure the correct secret key is set by reconnecting via the \"Reconnect with KOMOJU\" button above."
 msgstr ""
 
 #: class-wc-settings-page-komoju.php:92 class-wc-settings-page-komoju.php:127

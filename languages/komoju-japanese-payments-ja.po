@@ -58,8 +58,8 @@ msgid "API settings"
 msgstr "API設定"
 
 #: class-wc-settings-page-komoju.php:73
-msgid "Unable to reach KOMOJU. Is your secret key correct?"
-msgstr "KOMOJUへの接続に失敗しました。非公開鍵をご確認ください。"
+msgid "Failed to connect to KOMOJU. Please ensure the correct secret key is set by reconnecting via the \"Reconnect with KOMOJU\" button above."
+msgstr "KOMOJUへの接続に失敗しました。上の「KOMOJUと再連携」ボタンから再連携し、正しい非公開鍵が設定されていることをご確認ください。"
 
 #: class-wc-settings-page-komoju.php:92
 msgid "Only modify this if you know what you're doing."
