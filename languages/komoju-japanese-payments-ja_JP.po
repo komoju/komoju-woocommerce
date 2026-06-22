@@ -296,3 +296,7 @@ msgstr ""
 #: index.php
 msgid "Extends WooCommerce with KOMOJU gateway."
 msgstr "WooCommerce に KOMOJU 決済ゲートウェイを追加します。"
+
+#: index.php
+msgid "Settings"
+msgstr "設定"
