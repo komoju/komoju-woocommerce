@@ -435,3 +435,15 @@ msgstr ""
 #: class-wc-settings-page-komoju.php
 msgid "Selecting payment methods here makes them available as WooCommerce gateways. To turn them on at checkout, enable each one individually under WooCommerce > Settings > Payments."
 msgstr ""
+
+#: class-wc-gateway-komoju.php
+msgid "<strong>Deprecated — will be removed in a future version.</strong> This shows as \"KOMOJU\" at checkout and doesn't support refunds. Enable individual payment methods instead."
+msgstr ""
+
+#: class-wc-gateway-komoju.php
+msgid "Deprecated — will be removed in a future version."
+msgstr ""
+
+#: class-wc-gateway-komoju.php
+msgid "This shows as \"KOMOJU\" at checkout and doesn't support refunds. Enable individual payment methods instead."
+msgstr ""
