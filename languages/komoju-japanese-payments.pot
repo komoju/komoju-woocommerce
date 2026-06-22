@@ -426,3 +426,8 @@ msgstr ""
 #, php-format
 msgid "Successfully connected to KOMOJU account %s."
 msgstr ""
+
+#: includes/gateway-settings-komoju.php
+#, php-format
+msgid "Enable %s"
+msgstr ""

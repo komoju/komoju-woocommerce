@@ -342,3 +342,8 @@ msgstr "KOMOJU にログインすると、WooCommerce のゲートウェイと�
 #, php-format
 msgid "Successfully connected to KOMOJU account %s."
 msgstr "KOMOJU アカウント %s に正常に接続しました。"
+
+#: includes/gateway-settings-komoju.php
+#, php-format
+msgid "Enable %s"
+msgstr "「%s」を有効化"
