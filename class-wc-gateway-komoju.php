@@ -26,7 +26,7 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
     /** @var bool Whether or not logging is enabled */
     public static $log_enabled;
 
-    /** @var WC_Logger Logger instance */
+    /** @var WC_Logger_Interface Logger instance */
     public static $log;
 
     /* Fix for Deprecated: Creation of dynamic property */
@@ -122,9 +122,11 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
     {
         if (self::$log_enabled) {
             if (empty(self::$log)) {
-                self::$log = new WC_Logger();
+                self::$log = wc_get_logger();
             }
-            self::$log->add('komoju', $message);
+            // Logs are filed under the 'komoju' source and viewable at
+            // WooCommerce > Status > Logs.
+            self::$log->debug($message, ['source' => 'komoju']);
         }
     }
 

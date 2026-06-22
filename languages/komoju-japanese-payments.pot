@@ -158,8 +158,7 @@ msgstr ""
 
 #: includes/api-settings-komoju.php:44 includes/global-settings-komoju.php:49
 #: includes/settings-komoju.php:107 includes/settings-komoju.php:112
-#, php-format
-msgid "Log KOMOJU events inside <code>%s</code>"
+msgid "Log KOMOJU events. View logs under WooCommerce &gt; Status &gt; Logs (source: komoju)."
 msgstr ""
 
 #: includes/api-settings-komoju.php:46 includes/global-settings-komoju.php:51

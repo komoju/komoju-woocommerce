@@ -206,9 +206,8 @@ msgid "Staging token"
 msgstr "ステージングトークン"
 
 #: includes/settings-komoju.php:107 includes/settings-komoju.php:112
-#, php-format
-msgid "Log KOMOJU events inside <code>%s</code>"
-msgstr "KOMOJU のイベントログ <code>%s</code>"
+msgid "Log KOMOJU events. View logs under WooCommerce &gt; Status &gt; Logs (source: komoju)."
+msgstr "KOMOJU イベントを記録します。ログは WooCommerce &gt; ステータス &gt; ログ（ソース: komoju）で確認できます。"
 
 #: includes/settings-komoju.php
 #, php-format

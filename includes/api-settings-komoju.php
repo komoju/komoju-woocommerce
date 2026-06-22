@@ -99,8 +99,7 @@ return [
     ],
     [
         'id'          => 'komoju_woocommerce_debug_log',
-        /* translators: %s: log file path */
-        'desc'        => sprintf(__('Log KOMOJU events inside <code>%s</code>', 'komoju-japanese-payments'), wc_get_log_file_path('komoju')),
+        'desc'        => __('Log KOMOJU events. View logs under WooCommerce &gt; Status &gt; Logs (source: komoju).', 'komoju-japanese-payments'),
         'desc_tip'    => true,
         'title'       => __('Debug Log', 'komoju-japanese-payments'),
         'type'        => 'checkbox',
