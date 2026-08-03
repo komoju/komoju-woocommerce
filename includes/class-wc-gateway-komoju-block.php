@@ -58,8 +58,10 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
         if ($checkout_session_failed) {
             return [
                 'id'              => $this->name,
-                'title'           => $this->gateway->title,
-                'description'     => $this->gateway->description,
+                // Getters, not raw props: they apply the gateway title/description
+                // filters that multilingual plugins (e.g. WCML) translate through.
+                'title'           => $this->gateway->get_title(),
+                'description'     => $this->gateway->get_description(),
                 'supports'        => array_filter($this->gateway->supports, [$this->gateway, 'supports']),
                 'icon'            => $this->gateway->icon,
                 'tokenName'       => 'komoju_payment_token',
@@ -89,8 +91,8 @@ final class WC_Gateway_Komoju_Blocks extends AbstractPaymentMethodType
 
         return [
             'id'              => $this->name,
-            'title'           => $this->gateway->title,
-            'description'     => $this->gateway->description,
+            'title'           => $this->gateway->get_title(),
+            'description'     => $this->gateway->get_description(),
             'supports'        => array_filter($this->gateway->supports, [$this->gateway, 'supports']),
             'icon'            => $this->gateway->icon,
             'tokenName'       => 'komoju_payment_token',
