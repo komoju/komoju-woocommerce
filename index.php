@@ -234,13 +234,24 @@ function woocommerce_komoju_init()
         add_action(
             'woocommerce_blocks_payment_method_type_registration',
             function (PaymentMethodRegistry $payment_method_registry) {
-                $gateways = WC()->payment_gateways()->payment_gateways();
+                require_once 'class-wc-gateway-komoju.php';
+                require_once 'includes/class-wc-gateway-komoju-single-slug.php';
 
-                if ($gateways) {
-                    foreach ($gateways as $gateway) {
-                        if ($gateway->enabled == 'yes' && $gateway instanceof WC_Gateway_Komoju_Single_Slug) {
-                            $payment_method_registry->register(new WC_Gateway_Komoju_Blocks($gateway));
-                        }
+                $komoju_payment_methods = get_option('komoju_woocommerce_payment_methods');
+                if (gettype($komoju_payment_methods) != 'array') {
+                    return;
+                }
+
+                foreach ($komoju_payment_methods as $payment_method) {
+                    // CPF-264 Remove linepay from the list of payment methods
+                    if (isset($payment_method['type_slug']) && $payment_method['type_slug'] === 'linepay') {
+                        continue;
+                    }
+
+                    $gateway = new WC_Gateway_Komoju_Single_Slug($payment_method);
+
+                    if ($gateway->enabled == 'yes') {
+                        $payment_method_registry->register(new WC_Gateway_Komoju_Blocks($gateway));
                     }
                 }
             }
