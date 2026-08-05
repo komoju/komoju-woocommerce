@@ -137,7 +137,11 @@ class WC_Gateway_Komoju_Webhook_Event
     /**
      * A getter to retrieve the session ID from the webhook event
      *
-     * @return string
+     * Older payloads (and some non-payment events) may omit "session", so this
+     * can be null. Callers comparing against order metadata must not treat a
+     * null here as a match.
+     *
+     * @return string|null
      */
     public function session_id()
     {
