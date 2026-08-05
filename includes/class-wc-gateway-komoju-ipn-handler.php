@@ -261,7 +261,47 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function payment_status_cancelled($order, $webhookEvent)
     {
-        WC_Gateway_Komoju::log('Payment cancelled for Order #' . $order->get_id() . '. Order status not updated — customer may retry.');
+        if (!$this->is_order_cancellable($order, $webhookEvent)) {
+            WC_Gateway_Komoju::log('Aborting cancelled/expired webhook for Order #' . $order->get_id() . ': order is not cancellable or the webhook is from a stale session.');
+
+            return;
+        }
+
+        /* translators: %s: payment status */
+        $order->update_status('cancelled', sprintf(__('Payment %s via IPN.', 'komoju-japanese-payments'), wc_clean($webhookEvent->status())));
+    }
+
+    /**
+     * Determine whether an order may be cancelled by a cancelled/expired webhook.
+     *
+     * @param WC_Order $order
+     * @param WC_Gateway_Komoju_Webhook_Event $webhookEvent Webhook event data
+     *
+     * @return bool true if the order is cancellable
+     */
+    protected function is_order_cancellable($order, $webhookEvent)
+    {
+        // Never downgrade an order that has already been paid or refunded.
+        if ($order->is_paid() || $order->has_status('refunded')) {
+            return false;
+        }
+
+        // Match the webhook to the current checkout session so that stale
+        // cancellations from earlier payment attempts are ignored (e.g. the
+        // customer cancelled on the KOMOJU page and then retried).
+        $komoju_session_id = $order->get_meta('komoju_session_id');
+        if (!empty($komoju_session_id)) {
+            return $komoju_session_id === $webhookEvent->session_id();
+        }
+
+        // Legacy: orders created before session tracking used transaction_id.
+        $transaction_id = $order->get_transaction_id();
+        if (empty($transaction_id)) {
+            return false;
+        }
+
+        return $transaction_id == $webhookEvent->uuid()
+            || $transaction_id == $webhookEvent->external_order_num();
     }
 
     /**
@@ -272,7 +312,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function payment_status_expired($order, $webhookEvent)
     {
-        WC_Gateway_Komoju::log('Payment expired for Order #' . $order->get_id() . '. Order status not updated — customer may retry.');
+        $this->payment_status_cancelled($order, $webhookEvent);
     }
 
     /**

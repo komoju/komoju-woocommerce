@@ -141,7 +141,7 @@ class WC_Gateway_Komoju_Webhook_Event
      */
     public function session_id()
     {
-        return $this->data()['session'];
+        return $this->data()['session'] ?? null;
     }
 
     /**
