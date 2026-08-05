@@ -137,11 +137,11 @@ class WC_Gateway_Komoju_Webhook_Event
     /**
      * A getter to retrieve the session ID from the webhook event
      *
-     * @return string
+     * @return string|null null when the payload omits "session"
      */
     public function session_id()
     {
-        return $this->data()['session'];
+        return $this->data()['session'] ?? null;
     }
 
     /**
