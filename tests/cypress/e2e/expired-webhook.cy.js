@@ -3,20 +3,13 @@
 /**
  * KOMOJU expiry must cancel the WooCommerce order.
  *
- * Regression guard for 3.2.6 (commit 6efbe93, PR #166), where the expired and
- * cancelled webhook handlers became log-only no-ops. Orders sat in pending
- * forever once the KOMOJU payment deadline passed, despite the docs promising
- * pending -> cancelled.
+ * Regression guard for 3.2.6 (PR #166), where these handlers became no-ops.
+ * Unit coverage lives in tests/php/ipn-cancellation-test.php; this spec adds
+ * HMAC handling, order lookup and real update_status() side effects.
  *
- * The unit suite (tests/php/ipn-cancellation-test.php) covers the branch logic
- * against stubs. This spec exercises the parts stubs cannot: HMAC handling,
- * order lookup from external_order_num, and the real update_status() side
- * effects on a genuine order.
- *
- * Cancellation deliberately only fires when the webhook can be tied to the
- * order's current payment attempt, so these tests go through a real konbini
- * checkout to obtain a genuine komoju_session_id rather than POSTing at a
- * bare admin-created order.
+ * Cancellation only fires when the webhook matches the order's current payment
+ * attempt, so these tests run a real konbini checkout to get a genuine
+ * komoju_session_id.
  */
 describe("KOMOJU for WooCommerce: Expired webhook", () => {
   const webhookHeaders = {
@@ -27,9 +20,8 @@ describe("KOMOJU for WooCommerce: Expired webhook", () => {
     "Content-Type": "application/json",
   };
 
-  // Mirrors a payment.expired payload. `session` is what ties the event to the
-  // order's current attempt; `external_order_num` is how the handler finds the
-  // order (prefix + order number + 7-char suffix).
+  // `session` ties the event to the order's current attempt;
+  // `external_order_num` is how the handler finds the order.
   const expiredPayload = (orderId, sessionId, overrides = {}) => ({
     id: "evt_expired_test",
     type: "payment.expired",
@@ -81,9 +73,8 @@ describe("KOMOJU for WooCommerce: Expired webhook", () => {
   /**
    * Place a real konbini order and yield { orderId, sessionId }.
    *
-   * KOMOJU redirects to /sessions/<id> after checkout, which is the same id
-   * stored on the order as komoju_session_id -- so we can build a webhook that
-   * genuinely matches the current payment attempt.
+   * KOMOJU redirects to /sessions/<id>, which is the id stored on the order
+   * as komoju_session_id.
    */
   const placeKonbiniOrder = () => {
     cy.setupKomoju(['konbini']);
@@ -103,7 +94,7 @@ describe("KOMOJU for WooCommerce: Expired webhook", () => {
     cy.contains('button', 'Place Order').click({ force: true });
     cy.get('.blockUI,.blockOverlay').should('not.exist');
 
-    // Reaching KOMOJU can be slow; the konbini instructions confirm arrival.
+    // Reaching KOMOJU can be slow.
     cy.contains('How to make a payment at Family Mart', { matchCase: false, timeout: 20000 })
       .should('be.visible');
 
@@ -114,11 +105,8 @@ describe("KOMOJU for WooCommerce: Expired webhook", () => {
       cy.contains('Return to').click();
       cy.contains('Thank you. Your order has been received.').should('be.visible');
 
-      // Read the order id from the full URL, not the pathname. The test site
-      // runs on plain permalinks (see cy.goToStore visiting /?page_id=6), so
-      // WooCommerce puts the id in the query string and the pathname is just
-      // "/". Both forms are matched so this keeps working if the site is ever
-      // switched to pretty permalinks.
+      // The test site uses plain permalinks, so the order id is in the query
+      // string rather than the path. Both forms are matched.
       return cy.url().then((url) => {
         const match = url.match(/order-received[=/](\d+)/);
         expect(match, `order id in ${url}`).to.not.be.null;
@@ -160,8 +148,8 @@ describe("KOMOJU for WooCommerce: Expired webhook", () => {
   });
 
   it("ignores an expiry from a superseded payment attempt", () => {
-    // The retry flow PR #166 fixed: a webhook from an abandoned earlier attempt
-    // must not cancel an order whose customer has since started a new payment.
+    // The retry flow PR #166 fixed: an abandoned earlier attempt must not
+    // cancel an order whose customer has since started a new payment.
     placeKonbiniOrder().then(({ orderId, sessionId }) => {
       postWebhook(expiredPayload(orderId, `${sessionId}_stale`));
 

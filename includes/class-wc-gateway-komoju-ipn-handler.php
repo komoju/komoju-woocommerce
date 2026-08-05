@@ -281,14 +281,11 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
      */
     protected function is_order_cancellable($order, $webhookEvent)
     {
-        // Never downgrade an order that has already been paid or refunded.
         if ($order->is_paid() || $order->has_status('refunded')) {
             return false;
         }
 
-        // Match the webhook to the current checkout session so that stale
-        // cancellations from earlier payment attempts are ignored (e.g. the
-        // customer cancelled on the KOMOJU page and then retried).
+        // Ignore stale cancellations from earlier payment attempts.
         $komoju_session_id = $order->get_meta('komoju_session_id');
         if (!empty($komoju_session_id)) {
             return $komoju_session_id === $webhookEvent->session_id();
