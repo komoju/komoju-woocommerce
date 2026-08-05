@@ -154,8 +154,15 @@ class Testable_IPN_Handler
 
     public function call($method, ...$args)
     {
-        // No setAccessible() call: it is a no-op since PHP 8.1 and deprecated in 8.5.
-        return $this->ref->getMethod($method)->invoke($this->handler, ...$args);
+        $m = $this->ref->getMethod($method);
+
+        // Required to reach protected methods on PHP < 8.1 (CI runs 7.4).
+        // From 8.1 it is a no-op, and calling it is deprecated as of 8.5.
+        if (PHP_VERSION_ID < 80100) {
+            $m->setAccessible(true);
+        }
+
+        return $m->invoke($this->handler, ...$args);
     }
 }
 

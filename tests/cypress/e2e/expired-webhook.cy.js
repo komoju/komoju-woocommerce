@@ -111,15 +111,17 @@ describe("KOMOJU for WooCommerce: Expired webhook", () => {
       const sessionId = pathname.split('/sessions/')[1].split('/')[0];
       expect(sessionId, 'session id from KOMOJU redirect').to.be.a('string').and.not.be.empty;
 
-      // Returning to the store lands on order-received, whose URL carries the
-      // order id -- more stable than scraping the confirmation markup, which
-      // differs between block and shortcode checkout.
       cy.contains('Return to').click();
       cy.contains('Thank you. Your order has been received.').should('be.visible');
 
-      return cy.location('pathname').then((orderPath) => {
-        const match = orderPath.match(/order-received\/(\d+)/);
-        expect(match, `order id in ${orderPath}`).to.not.be.null;
+      // Read the order id from the full URL, not the pathname. The test site
+      // runs on plain permalinks (see cy.goToStore visiting /?page_id=6), so
+      // WooCommerce puts the id in the query string and the pathname is just
+      // "/". Both forms are matched so this keeps working if the site is ever
+      // switched to pretty permalinks.
+      return cy.url().then((url) => {
+        const match = url.match(/order-received[=/](\d+)/);
+        expect(match, `order id in ${url}`).to.not.be.null;
 
         return { orderId: match[1], sessionId };
       });
