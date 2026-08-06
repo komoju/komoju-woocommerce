@@ -1,0 +1,29 @@
+name: Plugin asset/readme update
+
+# Pushes readme.txt and .wordpress-org assets straight to SVN trunk/assets so
+# the wordpress.org listing can be corrected without cutting a release. The
+# action bails out if anything other than those files changed since the last
+# deploy, leaving code changes to deploy.yml.
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  trunk:
+    name: Push to trunk
+    runs-on: ubuntu-latest
+    steps:
+    - name: setup
+      uses: actions/checkout@v4
+    - name: WordPress.org plugin asset/readme update
+      uses: 10up/action-wordpress-plugin-asset-update@stable
+      env:
+        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        # Defaults to the repository name (komoju-woocommerce), which is not the
+        # wordpress.org slug.
+        SLUG: komoju-japanese-payments
