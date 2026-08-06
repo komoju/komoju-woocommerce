@@ -29,6 +29,10 @@
 # Tests
 /tests
 
+# WordPress.org listing assets: deployed to the SVN assets/ directory, which
+# sits beside trunk/ and must not be bundled into the plugin itself.
+/.wordpress-org
+
 # Editor/IDE
 /.editorconfig
 /.vscode
