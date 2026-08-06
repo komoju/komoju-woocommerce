@@ -13,3 +13,8 @@
 /.env export-ignore
 /docker-compose.yml export-ignore
 /Dockerfile export-ignore
+
+# Leading-dot directories need the bare name plus a glob: a "/.name" pattern
+# does not match here the way "/docs" does.
+.wordpress-org export-ignore
+.wordpress-org/** export-ignore
