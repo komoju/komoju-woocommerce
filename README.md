@@ -15,7 +15,7 @@ The above guides cover:
 
 ## License
 
-Komoju WooCommerce plugin copyright © 2020 by Degica Ltd.
+Komoju WooCommerce plugin copyright © 2020 by KOMOJU Co., Ltd.
 
 This is a free plugin for use by Komoju customers. This code is not be traded or sold for profit.
 

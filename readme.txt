@@ -1,9 +1,9 @@
 === KOMOJU Payments ===
-Contributors: KOMOJU
-Tags: WooCommerce,Payment Gateway,Komoju
+Contributors: komoju
+Tags: woocommerce, payment-gateway, japanese-payments, konbini, paypay
 Requires at least: 6.0
-Tested up to: 7.0
-Stable tag: 3.3.0
+Tested up to: 7.0.2
+Stable tag: 3.3.1
 Requires PHP: 7.4
 Requires Plugins: woocommerce
 WC requires at least: 6.0.0
@@ -11,176 +11,80 @@ WC tested up to: 10.8.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Accept payments in Japan, South-Korea, South-East Asia and around the world with KOMOJU.
+Accept prevalent payment methods in Japan, South Korea, and beyond with KOMOJU. Boost conversions with seamless WooCommerce checkout.
 
 == Description ==
 
-Accept payments in Japan, South-Korea, South-East Asia and Europe with KOMOJU. Supports credit cards, convenience store payments, digital wallets and more.
+**Give your customers the local payment experience they expect**
 
-## Quick Start Guide
+KOMOJU Payments connects your online store to major international credit cards and regional alternative payment method options across Japan, South Korea, Southeast Asia, Europe, and Latin America through a single integration. By offering customers their preferred local payment methods in familiar currencies, KOMOJU eliminates checkout friction, reduces cart abandonment, and drives higher store conversions—allowing you to accept payments wherever you're located and ship worldwide.
 
-If you'd like to set up this plugin quickly, please see our  
+### Key Features & Benefits
 
-- [**KOMOJU-WooCommerce Quick Start Guide**](https://tech.degica.com/komoju-woocommerce/en/user_guide/getting_started/)
-- [**KOMOJU-WooCommerce プラグインの始め方**](https://tech.degica.com/komoju-woocommerce/user_guide/getting_started/)
+* **Single Integration Setup:** Accept major credit cards, digital wallets, and convenience store payments through a single, easy-to-install plugin.
+* **Frictionless Native Checkout:** Customers complete purchases smoothly on your checkout page without unnecessary redirects.
+* **Pay-As-You-Grow Pricing:** Only pay a flat payment processing fee on completed transactions with no setup costs, monthly fees or hidden charges.
+* **Automated Order Synchronization:** Syncs payment statuses directly to your WooCommerce orders, updating them automatically when payments are completed.
+* **Enterprise-Grade Security:** Fully PCI-DSS compliant with dynamic 3D Secure (3DS 2.0) authentication and AI-powered fraud prevention to protect every transaction.
+* **Flexible Payouts:** Fast funding with flexible weekly or monthly payout schedules to keep your cash flow moving.
 
----
+### Supported Payment Categories
 
-## KOMOJU Global Payment Gateway
+KOMOJU connects you to the payment methods your customers prefer.
 
-**Expand your business to global markets and accept payments as a local!**
+* **Credit Cards:** Major international card brands alongside local and regional credit cards.
+* **Digital Wallets:** Digital wallets in various markets, including widely used local options such as PayPay and Alipay.
+* **Convenience Store Payments (Konbini):** Over-the-counter cash payments at major convenience store chains.
+* **Bank Transfers & Carrier Billing:** Local bank transfers, Pay-easy, and mobile carrier billing options.
+* **Buy Now, Pay Later (BNPL):** Flexible pay-after-delivery options such as Paidy.
 
-Give your customers a local payment experience they expect. Increase conversion rates with our local payment methods such as Alipay, Credit Cards (South-Korea & Japan), GrabPay (Singapore), Konbini (Japan) and many more!
-
-If you're expanding your business globally and need a payment partner with local experience, [KOMOJU](https://en.komoju.com/) is right for you. Adding the payment methods your customer expects is key to success and will drastically decrease abandon rates and increase conversion and sales. Give your customers a local payment experience, in the local currency they are familiar with and with their preferred payment method.
-
-[KOMOJU](https://en.komoju.com/) integrates seamlessly with your checkout and all payment options are displayed dynamically. This means you do not have to make any additional configuration after setting up our plugin.
-
-### Features
-
-KOMOJU lets you accept payments in multiple currencies through a variety of local payment methods and credit/debit cards. We cover payment methods in Japan, South-Korea, China, South-East Asia, Australia and Europe!
-
-- **Clear pricing**: You only pay per transaction - no hidden fees, charges or setup costs!
-- **Fast Payout**: Choose between a monthly or weekly cycle - you'll get your funds quickly.
-- **Multi-Currency:** Accept payments in local currency, and receive your funds in your preferred currency. We support USD, EUR, JPY, SGD, HKD and AUD for payouts.
-- **Easy onboarding:** We quickly review every merchant and can provide payments fast.
-- **Many payment methods accepted**: We provide payment methods across 6 regions, with most payment methods covered.
-
-### Benefits
-
-When enabling KOMOJU Payment Gateway on your store, you will be able to accept payments from your customers, worldwide. Your customers will pay in their preferred currency and payment method.
-
-Our plugin is fully PCI-DSS compliant, so you do not need to worry about regulations and cardholder safety. With 3D-Secure 2.0, you can be rest assured that your payments are secured and authenticated.
-
-You can accept payments with digital wallets such as Alipay, WeChat Pay, PayPay, Toss, PAYCO, GrabPay, Doku, OVO and many more. Payments with digital wallets give your customers a customised, trusted and convenient payment option.
-
-We support businesses that are conducting business cross-border. For the majority of the payment methods we do not require a local entity or bank account. Accept payments wherever you're located, and ship your products worldwide.
-
-**KOMOJU is the ideal way to accept payments on your store to ensure your customers can pay without friction with the payment methods they want.**
-
-### Accepted Payment Methods
-
-We currently accept the following payment methods:
-
-**Japan**
-
-- Credit / Debit Cards Japan (Visa, Mastercard, American Express, JCB, Diners Club)
-- Convenience Store (Konbini)
-- Pay-Easy
-- Japan Bank Transfer
-- PayPay
-- MerPay
-- RakutenPay
-- Paidy
-- Carrier Billing (NTT Docomo, Softbank, au)
-- Prepaid Vouchers (WebMoney, BitCash, NET Cash)
-
-**South-Korea**
-
-- Credit / Debit Cards (Samsung, Lotte, Hyundai, Hana, BC, NH, Shinhan, KB)
-- Toss
-- Payco
-
-**China**
-
-- Alipay
-- WeChat Pay
-- UnionPay
-
-**South-East Asia**
-
-- Doku
-- OVO
-- GrabPay
-- Dragonpay
-- FPX
-
-**Europe**
-
-- Bancontact
-- Multibanco
-- EPS
-- Giropay
-- Przelewy24
-- BLIK
-- MyBank
-- Sofort
-
-== Frequently Asked Questions ==
-
-= What versions of WordPress and WooCommerce is this compatible with? =
-
-At the moment, this plugin has been tested and is known to work up to WordPress
-7.0 and WooCommerce 10.8.1. If you are using a later version, please check the
-next section or contact us regarding this.
-
-= What should I do if I am using newer versions of WordPress and WooCommerce? =
-
-We recommend performing a fresh install of WordPress 7.0 and WooCommerce
-10.8.1 before proceeding to install this plugin. You can temporarily downgrade
-from a newer version of WordPress and WooCommerce before continuing installation.
-However, downgrading from newer versions of WordPress and WooCommerce may result in
-issues with installing this plugin. If you are experiencing problems, please
-contact our support team (contact@komoju.com).
-
-= Where can I get more information? =
-
-Please contact contact@komoju.com if you have any questions about
-the installation of the module.
-
-= どのWordPress・WooCommerceのバージョンに対応していますか？=
-現時点でこのプラグインは、WordPress 7.0およびWooCommerce 10.8.1まで動作することが確認されています。
-それ以降のバージョンをお使いの場合は、以下をお試し頂くか、contact@komoju.comまでご連絡ください。
-
-= 新しいバージョンのWordPressとWooCommerceを使用している場合はどうすればよいですか？ =
-このプラグインをインストールする前に、まずWordPress 7.0とWooCommerce 10.8.1を新規インストールすることをお勧めします。
-新しいバージョンから旧バージョンへ一時的にダウングレードし、接続頂くことも可能ですが、新しいバージョンからダウングレードすると、このプラグインのインストールに問題が生じる可能性がございます。
-問題が発生した場合は、サポートチーム（contact@komoju.com）までご連絡ください。
-
-= 詳細はどこで入手できますか？=
-KOMOJUの接続方法についてご不明な点がありましたら、弊社のサポートチーム（contact@komoju.com） までお問合せください。
+*Note: To view the complete, up-to-date list of supported payment methods, please visit KOMOJU's [Payment Methods Page](https://en.komoju.com/payment-methods/).*
 
 == Installation ==
 
-1. Upload the plugin to your server where wordpress and WooCommerce are installed via FTP or other file transfer method to the wordpress/wp-content/plugins directory
-1. Change to the plugin directory
-1. Run: `unzip woocommerce-komoju.zip`
+1. **Install & Activate:** In your WordPress dashboard, go to **Plugins > Add New**, search for **KOMOJU Payments**, and click **Install Now**, then **Activate**.
+2. **Connect Your Account:** Navigate to **WooCommerce > Settings > Payments**, select **KOMOJU**, and click **Sign into KOMOJU** to link your merchant account.
+3. **Enable Payment Methods:** Select your preferred payment options—such as credit cards, digital wallets, or konbini payments. No coding required.
 
-Login to Wordpress as Administrator
+For detailed setup guides, please visit our documentation:
 
-Click on the 'Plugins' menu on the left hand side.
+* [KOMOJU WooCommerce Documentation (English)](https://doc.komoju.com/docs/woocommerce)
+* [KOMOJU WooCommerce Documentation (日本語)](https://ja.doc.komoju.com/docs/woocommerce)
 
-You should see the WooCommerce Komoju Gateway listed among the plugins. Click the Activate Link for this gateway.
-Next you need to configure the Plugin in WooCommerce. To do so, from the left hand menu, select 'WooCommerce' and then 'Settings'.
+== Frequently Asked Questions ==
 
-Then click 'Checkout' from the Top Menu.
+= What versions of WordPress and WooCommerce are supported? =
 
-Click on the 'Komoju' Link just below the top tabbed menu.
+This plugin requires WordPress 6.0 or higher (tested up to 7.0.2) and PHP 7.4 or higher. We actively maintain and test the plugin against current versions of WordPress and WooCommerce to ensure optimal security and performance.
 
-Click the Enable/Disable Box to enable this gateway.
+= What should I do if I experience compatibility issues? =
 
-Enter your KOMOJU API credentials in this configuration page. The information to set here is defined in your KOMOJU Merchant Settings page. Ignore the "Webhook Secret Token" for now, as it will be filled out after your Komoju account has been configured.
-The value for "Komoju merchant ID" field is the Merchant UUID value on the Merchant Settings page.
-The value for the "Secret Key from Komoju" field is the Secret Key value on the Merchant Settings page.
-Make sure they match.
-Always start the configuration by using the test mode secret key and do a few tests before going live.
+If you encounter any unexpected errors or compatibility issues on your store setup, please utilise the [KOMOJU Help Center](https://help.komoju.com/hc/en-us) or inquire from the [KOMOJU Dashboard](https://app.komoju.com/merchant).
 
-To enable Debug click the 'Enable logging' box.
+= Where can I view the full list of supported payment methods? =
 
-= Configuring your Komoju account =
-To ensure that the WooCommerce plugin works correctly you will need to set up a webhook from your KOMOJU dashboard to the wordpress instance. To do this you will need to go to your [Webhook page on the Komoju dashboard](https://komoju.com/admin/webhooks) and click "New Webhook". If you don't know what the webhook URL should be you can check the admin page for this plugin on your wordpress instance to see the default address. The secret can be anything you want (as long as you remember it), but you must make sure the following events are ticked:
+To view the full, up-to-date list of supported payment methods, visit our [Payment Methods Page](https://en.komoju.com/payment-methods/).
 
-- payment.authorized
-- payment.captured
-- payment.expired
-- payment.cancelled
-- payment.refunded
+= Do my customers need a KOMOJU account to make a payment? =
 
-Ensure that the "Active" checkbox is also ticked and then click "Create Webhook".
+No. KOMOJU provides a frictionless guest checkout experience. Customers select their preferred payment method directly at checkout without needing to create or log into a KOMOJU account.
 
-Go back to your Wordpress instance and set the "Webhook Secret Token" value on the Komoju Woocommerce plugin to be the same as the secret set for the webhook.
+= Where can I get more information or support? =
+
+You can visit our [Help Center Page](https://help.komoju.com/hc/en-us) or inquire from the [KOMOJU Dashboard](https://app.komoju.com/merchant) for assistance with account setup or technical questions.
+
+== Screenshots ==
+
+1. **Localized Customer Checkout:** Seamless checkout with popular local payment methods including PayPay, Konbini payments, BNPL, and credit cards.
+2. **Simple Payment Management:** Easily enable, disable, and configure individual payment options directly within WooCommerce settings.
+3. **Real-Time Analytics & Reporting:** Track completed transactions, payout schedules, and store performance inside the KOMOJU merchant dashboard.
 
 == Changelog ==
+
+= 3.3.1 =
+
+Fixed a regression where expired and cancelled payments did not move the order to "Cancelled"
+Fixed translation string issue causing slow db queries when using specific 3rd party plugins
 
 = 3.3.0 =
 
