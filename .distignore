@@ -21,6 +21,10 @@
 /composer.json
 /package.json
 /package-lock.json
+/build.bash
+/mkdocs.yml
+/site
+/README.md
 
 # Docker
 /docker-compose.yml
@@ -37,3 +41,9 @@
 /.editorconfig
 /.vscode
 /.idea
+/.devcontainer
+/.DS_Store
+
+# Local build artifacts produced by build.bash
+/.svn-komoju-japanese-payments
+/komoju-japanese-payments.zip
