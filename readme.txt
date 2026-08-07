@@ -1,5 +1,5 @@
 === KOMOJU Payments ===
-Contributors: komoju
+Contributors: degica
 Tags: woocommerce, payment-gateway, japanese-payments, konbini, paypay
 Requires at least: 6.0
 Tested up to: 7.0.2
