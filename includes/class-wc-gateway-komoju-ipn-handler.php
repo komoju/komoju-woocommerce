@@ -107,12 +107,31 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
             return;
         }
 
+        $new_merchant = isset($post['merchant_name']) ? $post['merchant_name'] : '';
+        $old_merchant = get_option('komoju_woocommerce_connected_merchant_name');
+
         update_option('komoju_woocommerce_secret_key', $post['secret_key']);
         update_option('komoju_woocommerce_publishable_key', $post['publishable_key']);
         update_option('komoju_woocommerce_webhook_secret', $post['webhook_secret']);
         delete_option('komoju_woocommerce_nonce');
 
-        update_option('komoju_woocommerce_just_connected_merchant_name', $post['merchant_name']);
+        // Reconnecting to a different merchant invalidates any cached payment-method
+        // selections and per-gateway settings from the previous credentials. Without
+        // this, checkout continues to render the previous merchant's payment methods
+        // even though the KOMOJU settings page correctly shows the new merchant's list.
+        if ($old_merchant !== $new_merchant) {
+            $previous_types = get_option('komoju_woocommerce_payment_types');
+            if (is_array($previous_types)) {
+                foreach ($previous_types as $slug) {
+                    delete_option('woocommerce_komoju_' . $slug . '_settings');
+                }
+            }
+            delete_option('komoju_woocommerce_payment_types');
+            delete_option('komoju_woocommerce_payment_methods');
+        }
+
+        update_option('komoju_woocommerce_connected_merchant_name', $new_merchant);
+        update_option('komoju_woocommerce_just_connected_merchant_name', $new_merchant);
 
         wp_safe_redirect(admin_url('admin.php?page=wc-settings&tab=komoju_settings'));
         exit;
