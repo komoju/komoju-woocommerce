@@ -85,6 +85,7 @@ You can visit our [Help Center Page](https://help.komoju.com/hc/en-us) or inquir
 
 Fixed a regression where expired and cancelled payments did not move the order to "Cancelled"
 Block checkout now shows translated gateway names on WCML sites
+Fixed an issue where the payment methods shown when switching from test to live mode were stale
 
 = 3.3.0 =
 
