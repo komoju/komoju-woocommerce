@@ -1,5 +1,5 @@
 === KOMOJU Payments ===
-Contributors: komoju
+Contributors: degica
 Tags: woocommerce, payment-gateway, japanese-payments, konbini, paypay
 Requires at least: 6.0
 Tested up to: 7.0.2
@@ -84,7 +84,7 @@ You can visit our [Help Center Page](https://help.komoju.com/hc/en-us) or inquir
 = 3.3.1 =
 
 Fixed a regression where expired and cancelled payments did not move the order to "Cancelled"
-Fixed translation string issue causing slow db queries when using specific 3rd party plugins
+Block checkout now shows translated gateway names on WCML sites
 
 = 3.3.0 =
 
