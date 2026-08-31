@@ -207,6 +207,8 @@ class WC_Gateway_Komoju_Single_Slug extends WC_Gateway_Komoju
             echo '</p>';
         }
 
+        parent::payment_fields();
+
         if (!$this->has_fields) {
             return;
         }
