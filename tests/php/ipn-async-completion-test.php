@@ -86,9 +86,9 @@ function wc_get_order($order_id)
 
 class Fake_Async_Order
 {
-    public $notes = [];
+    public $notes                  = [];
     public $payment_complete_calls = [];
-    public $paid = false;
+    public $paid                   = false;
 
     public function add_order_note($note)
     {
@@ -125,7 +125,7 @@ check('async callback accepts all action arguments', action_accepted_args('komoj
 check('legacy gateway is not constructed during bootstrap', class_exists('WC_Gateway_Komoju', false), false);
 check('IPN handler is not constructed during bootstrap', class_exists('WC_Gateway_Komoju_IPN_Handler', false), false);
 
-$order_id                    = 8950;
+$order_id                     = 8950;
 $GLOBALS['orders'][$order_id] = new Fake_Async_Order();
 do_action('komoju_capture_payment_async', $order_id, 'IPN payment captured', 'payment_abc123');
 
