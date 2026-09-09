@@ -2,8 +2,8 @@
 Contributors: degica
 Tags: woocommerce, payment-gateway, japanese-payments, konbini, paypay
 Requires at least: 6.0
-Tested up to: 7.0.2
-Stable tag: 3.3.2
+Tested up to: 7.1
+Stable tag: 3.3.3
 Requires PHP: 7.4
 Requires Plugins: woocommerce
 WC requires at least: 6.0.0
@@ -80,6 +80,11 @@ You can visit our [Help Center Page](https://help.komoju.com/hc/en-us) or inquir
 3. **Real-Time Analytics & Reporting:** Track completed transactions, payout schedules, and store performance inside the KOMOJU merchant dashboard.
 
 == Changelog ==
+
+= 3.3.3 =
+
+Fixed an issue where order statuses were not properly updating when the "Process IPNs Asynchronously" setting is enabled
+Updated "Tested up to" WordPress 7.1
 
 = 3.3.2 =
 
