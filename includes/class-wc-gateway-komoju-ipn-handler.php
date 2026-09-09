@@ -25,7 +25,6 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
     {
         add_filter('komoju_japanese_payments_invoke_ipn_handler', [$this, 'check_response'], 10, 1);
         add_action('komoju_japanese_payments_valid_ipn_request', [$this, 'valid_response']);
-        add_action('komoju_capture_payment_async', [$this, 'payment_complete_async'], 10, 3);
 
         $this->gateway            = $gateway;
         $this->webhookSecretToken = $webhookSecretToken;
