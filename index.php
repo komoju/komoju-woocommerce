@@ -86,6 +86,15 @@ add_action('plugins_loaded', 'woocommerce_komoju_init', 0);
 
 function woocommerce_komoju_init()
 {
+    require_once __DIR__ . '/includes/class-wc-gateway-komoju-response.php';
+
+    add_action(
+        'komoju_capture_payment_async',
+        ['WC_Gateway_Komoju_Response', 'payment_complete_async'],
+        10,
+        3
+    );
+
     /**
      * Add the Gateway to WooCommerce
      **/
