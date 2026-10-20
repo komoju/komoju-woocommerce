@@ -10,10 +10,20 @@ Docker, a database, or API keys:
 
 ```bash
 php tests/php/blocks-translation-test.php
+php tests/php/ipn-async-completion-test.php
 ```
 
 Each file is self-contained and exits non-zero on failure. CI runs every
 `tests/php/*-test.php` (see `.github/workflows/lint.yml`).
+
+The completion regression covers duplicate jobs, paid/refunded orders, fresh
+state after lock acquisition, the authorized/captured event pair, webhook lock
+contention, deferred workers, database errors, exception-safe lock release, and
+unchanged processing for unknown adapters (including MySQL-emulating drivers).
+Serialization is enabled only for the core `wpdb` class with `is_mysql === true`;
+custom drivers, even MySQL-backed ones, keep the original paths. These stubs do
+not prove database locking. Changes also need concurrent MySQL/MariaDB requests
+with HPOS and legacy storage, plus adapter checks that no locking SQL is issued.
 
 ## End-to-end tests
 

@@ -67,6 +67,69 @@ abstract class WC_Gateway_Komoju_Response
     }
 
     /**
+     * Adapters may emulate MySQL versions/flags without supporting named locks.
+     * Only the core driver is known; custom database drivers keep legacy behavior.
+     */
+    protected static function supports_order_lock()
+    {
+        global $wpdb;
+
+        return $wpdb instanceof wpdb && get_class($wpdb) === 'wpdb' && $wpdb->is_mysql === true;
+    }
+
+    /**
+     * Serialize webhook and worker writes, then reload outside all order caches.
+     * MySQL/MariaDB named locks are connection-owned and need no schema changes.
+     *
+     * @return bool false on contention; callers must leave the work retryable
+     */
+    protected static function with_order_lock($order_id, $callback)
+    {
+        global $wpdb;
+
+        $lock     = 'komoju_order_' . md5(DB_NAME . ':' . $wpdb->prefix . ':' . (int) $order_id);
+        $acquired = $wpdb->get_var($wpdb->prepare('SELECT GET_LOCK(%s, 5)', $lock));
+        if ((string) $acquired === '0') {
+            return false;
+        }
+        if ((string) $acquired !== '1') {
+            throw new RuntimeException('Could not acquire KOMOJU order lock for order ' . $order_id);
+        }
+
+        $released = false;
+        $release  = static function () use ($wpdb, $lock, &$released) {
+            if (!$released) {
+                $released = true;
+                $wpdb->get_var($wpdb->prepare('SELECT RELEASE_LOCK(%s)', $lock));
+            }
+        };
+        // Amount validation and WordPress hooks can exit without running finally.
+        register_shutdown_function($release);
+
+        try {
+            clean_post_cache($order_id);
+            $data_store = WC_Data_Store::load('order');
+            if ($data_store->has_callable('clear_cached_data')) {
+                $data_store->clear_cached_data([$order_id]);
+            }
+            if (class_exists('\Automattic\WooCommerce\Caches\OrderCache')) {
+                wc_get_container()->get(Automattic\WooCommerce\Caches\OrderCache::class)->remove($order_id);
+            }
+
+            $order = wc_get_order($order_id);
+            if (!$order) {
+                throw new RuntimeException('Cannot reload KOMOJU order ' . $order_id);
+            }
+            $order->read_meta_data(true);
+            $callback($order);
+
+            return true;
+        } finally {
+            $release();
+        }
+    }
+
+    /**
      * Complete order, add transaction ID and note
      *
      * @param WC_Order $order
@@ -85,7 +148,26 @@ abstract class WC_Gateway_Komoju_Response
 
     public static function payment_complete_async($order_id, $note, $txn_id)
     {
-        self::do_payment_complete(wc_get_order($order_id), $note, $txn_id);
+        if (!self::supports_order_lock()) {
+            self::do_payment_complete(wc_get_order($order_id), $note, $txn_id);
+
+            return;
+        }
+
+        $processed = self::with_order_lock($order_id, static function ($order) use ($note, $txn_id) {
+            if ($order->is_paid() || $order->has_status('refunded')) {
+                return;
+            }
+            self::do_payment_complete($order, $note, $txn_id);
+        });
+
+        if (!$processed) {
+            // A failed Action Scheduler action is not automatically retried.
+            $retry = as_schedule_single_action(time() + 60, 'komoju_capture_payment_async', [$order_id, $note, $txn_id], 'komoju-capture');
+            if (!$retry) {
+                throw new RuntimeException('Could not reschedule KOMOJU completion for order ' . $order_id);
+            }
+        }
     }
 
     protected static function do_payment_complete($order, $note, $txn_id)
