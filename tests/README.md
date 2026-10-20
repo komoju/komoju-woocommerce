@@ -29,6 +29,9 @@ with HPOS and legacy storage, plus adapter checks that no locking SQL is issued.
 
 The end-to-end tests use [cypress](https://cypress.io).
 
+The shared setup loads KOMOJU Fields from
+`https://multipay.staging.komoju-dev.com/fields.js`.
+
 These tests should work on a fresh `docker-compose up`. If your database is not fresh, you can clear it with the following commands:
 
 ```bash
