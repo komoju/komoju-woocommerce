@@ -58,7 +58,8 @@ describe('KOMOJU for WooCommerce: Checkout', () => {
     cy.wait(2000);
     cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('#cc-name').should('exist');
     cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('#cc-name').type('Test Test');
-    cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('#cc-number').type('4111111111111111');
+    // Fields requires a 3DS-aware card; this Visa passes 3DS frictionlessly in test mode.
+    cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('#cc-number').type('4000000000000010');
     cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('#cc-exp').type('1299');
     cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('#cc-cvc').type('111');
 
