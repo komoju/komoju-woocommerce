@@ -15,13 +15,12 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
     protected $gateway;
     protected $webhookSecretToken;
     protected $secret_key;
-    protected $invoice_prefix;
     protected $useOnHold;
 
     /**
      * Constructor
      */
-    public function __construct($gateway, $webhookSecretToken = '', $secret_key = '', $invoice_prefix = '', $useOnHold = false)
+    public function __construct($gateway, $webhookSecretToken = '', $secret_key = '', $useOnHold = false)
     {
         add_filter('komoju_japanese_payments_invoke_ipn_handler', [$this, 'check_response'], 10, 1);
         add_action('komoju_japanese_payments_valid_ipn_request', [$this, 'valid_response']);
@@ -29,7 +28,6 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
         $this->gateway            = $gateway;
         $this->webhookSecretToken = $webhookSecretToken;
         $this->secret_key         = $secret_key;
-        $this->invoice_prefix     = $invoice_prefix;
         $this->useOnHold          = $useOnHold;
     }
 
@@ -54,7 +52,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
                 exit;
             }
 
-            $order = $this->get_order_from_komoju_session($session, $this->invoice_prefix);
+            $order = $this->get_order_from_komoju_session($session);
 
             // null payment on a session indicates incomplete payment flow
             if ($session->status === 'completed' && !is_null($order)) {
@@ -147,7 +145,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
         WC_Gateway_Komoju::log('Uuid: ' . $webhookEvent->uuid());
         WC_Gateway_Komoju::log('Payment status: ' . $webhookEvent->status());
 
-        $order = $this->get_komoju_order($webhookEvent, $this->invoice_prefix);
+        $order = $this->get_komoju_order($webhookEvent);
         if ($order) {
             // Replay protection: skip duplicate webhook events
             $event_id = $webhookEvent->event_type() . '_' . $webhookEvent->uuid();
