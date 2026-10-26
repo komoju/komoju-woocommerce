@@ -74,7 +74,28 @@ abstract class WC_Gateway_Komoju_Response
     {
         global $wpdb;
 
-        return $wpdb instanceof wpdb && get_class($wpdb) === 'wpdb' && $wpdb->is_mysql === true;
+        $supported = $wpdb instanceof wpdb && get_class($wpdb) === 'wpdb' && $wpdb->is_mysql === true;
+        if (!$supported) {
+            self::log_order_lock('Order locking unavailable for database driver ' . (is_object($wpdb) ? get_class($wpdb) : gettype($wpdb)) . '; processing without serialization.');
+        }
+
+        return $supported;
+    }
+
+    /**
+     * Gateway logging is configured by its constructor, but background
+     * workers can run before any gateway is constructed.
+     */
+    protected static function log_order_lock($message)
+    {
+        $debug = get_option('komoju_woocommerce_debug_log');
+        if (!$debug) {
+            $legacy = get_option('woocommerce_komoju_settings');
+            $debug  = is_array($legacy) && isset($legacy['debug']) ? $legacy['debug'] : 'no';
+        }
+        if ($debug === 'yes') {
+            wc_get_logger()->debug($message, ['source' => 'komoju']);
+        }
     }
 
     /**
@@ -167,6 +188,7 @@ abstract class WC_Gateway_Komoju_Response
             if (!$retry) {
                 throw new RuntimeException('Could not reschedule KOMOJU completion for order ' . $order_id);
             }
+            self::log_order_lock('Order #' . $order_id . ' is locked; rescheduled background completion as action #' . $retry . ' in 60 seconds.');
         }
     }
 

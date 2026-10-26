@@ -193,6 +193,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
         }
 
         if (!self::with_order_lock($order->get_id(), $process)) {
+            self::log_order_lock('Order #' . $order->get_id() . ' is locked; returning HTTP 503 so webhook ' . $webhookEvent->event_type() . ' can be redelivered.');
             wp_die('KOMOJU order is being processed. Please retry.', 'Komoju IPN', ['response' => 503]);
         }
     }

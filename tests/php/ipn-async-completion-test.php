@@ -40,6 +40,10 @@ function wp_json_encode($value)
 }
 function get_option($key)
 {
+    if ($key !== 'komoju_woocommerce_ipn_async') {
+        return false;
+    }
+
     return $GLOBALS['async'] ? 'yes' : 'no';
 }
 function wc_get_order($id)
