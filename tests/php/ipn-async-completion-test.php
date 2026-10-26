@@ -231,8 +231,6 @@ class Fake_Async_Order
 
 require_once ABSPATH . 'index.php';
 do_action('plugins_loaded');
-require_once ABSPATH . 'includes/class-wc-gateway-komoju-ipn-handler.php';
-$handler = new WC_Gateway_Komoju_IPN_Handler(null);
 
 function event_for($id, $type = 'payment.captured')
 {
@@ -261,6 +259,7 @@ function check($label, $actual, $expected)
     }
 }
 
+// Background jobs must work after plugin bootstrap, before any IPN handler exists.
 $orders[42] = new Fake_Async_Order(42);
 run_worker(42);
 run_worker(42);
@@ -272,6 +271,9 @@ $orders[43]         = new Fake_Async_Order(43);
 $orders[43]->status = 'refunded';
 run_worker(43);
 check('late worker leaves refunded order untouched', [$orders[43]->notes, $orders[43]->transactions, $orders[43]->status], [[], [], 'refunded']);
+
+require_once ABSPATH . 'includes/class-wc-gateway-komoju-ipn-handler.php';
+$handler = new WC_Gateway_Komoju_IPN_Handler(null);
 
 $orders[44] = new Fake_Async_Order(44);
 $after_lock = function () use (&$orders) { $orders[44]->status = 'processing'; };

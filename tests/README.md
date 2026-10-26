@@ -16,7 +16,8 @@ php tests/php/ipn-async-completion-test.php
 Each file is self-contained and exits non-zero on failure. CI runs every
 `tests/php/*-test.php` (see `.github/workflows/lint.yml`).
 
-The completion regression covers duplicate jobs, paid/refunded orders, fresh
+The completion regression covers background completion before IPN handler
+initialization, duplicate jobs, paid/refunded orders, fresh
 state after lock acquisition, the authorized/captured event pair, webhook lock
 contention, deferred workers, database errors, exception-safe lock release, and
 unchanged processing for unknown adapters (including MySQL-emulating drivers).
