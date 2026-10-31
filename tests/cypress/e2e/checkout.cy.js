@@ -56,7 +56,8 @@ describe('KOMOJU for WooCommerce: Checkout', () => {
     cy.get('komoju-fields[payment-type="credit_card"]').should('be.visible');
     cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('komoju-host').should('exist');
     cy.wait(2000);
-    cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('#cc-name').should('exist');
+    cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('#cc-email').should('exist');
+    cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('#cc-email').type('test@example.com');
     cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('#cc-name').type('Test Test');
     cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('#cc-number').type('4111111111111111');
     cy.get('komoju-fields[payment-type="credit_card"] iframe').iframe().find('#cc-exp').type('1299');
@@ -64,7 +65,8 @@ describe('KOMOJU for WooCommerce: Checkout', () => {
 
     cy.contains('button', 'Place Order').click({ force: true });
     cy.wait(2000);
-    cy.contains('Thank you. Your order has been received.').should('be.visible');
+    // Fields runs a 3DS secure-token round trip before WooCommerce submits the order.
+    cy.contains('Thank you. Your order has been received.', { timeout: 20000 }).should('be.visible');
   })
 
   it('lets me use the specialized WebMoney gateway, despite it being unsupported by Fields', () => {

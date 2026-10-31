@@ -145,7 +145,7 @@ Cypress.Commands.add('setupKomoju', (
     const $edit = $element.find('.komoju-endpoint-edit');
     if ($edit.length > 0) { return cy.wrap($edit).click(); }
   });
-  cy.get('#komoju_woocommerce_fields_url').should('not.be.disabled').clear().type('https://multipay-staging.test.komoju.com/fields.js');
+  cy.get('#komoju_woocommerce_fields_url').should('not.be.disabled').clear().type('https://multipay.staging.komoju-dev.com/fields.js');
   cy.contains('Save changes').should('not.be.disabled').click();
 
   cy.contains('Payment methods').click();

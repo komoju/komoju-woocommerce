@@ -146,7 +146,11 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
         WC_Gateway_Komoju::log('Payment status: ' . $webhookEvent->status());
 
         $order = $this->get_komoju_order($webhookEvent);
-        if ($order) {
+        if (!$order) {
+            return;
+        }
+
+        $process = function ($order) use ($webhookEvent) {
             // Replay protection: skip duplicate webhook events
             $event_id = $webhookEvent->event_type() . '_' . $webhookEvent->uuid();
             if ($this->is_event_already_processed($order, $event_id)) {
@@ -155,7 +159,7 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
                 return;
             }
 
-            // Record this event as processed immediately to prevent concurrent replays
+            // Preserve the existing record-before-dispatch replay behavior.
             $this->mark_event_processed($order, $event_id);
 
             $this->save_komoju_meta_data($order, $webhookEvent);
@@ -178,6 +182,17 @@ class WC_Gateway_Komoju_IPN_Handler extends WC_Gateway_Komoju_Response
                 default:
                     WC_Gateway_Komoju::log('Unknown webhook sent. Webhook type: ' . $webhookEvent->event_type());
             }
+        };
+
+        if (!self::supports_order_lock()) {
+            $process($order);
+
+            return;
+        }
+
+        if (!self::with_order_lock($order->get_id(), $process)) {
+            self::log_order_lock('Order #' . $order->get_id() . ' is locked; returning HTTP 503 so webhook ' . $webhookEvent->event_type() . ' can be redelivered.');
+            wp_die('KOMOJU order is being processed. Please retry.', 'Komoju IPN', ['response' => 503]);
         }
     }
 
