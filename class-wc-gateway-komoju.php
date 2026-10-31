@@ -86,7 +86,6 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
                 $this,
                 $this->webhookSecretToken,
                 $this->secretKey,
-                $this->invoice_prefix,
                 $this->useOnHold
             );
             add_filter('woocommerce_admin_order_data_after_billing_address', [$this, 'show_komoju_link_on_order_page'], 10, 1);
@@ -273,7 +272,9 @@ class WC_Gateway_Komoju extends WC_Payment_Gateway
             ],
             'line_items' => $line_items,
             'metadata'   => [
-                'woocommerce_order_id' => $order->get_order_number(),
+                // Internal ID. wc_get_order() ignores woocommerce_order_number,
+                // so a sequential or formatted display number must not be stored here.
+                'woocommerce_order_id' => (string) $order->get_id(),
             ],
         ];
         if ($payment_type) {

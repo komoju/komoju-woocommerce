@@ -50,6 +50,24 @@ function wc_get_order($id)
 {
     return isset($GLOBALS['orders'][$id]) ? clone $GLOBALS['orders'][$id] : false;
 }
+function wc_get_orders($args)
+{
+    $key   = $args['meta_key']   ?? '';
+    $value = $args['meta_value'] ?? null;
+    $found = [];
+    foreach ($GLOBALS['orders'] as $order) {
+        if ($order->get_meta($key) === $value) {
+            $found[] = $order;
+        }
+    }
+
+    $limit = $args['limit'] ?? -1;
+    if ($limit > 0) {
+        $found = array_slice($found, 0, $limit);
+    }
+
+    return $found;
+}
 function clean_post_cache($id)
 {
 }
@@ -160,12 +178,13 @@ class Fake_Async_Order
     public $status       = 'pending';
     public $notes        = [];
     public $transactions = [];
-    public $meta         = ['komoju_session_id' => 'session_current'];
+    public $meta         = [];
     public $fail         = false;
 
     public function __construct($id)
     {
-        $this->id = $id;
+        $this->id   = $id;
+        $this->meta = ['komoju_session_id' => 'session_' . $id];
     }
 
     public function get_id()
@@ -242,7 +261,8 @@ function event_for($id, $type = 'payment.captured')
         'type' => $type,
         'data' => [
             'id'                 => 'payment_' . $id, 'status' => 'captured',
-            'external_order_num' => $id . '-ABCDEF', 'session' => 'session_current',
+            'external_order_num' => $id . '-ABCDEF', 'session' => 'session_' . $id,
+            'metadata'           => ['woocommerce_order_id' => (string) $id],
             'amount'             => 100, 'total' => 100, 'currency' => 'JPY',
             'tax'                => 0, 'payment_method_fee' => 0, 'payment_details' => ['type' => 'rakutenpay'],
         ],
@@ -299,7 +319,7 @@ try {
     $http_status = $e->getCode();
 }
 check('busy webhook returns a retryable status', $http_status, 503);
-check('busy webhook does not consume event or mutate order', [$orders[46]->meta, $orders[46]->notes, $orders[46]->transactions], [['komoju_session_id' => 'session_current'], [], []]);
+check('busy webhook does not consume event or mutate order', [$orders[46]->meta, $orders[46]->notes, $orders[46]->transactions], [['komoju_session_id' => 'session_46'], [], []]);
 run_worker(46);
 check('busy worker defers completion', $orders[46]->transactions, []);
 $wpdb->result = '1';
