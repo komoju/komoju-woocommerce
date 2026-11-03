@@ -145,6 +145,26 @@ class WC_Gateway_Komoju_Webhook_Event
     }
 
     /**
+     * WooCommerce order ID stored in session metadata.
+     *
+     * @return string|null null when the payment has no woocommerce_order_id
+     */
+    public function woocommerce_order_id()
+    {
+        $metadata = $this->data()['metadata'] ?? null;
+        if (!is_array($metadata)) {
+            return null;
+        }
+
+        $order_id = $metadata['woocommerce_order_id'] ?? null;
+        if (!is_scalar($order_id) || $order_id === '') {
+            return null;
+        }
+
+        return (string) $order_id;
+    }
+
+    /**
      * A get to retrieve the amount refunded from the webhook event. This will
      * only be sent on payment.refunded events
      *

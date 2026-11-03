@@ -47,9 +47,9 @@ describe("KOMOJU for WooCommerce: Refunded webhook", () => {
             currency: "EUR",
             description: null,
             captured_at: "2023-02-17T11:57:05Z",
-            external_order_num: `WC-${orderId}-A49R0D`, // <---- the order id
+            external_order_num: `WC-${orderId}-A49R0D`,
             metadata: {
-              woocommerce_order_id: "255095",
+              woocommerce_order_id: String(orderId),
             },
             created_at: "2023-02-17T11:57:01Z",
             amount_refunded: 1200,

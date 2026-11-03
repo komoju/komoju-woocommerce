@@ -20,8 +20,8 @@ describe("KOMOJU for WooCommerce: Expired webhook", () => {
     "Content-Type": "application/json",
   };
 
-  // `session` ties the event to the order's current attempt;
-  // `external_order_num` is how the handler finds the order.
+  // `session` matches the order's komoju_session_id.
+  // `metadata.woocommerce_order_id` is the internal order ID.
   const expiredPayload = (orderId, sessionId, overrides = {}) => ({
     id: "evt_expired_test",
     type: "payment.expired",

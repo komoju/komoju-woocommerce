@@ -7,63 +7,84 @@ if (!defined('ABSPATH')) {
 abstract class WC_Gateway_Komoju_Response
 {
     /**
-     * Get the order from the Komoju 'transaction' variable
+     * Get the order for a KOMOJU webhook.
+     *
+     * Session id first, then the internal order ID in metadata.
+     * external_order_num is a display reference and is not parsed.
      *
      * @param WC_Gateway_Komoju_Webhook_Event $webhookEvent Webhook event data
-     * @param string $invoice_prefix set as an option in Komoju plugin dashboard
      *
      * @return bool|WC_Order object
      */
-    protected function get_komoju_order($webhookEvent, $invoice_prefix)
+    protected function get_komoju_order($webhookEvent)
     {
-        // We have the data in the correct format, so get the order
-        if (is_string($webhookEvent->external_order_num())) {
-            $order_id = $webhookEvent->external_order_num();
-
-        // Nothing was found
-        } else {
-            WC_Gateway_Komoju::log('Error: Order ID (external_order_num) was not found in "webhookEvent".');
-
-            return false;
-        }
-
-        if (!$order = wc_get_order(substr($order_id, strlen($invoice_prefix), -7))) {
-            WC_Gateway_Komoju::log('Error: Cannot locate order in WC with order_id: .' . $order_id . ' minus prefix: ' . $invoice_prefix);
-
-            return false;
-        }
-
-        return $order;
-    }
-
-    /**
-     * Get an order from a payment associated with a KOMOJU session
-     *
-     * @param string $session_id
-     * @param string $invoice_prefix set as an option in Komoju plugin dashboard
-     */
-    protected function get_order_from_komoju_session($session, $invoice_prefix)
-    {
-        $order = wc_get_order($session->metadata->woocommerce_order_id);
+        $order = $this->order_from_session_id($webhookEvent->session_id());
         if ($order) {
             return $order;
         }
 
-        $payment = $session->payment;
-        if (is_null($payment)) {
-            return null;
+        $order_id = $webhookEvent->woocommerce_order_id();
+        $order    = $order_id ? wc_get_order($order_id) : false;
+        if ($order) {
+            return $order;
         }
 
-        $order_id = $payment->external_order_num;
-        $order    = wc_get_order(substr($order_id, strlen($invoice_prefix), -7));
+        WC_Gateway_Komoju::log('Error: Cannot locate order for KOMOJU webhook. session_id: ' . (string) $webhookEvent->session_id() . ' woocommerce_order_id: ' . (string) $order_id);
 
-        if (!$order) {
-            WC_Gateway_Komoju::log('Error: Cannot locate order in WC with order_id: .' . $order_id . ' minus prefix: ' . $invoice_prefix);
+        return false;
+    }
 
-            return null;
+    /**
+     * Get the order for a KOMOJU session return.
+     *
+     * Internal order ID first, then komoju_session_id.
+     *
+     * @param object $session KOMOJU session
+     *
+     * @return WC_Order|null
+     */
+    protected function get_order_from_komoju_session($session)
+    {
+        $order_id = $session->metadata->woocommerce_order_id ?? null;
+        $order    = $order_id ? wc_get_order($order_id) : false;
+        if ($order) {
+            return $order;
         }
 
-        return $order;
+        $session_id = isset($session->id) ? $session->id : null;
+        $order      = $this->order_from_session_id($session_id);
+        if ($order) {
+            return $order;
+        }
+
+        WC_Gateway_Komoju::log('Error: Cannot locate order for KOMOJU session: ' . (string) $session_id);
+
+        return null;
+    }
+
+    /**
+     * @param string|null $session_id
+     *
+     * @return WC_Order|false
+     */
+    private function order_from_session_id($session_id)
+    {
+        if (!is_string($session_id) || $session_id === '') {
+            return false;
+        }
+
+        $orders = wc_get_orders([
+            'limit'      => 1,
+            'meta_key'   => 'komoju_session_id',
+            'meta_value' => $session_id,
+            'return'     => 'objects',
+        ]);
+
+        if (!is_array($orders) || empty($orders)) {
+            return false;
+        }
+
+        return $orders[0];
     }
 
     /**
